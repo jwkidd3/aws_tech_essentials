@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 5: Implement DynamoDB | AWS Technical Essentials</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/white.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/highlight/monokai.css">
+    <style>
+        :root { --heading-color: #1a365d; --accent-color: #2b6cb0; --success-color: #2f855a; --warning-color: #c05621; --danger-color: #c53030; --text-color: #2d3748; }
+        .reveal { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--text-color); font-size: 28px; }
+        .reveal .slides section { text-align: left; padding: 20px 40px; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 { color: var(--heading-color); font-weight: 700; text-transform: none; }
+        .reveal h1 { font-size: 2.2em; } .reveal h2 { font-size: 1.6em; } .reveal h3 { font-size: 1.3em; }
+        .title-slide { text-align: center !important; }
+        .title-slide h1 { color: #ffffff; font-size: 2.4em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-bottom: 0.3em; }
+        .title-slide h2 { color: #e2e8f0; font-size: 1.4em; font-weight: 400; }
+        .title-slide h3 { color: #cbd5e0; font-size: 1.1em; font-weight: 300; }
+        .section-divider { text-align: center !important; }
+        .section-divider h2 { color: #ffffff; font-size: 2.0em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .section-divider h3 { color: #e2e8f0; font-size: 1.2em; font-weight: 400; }
+        .highlight-box { background: #ebf8ff; border-left: 4px solid var(--accent-color); padding: 20px 25px; border-radius: 0 8px 8px 0; margin: 15px 0; text-align: left; }
+        .highlight-box.success { background: #f0fff4; border-left-color: var(--success-color); }
+        .highlight-box.warning { background: #fffaf0; border-left-color: var(--warning-color); }
+        .highlight-box.danger { background: #fff5f5; border-left-color: var(--danger-color); }
+        .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; text-align: left; }
+        .three-columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: start; text-align: left; }
+        .card { background: #ffffff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; text-align: left; }
+        .card h3, .card h4 { margin-top: 0; color: var(--accent-color); }
+        .concept-box { background: linear-gradient(135deg, #ebf8ff 0%, #e2e8f0 100%); border-radius: 12px; padding: 25px; margin: 15px 0; border: 1px solid #bee3f8; text-align: left; }
+        .concept-box h3, .concept-box h4 { color: var(--heading-color); margin-top: 0; }
+        .key-point { background: #ebf8ff; border: 2px solid var(--accent-color); border-radius: 12px; padding: 20px 25px; margin: 15px 0; text-align: left; font-size: 0.95em; }
+        .key-point strong { color: var(--accent-color); }
+        .questions-slide h2 { color: #ffffff; font-size: 2.2em; }
+        .questions-slide p { color: #e2e8f0; font-size: 1.2em; }
+        .module-progress { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
+        .module-progress .step { width: 30px; height: 6px; border-radius: 3px; background: #cbd5e0; }
+        .module-progress .step.active { background: var(--accent-color); }
+        .module-progress .step.completed { background: var(--success-color); }
+        .reveal table { border-collapse: collapse; width: 100%; font-size: 0.75em; margin: 15px 0; }
+        .reveal table th { background: var(--heading-color); color: #ffffff; padding: 12px 16px; text-align: left; font-weight: 600; }
+        .reveal table td { padding: 10px 16px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+        .reveal table tr:nth-child(even) { background: #f7fafc; }
+        .reveal ul, .reveal ol { text-align: left; display: block; margin-left: 1em; }
+        .reveal li { margin-bottom: 0.5em; line-height: 1.5; font-size: 0.9em; }
+        .reveal p { line-height: 1.6; }
+        .reveal pre code { font-size: 0.7em; line-height: 1.4; max-height: 500px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Title Slide -->
+            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%)">
+                <div class="title-slide">
+                    <h1>&#128218; Lab 5</h1>
+                    <h2>Implement and Manage Amazon DynamoDB</h2>
+                    <h3>AWS Technical Essentials &bull; ~40 Minutes</h3>
+                    <div class="module-progress">
+                        <div class="step completed"></div>
+                        <div class="step completed"></div>
+                        <div class="step completed"></div>
+                        <div class="step completed"></div>
+                        <div class="step active"></div>
+                        <div class="step"></div>
+                    </div>
+                </div>
+                <aside class="notes">Lab 5 of 6. Students will create a DynamoDB table, add items, query data, create indexes, enable streams, and configure backups. Allow approximately 40 minutes.</aside>
+            </section>
+
+            <!-- Lab Overview -->
+            <section>
+                <h2>&#127919; Lab Objectives</h2>
+                <ul>
+                    <li class="fragment">Create a DynamoDB table with a partition key</li>
+                    <li class="fragment">Add, query, scan, and edit items</li>
+                    <li class="fragment">Create a Global Secondary Index (GSI) and query it</li>
+                    <li class="fragment">Enable DynamoDB Streams for change capture</li>
+                    <li class="fragment">Configure Point-in-Time Recovery and on-demand backups</li>
+                </ul>
+                <div class="highlight-box warning fragment">
+                    <strong>&#9888;&#65039; Prerequisites:</strong> You must be signed in to the AWS Management Console with appropriate IAM permissions for DynamoDB.
+                </div>
+                <aside class="notes">Review the objectives with students. This lab covers core DynamoDB operations they will encounter in production environments. Ensure everyone has console access before starting.</aside>
+            </section>
+
+            <!-- Architecture Context -->
+            <section>
+                <h2>&#128640; What You Will Build</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>&#128202; Employees Table</h4>
+                        <ul>
+                            <li>Simple primary key (partition key only)</li>
+                            <li>On-demand capacity mode</li>
+                            <li>Schema-flexible items</li>
+                            <li>Global Secondary Index</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>&#128274; Data Protection</h4>
+                        <ul>
+                            <li>Encryption at rest</li>
+                            <li>DynamoDB Streams enabled</li>
+                            <li>Point-in-Time Recovery</li>
+                            <li>On-demand backup</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">Give students a high-level view of what they will build. The Employees table is a realistic example of how DynamoDB stores semi-structured data. The backup and streaming features demonstrate enterprise-grade data protection.</aside>
+            </section>
+
+            <!-- Step 1 Divider -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
+                <div class="section-divider">
+                    <h2>Step 1</h2>
+                    <h3>Create a DynamoDB Table</h3>
+                </div>
+                <aside class="notes">In this step, students create the Employees table. Emphasize the importance of choosing the right primary key design up front, as it cannot be changed later.</aside>
+            </section>
+
+            <!-- Step 1: Navigate to DynamoDB -->
+            <section>
+                <h2>&#128268; Navigate to DynamoDB</h2>
+                <ol>
+                    <li class="fragment">In the AWS Management Console, click the <strong>Services</strong> menu (or use the search bar at the top)</li>
+                    <li class="fragment">Type <strong>DynamoDB</strong> in the search bar</li>
+                    <li class="fragment">Click <strong>DynamoDB</strong> from the results to open the DynamoDB dashboard</li>
+                </ol>
+                <div class="highlight-box fragment">
+                    <strong>&#128161; Tip:</strong> Verify your AWS Region in the top-right corner of the console. All resources will be created in this Region.
+                </div>
+                <aside class="notes">Make sure all students are in the same Region. DynamoDB is a regional service, so the table will only be visible in the Region where it is created.</aside>
+            </section>
+
+            <!-- Step 1: Create Table -->
+            <section>
+                <h2>&#128221; Create the Employees Table</h2>
+                <ol>
+                    <li class="fragment">Click <strong>Create table</strong></li>
+                    <li class="fragment">For <strong>Table name</strong>, enter: <code>Employees</code></li>
+                    <li class="fragment">For <strong>Partition key</strong>, enter: <code>id</code> and select type <strong>String</strong></li>
+                    <li class="fragment">Leave <strong>Sort key</strong> empty &mdash; we are using a simple primary key</li>
+                </ol>
+                <div class="key-point fragment">
+                    <strong>Key Concept:</strong> A simple primary key (partition key only) uniquely identifies each item. A composite primary key adds a sort key for finer-grained access patterns.
+                </div>
+                <aside class="notes">Explain the difference between simple and composite primary keys. For this lab we use a simple key for clarity. In production, composite keys are common when you need to model one-to-many relationships within a single table.</aside>
+            </section>
+
+            <!-- Step 1: Table Settings -->
+            <section>
+                <h2>&#9881;&#65039; Configure Table Settings</h2>
+                <ol>
+                    <li class="fragment">Under <strong>Table settings</strong>, select <strong>Customize settings</strong></li>
+                    <li class="fragment">For <strong>Table class</strong>, select <strong>DynamoDB Standard</strong></li>
+                    <li class="fragment">For <strong>Read/write capacity settings</strong>, select <strong>On-demand</strong></li>
+                    <li class="fragment">Under <strong>Encryption at rest</strong>, select <strong>Owned by Amazon DynamoDB</strong></li>
+                    <li class="fragment">Click <strong>Create table</strong></li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected Result:</strong> The table will appear in the Tables list with status <strong>Creating</strong>. Wait until the status changes to <strong>Active</strong> (typically 10&ndash;30 seconds).
+                </div>
+                <aside class="notes">On-demand capacity mode means DynamoDB automatically scales to handle your workload. You pay per request instead of provisioning capacity units. This is ideal for unpredictable workloads or labs where you do not know the traffic pattern in advance.</aside>
+            </section>
+
+            <!-- Step 2 Divider -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
+                <div class="section-divider">
+                    <h2>Step 2</h2>
+                    <h3>Explore Table Details</h3>
+                </div>
+                <aside class="notes">Students will familiarize themselves with the DynamoDB console layout and understand the metadata available for each table.</aside>
+            </section>
+
+            <!-- Step 2: Explore Table -->
+            <section>
+                <h2>&#128269; Review Table Information</h2>
+                <ol>
+                    <li class="fragment">Click on the <strong>Employees</strong> table name to open its details</li>
+                    <li class="fragment">Review the <strong>General information</strong> section:
+                        <ul>
+                            <li>Amazon Resource Name (ARN)</li>
+                            <li>Item count and table size (both 0 initially)</li>
+                            <li>Table status: <strong>Active</strong></li>
+                        </ul>
+                    </li>
+                    <li class="fragment">Review <strong>Additional settings</strong>:
+                        <ul>
+                            <li>Read/write capacity mode: <strong>On-demand</strong></li>
+                            <li>Encryption: <strong>DEFAULT</strong> (owned by DynamoDB)</li>
+                        </ul>
+                    </li>
+                </ol>
+                <aside class="notes">Point out the ARN format: arn:aws:dynamodb:REGION:ACCOUNT_ID:table/Employees. The item count and table size are updated approximately every 6 hours, not in real time.</aside>
+            </section>
+
+            <!-- Step 2: Explore Tabs -->
+            <section>
+                <h2>&#128196; Explore Console Tabs</h2>
+                <ol>
+                    <li class="fragment">Click the <strong>Indexes</strong> tab &mdash; currently empty (we will add a GSI later)</li>
+                    <li class="fragment">Click the <strong>Monitoring</strong> tab &mdash; shows CloudWatch metrics for read/write capacity, throttling, and latency</li>
+                    <li class="fragment">Click the <strong>Exports and streams</strong> tab &mdash; DynamoDB Streams and export to S3 options</li>
+                </ol>
+                <div class="highlight-box fragment">
+                    <strong>&#128161; Note:</strong> The Monitoring tab uses CloudWatch metrics. Graphs will populate once you start reading and writing data.
+                </div>
+                <aside class="notes">Walk through each tab briefly. Students do not need to change anything here yet. The purpose is to understand what information is available. The Monitoring tab is especially useful for performance troubleshooting in production.</aside>
+            </section>
+
+            <!-- Step 3 Divider -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
+                <div class="section-divider">
+                    <h2>Step 3</h2>
+                    <h3>Add Items to the Table</h3>
+                </div>
+                <aside class="notes">Students will add three employee records. This demonstrates that DynamoDB is schema-flexible: each item can have different attributes beyond the primary key.</aside>
+            </section>
+
+            <!-- Step 3: First Item -->
+            <section>
+                <h2>&#10133; Create the First Item</h2>
+                <ol>
+                    <li class="fragment">Click <strong>Explore table items</strong> (or use the left navigation)</li>
+                    <li class="fragment">Click <strong>Create item</strong></li>
+                    <li class="fragment">In the <strong>id</strong> field (String), enter: <code>1</code></li>
+                    <li class="fragment">Click <strong>Add new attribute</strong> &rarr; <strong>String</strong>:
+                        <ul>
+                            <li>Attribute name: <code>name</code> &mdash; Value: <code>John Smith</code></li>
+                        </ul>
+                    </li>
+                    <li class="fragment">Repeat <strong>Add new attribute</strong> &rarr; <strong>String</strong> for each:
+                        <ul>
+                            <li><code>location</code> = <code>Seattle</code></li>
+                            <li><code>department</code> = <code>Engineering</code></li>
+                            <li><code>email</code> = <code>jsmith@example.com</code></li>
+                            <li><code>badge_number</code> = <code>12345</code></li>
+                        </ul>
+                    </li>
+                    <li class="fragment">Click <strong>Create item</strong></li>
+                </ol>
+                <aside class="notes">Walk students through the item editor carefully. The JSON view can also be used, but the form view is more intuitive for this exercise. Note that all values are strings here for simplicity.</aside>
+            </section>
+
+            <!-- Step 3: Second and Third Items -->
+            <section>
+                <h2>&#10133; Add Two More Employees</h2>
+                <p>Repeat the same process for these two items:</p>
+                <table>
+                    <thead>
+                        <tr><th>id</th><th>name</th><th>location</th><th>department</th><th>email</th><th>badge_number</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="fragment">
+                            <td>2</td><td>Jane Doe</td><td>New York</td><td>Marketing</td><td>jdoe@example.com</td><td>67890</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>3</td><td>Bob Johnson</td><td>Austin</td><td>Sales</td><td>bjohnson@example.com</td><td>11111</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected Result:</strong> After creating all three items, you should see 3 items listed in the <strong>Items returned</strong> section.
+                </div>
+                <aside class="notes">Give students a few minutes to add these items. They can use the form view or switch to JSON view if they prefer. Remind them that the id field is the partition key and must be unique for each item.</aside>
+            </section>
+
+            <!-- Step 4 Divider -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
+                <div class="section-divider">
+                    <h2>Step 4</h2>
+                    <h3>Query and Scan the Table</h3>
+                </div>
+                <aside class="notes">This step teaches the critical difference between Scan and Query operations. Scans read every item in the table; Queries are targeted and far more efficient.</aside>
+            </section>
+
+            <!-- Step 4: Scan -->
+            <section>
+                <h2>&#128270; Scan the Table</h2>
+                <ol>
+                    <li class="fragment">In <strong>Explore table items</strong>, ensure the <strong>Scan</strong> tab is selected</li>
+                    <li class="fragment">Leave all filters empty</li>
+                    <li class="fragment">Click <strong>Run</strong></li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected Result:</strong> All 3 items are returned. You should see John Smith, Jane Doe, and Bob Johnson with all their attributes.
+                </div>
+                <div class="highlight-box warning fragment">
+                    <strong>&#9888;&#65039; Important:</strong> A Scan reads <em>every item</em> in the table. On large tables, this is expensive and slow. Avoid Scans in production whenever possible.
+                </div>
+                <aside class="notes">Emphasize that a Scan operation consumes read capacity proportional to the entire table size, not the number of results returned. This is fine for 3 items but disastrous for millions.</aside>
+            </section>
+
+            <!-- Step 4: Query -->
+            <section>
+                <h2>&#128269; Query by Partition Key</h2>
+                <ol>
+                    <li class="fragment">Switch to the <strong>Query</strong> tab</li>
+                    <li class="fragment">For <strong>Partition key (id)</strong>, enter: <code>1</code></li>
+                    <li class="fragment">Click <strong>Run</strong></li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected Result:</strong> Only one item is returned &mdash; John Smith&#39;s record with all attributes (name, location, department, email, badge_number).
+                </div>
+                <div class="key-point fragment">
+                    <strong>Query vs. Scan:</strong> Queries target a specific partition key and are significantly more efficient. They only read the items that match, consuming minimal read capacity. Always prefer Query over Scan.
+                </div>
+                <aside class="notes">This is one of the most important DynamoDB concepts. Queries go directly to the correct partition, while Scans touch every item. In a table with millions of items, this difference translates to orders-of-magnitude cost and latency savings.</aside>
+            </section>
+
+            <!-- Step 5 Divider -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
+                <div class="section-divider">
+                    <h2>Step 5</h2>
+                    <h3>Edit an Item</h3>
+                </div>
+                <aside class="notes">This step demonstrates DynamoDB's schema flexibility. Students will modify an existing attribute and add a new one that does not exist on other items.</aside>
+            </section>
+
+            <!-- Step 5: Edit Item -->
+            <section>
+                <h2>&#9999;&#65039; Modify John Smith&#39;s Record</h2>
+                <ol>
+                    <li class="fragment">In the items list, click on the item with <strong>id = 1</strong> (John Smith)</li>
+                    <li class="fragment">Change the <strong>location</strong> value from <code>Seattle</code> to <code>San Francisco</code></li>
+                    <li class="fragment">Click <strong>Add new attribute</strong> &rarr; <strong>String</strong></li>
+                    <li class="fragment">Attribute name: <code>phone</code> &mdash; Value: <code>555-0100</code></li>
+                    <li class="fragment">Click <strong>Save changes</strong></li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Verification:</strong> Run a Scan again. John Smith&#39;s record should now show <strong>location: San Francisco</strong> and a new <strong>phone</strong> attribute. The other two items do <em>not</em> have a phone attribute.
+                </div>
+                <aside class="notes">This is a great moment to discuss schema flexibility. Unlike relational databases, DynamoDB does not require all items to have the same attributes. John Smith now has 7 attributes while the other items have 6. This is perfectly valid and is a core feature of NoSQL design.</aside>
+            </section>
+
+            <!-- Step 5: Schema Flexibility -->
+            <section>
+                <h2>&#128161; Schema Flexibility in DynamoDB</h2>
+                <div class="concept-box">
+                    <h4>Key Takeaway</h4>
+                    <p>DynamoDB is <strong>schema-flexible</strong>. Only the primary key attributes are required on every item. All other attributes are optional and can vary from item to item.</p>
+                </div>
+                <div class="two-columns fragment">
+                    <div class="card">
+                        <h4>&#9989; Advantages</h4>
+                        <ul>
+                            <li>Easy to evolve your data model</li>
+                            <li>No costly ALTER TABLE migrations</li>
+                            <li>Different item types in one table</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>&#9888;&#65039; Considerations</h4>
+                        <ul>
+                            <li>Application must handle missing attributes</li>
+                            <li>No built-in schema enforcement</li>
+                            <li>Careful design is still essential</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">Reinforce that schema-flexible does not mean schema-less. Good data modeling is still critical. The application layer is responsible for validation. Many teams use libraries or middleware to enforce schemas at the application level.</aside>
+            </section>
+
+            <!-- Step 6 Divider -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
+                <div class="section-divider">
+                    <h2>Step 6</h2>
+                    <h3>Add a Global Secondary Index (GSI)</h3>
+                </div>
+                <aside class="notes">GSIs are one of the most powerful DynamoDB features. They allow you to query the table using an alternate key, enabling different access patterns without duplicating data.</aside>
+            </section>
+
+            <!-- Step 6: Create GSI -->
+            <section>
+                <h2>&#128204; Create the GSI</h2>
+                <ol>
+                    <li class="fragment">Navigate to the <strong>Employees</strong> table &rarr; <strong>Indexes</strong> tab</li>
+                    <li class="fragment">Click <strong>Create index</strong></li>
+                    <li class="fragment">For <strong>Partition key</strong>, enter: <code>department</code> (String)</li>
+                    <li class="fragment">For <strong>Sort key</strong>, enter: <code>name</code> (String)</li>
+                    <li class="fragment">For <strong>Index name</strong>, enter: <code>department-name-index</code></li>
+                    <li class="fragment">For <strong>Projected attributes</strong>, select: <strong>All</strong></li>
+                    <li class="fragment">Click <strong>Create index</strong></li>
+                </ol>
+                <div class="highlight-box fragment">
+                    <strong>&#9203; Wait:</strong> The index status will show <strong>Creating</strong>. Wait until it changes to <strong>Active</strong> before proceeding. This may take 1&ndash;2 minutes.
+                </div>
+                <aside class="notes">While students wait for the index to become active, explain that a GSI is essentially a separate table managed by DynamoDB that is kept in sync with the base table. It has its own partition and sort key, allowing completely different query patterns. 'All' projected attributes means every attribute from the base table is copied to the index.</aside>
+            </section>
+
+            <!-- Step 6: Query GSI -->
+            <section>
+                <h2>&#128269; Query Using the GSI</h2>
+                <ol>
+                    <li class="fragment">Go to <strong>Explore table items</strong></li>
+                    <li class="fragment">In the table/index dropdown, change it from <strong>Employees</strong> to <strong>department-name-index</strong></li>
+                    <li class="fragment">Select the <strong>Query</strong> tab</li>
+                    <li class="fragment">For <strong>Partition key (department)</strong>, enter: <code>Engineering</code></li>
+                    <li class="fragment">Click <strong>Run</strong></li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected Result:</strong> The query returns John Smith&#39;s record (the only employee in the Engineering department). All attributes are visible because we projected <strong>All</strong>.
+                </div>
+                <div class="key-point fragment">
+                    <strong>Why GSIs matter:</strong> Without this index, finding employees by department would require a full table Scan with a filter. The GSI makes this a fast, efficient Query operation.
+                </div>
+                <aside class="notes">Highlight that the GSI allows querying by department without touching the entire table. This is how DynamoDB supports multiple access patterns. In real applications, you might have several GSIs for different query needs. Note the sort key (name) allows results within a department to be returned in alphabetical order.</aside>
+            </section>
+
+            <!-- Step 7 Divider -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
+                <div class="section-divider">
+                    <h2>Step 7</h2>
+                    <h3>Enable DynamoDB Streams</h3>
+                </div>
+                <aside class="notes">DynamoDB Streams captures a time-ordered sequence of item-level changes. This is the foundation for event-driven architectures, such as triggering Lambda functions when data changes.</aside>
+            </section>
+
+            <!-- Step 7: Enable Streams -->
+            <section>
+                <h2>&#128260; Enable DynamoDB Streams</h2>
+                <ol>
+                    <li class="fragment">Navigate to the <strong>Employees</strong> table &rarr; <strong>Exports and streams</strong> tab</li>
+                    <li class="fragment">Under <strong>DynamoDB stream details</strong>, click <strong>Enable</strong></li>
+                    <li class="fragment">For <strong>View type</strong>, select: <strong>New and old images</strong></li>
+                    <li class="fragment">Click <strong>Enable stream</strong></li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected Result:</strong> The stream status changes to <strong>Enabled</strong>. You will see a Stream ARN and the view type set to <strong>NEW_AND_OLD_IMAGES</strong>.
+                </div>
+                <aside class="notes">Explain the four view types: KEYS_ONLY, NEW_IMAGE, OLD_IMAGE, NEW_AND_OLD_IMAGES. We chose NEW_AND_OLD_IMAGES so that stream consumers can see both the before and after states of each changed item. This is useful for auditing, replication, and triggering business logic.</aside>
+            </section>
+
+            <!-- Step 7: Streams Discussion -->
+            <section>
+                <h2>&#128161; DynamoDB Streams Use Cases</h2>
+                <div class="three-columns">
+                    <div class="card fragment">
+                        <h4>&#9889; Event-Driven</h4>
+                        <p>Trigger AWS Lambda functions on every insert, update, or delete</p>
+                    </div>
+                    <div class="card fragment">
+                        <h4>&#128257; Replication</h4>
+                        <p>Replicate changes to another table, Region, or data store</p>
+                    </div>
+                    <div class="card fragment">
+                        <h4>&#128203; Auditing</h4>
+                        <p>Capture old and new images for compliance and change tracking</p>
+                    </div>
+                </div>
+                <div class="key-point fragment">
+                    <strong>Stream records are retained for 24 hours.</strong> Consumers must process them within that window or the records expire.
+                </div>
+                <aside class="notes">DynamoDB Streams combined with Lambda is one of the most common serverless patterns on AWS. For example, a stream could trigger a Lambda function that sends a welcome email when a new employee record is created, or updates a search index whenever data changes.</aside>
+            </section>
+
+            <!-- Step 8 Divider -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
+                <div class="section-divider">
+                    <h2>Step 8</h2>
+                    <h3>Enable Point-in-Time Recovery</h3>
+                </div>
+                <aside class="notes">PITR provides continuous backups of DynamoDB table data. It is a critical feature for production workloads that need protection against accidental writes or deletes.</aside>
+            </section>
+
+            <!-- Step 8: Enable PITR -->
+            <section>
+                <h2>&#128274; Enable Point-in-Time Recovery (PITR)</h2>
+                <ol>
+                    <li class="fragment">Navigate to the <strong>Employees</strong> table &rarr; <strong>Backups</strong> tab</li>
+                    <li class="fragment">Under <strong>Point-in-time recovery</strong>, click <strong>Edit</strong></li>
+                    <li class="fragment">Check the box to <strong>Enable Point-in-time recovery</strong></li>
+                    <li class="fragment">Click <strong>Save changes</strong></li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected Result:</strong> PITR status changes to <strong>Enabled</strong>. You will see the <strong>Earliest restore date/time</strong> and <strong>Latest restore date/time</strong> fields.
+                </div>
+                <div class="key-point fragment">
+                    <strong>PITR provides continuous backups for the last 35 days.</strong> You can restore your table to any second within that window. Restores always create a new table.
+                </div>
+                <aside class="notes">PITR is an essential feature for production tables. It protects against accidental deletes or overwrites. The restore creates a new table, so the original table remains unchanged. There is an additional cost for PITR based on table size.</aside>
+            </section>
+
+            <!-- Step 9 Divider -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
+                <div class="section-divider">
+                    <h2>Step 9</h2>
+                    <h3>Create an On-Demand Backup</h3>
+                </div>
+                <aside class="notes">On-demand backups are full snapshots of the table. Unlike PITR, they are retained indefinitely until you delete them.</aside>
+            </section>
+
+            <!-- Step 9: Create Backup -->
+            <section>
+                <h2>&#128190; Create an On-Demand Backup</h2>
+                <ol>
+                    <li class="fragment">In the <strong>Backups</strong> tab, click <strong>Create backup</strong></li>
+                    <li class="fragment">For <strong>Backup name</strong>, enter: <code>employees-backup-lab</code></li>
+                    <li class="fragment">Click <strong>Create backup</strong></li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected Result:</strong> The backup appears in the <strong>Backups</strong> list with status <strong>Available</strong>. You will see the backup ARN, table name, and creation timestamp.
+                </div>
+                <div class="concept-box fragment">
+                    <h4>On-Demand vs. PITR</h4>
+                    <ul>
+                        <li><strong>PITR:</strong> Continuous, automatic, last 35 days, restore to any second</li>
+                        <li><strong>On-Demand:</strong> Manual snapshot, retained indefinitely, restore to that exact point</li>
+                    </ul>
+                </div>
+                <aside class="notes">On-demand backups are useful before major data migrations or application deployments. They do not affect table performance or availability. Both PITR and on-demand restores create a new table rather than overwriting the existing one.</aside>
+            </section>
+
+            <!-- Step 10 Divider -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
+                <div class="section-divider">
+                    <h2>Step 10</h2>
+                    <h3>Delete Items and Clean Up</h3>
+                </div>
+                <aside class="notes">Students will delete a single item and learn about TTL as an alternative for automatic expiration. The table itself is kept for potential use in subsequent labs.</aside>
+            </section>
+
+            <!-- Step 10: Delete Item -->
+            <section>
+                <h2>&#128465;&#65039; Delete an Item</h2>
+                <ol>
+                    <li class="fragment">Go to <strong>Explore table items</strong> and run a <strong>Scan</strong> to see all items</li>
+                    <li class="fragment">Select the checkbox next to the item with <strong>id = 3</strong> (Bob Johnson)</li>
+                    <li class="fragment">Click <strong>Actions</strong> &rarr; <strong>Delete items</strong></li>
+                    <li class="fragment">Confirm the deletion by clicking <strong>Delete</strong></li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected Result:</strong> The items list now shows only 2 items: John Smith (id: 1) and Jane Doe (id: 2).
+                </div>
+                <aside class="notes">Deleting items is immediate and permanent. In production, consider using TTL (Time to Live) to automatically expire items after a specified timestamp. TTL is useful for session data, temporary records, or compliance-driven retention policies.</aside>
+            </section>
+
+            <!-- Step 10: Clean Up -->
+            <section>
+                <h2>&#129529; Clean Up</h2>
+                <div class="highlight-box warning">
+                    <strong>&#9888;&#65039; Clean-Up Actions:</strong>
+                </div>
+                <ol>
+                    <li class="fragment"><strong>Keep the Employees table</strong> &mdash; it may be used by subsequent labs or applications</li>
+                    <li class="fragment"><strong>Delete the on-demand backup</strong> (optional, to save costs):
+                        <ul>
+                            <li>Go to <strong>Backups</strong> tab</li>
+                            <li>Select <strong>employees-backup-lab</strong></li>
+                            <li>Click <strong>Delete</strong> and confirm</li>
+                        </ul>
+                    </li>
+                </ol>
+                <div class="key-point fragment">
+                    <strong>Production Tip:</strong> Use Time to Live (TTL) to automatically expire items instead of manually deleting them. TTL deletes are free and do not consume write capacity.
+                </div>
+                <aside class="notes">Remind students that DynamoDB on-demand pricing means they only pay for actual reads and writes. An idle table with a few items has negligible cost. The on-demand backup does incur a small storage charge, so deleting it is good practice in a lab environment.</aside>
+            </section>
+
+            <!-- Lab Summary -->
+            <section>
+                <h2>&#128218; Lab Summary</h2>
+                <div class="two-columns">
+                    <div>
+                        <h4>What You Accomplished</h4>
+                        <ul>
+                            <li class="fragment">&#9989; Created a DynamoDB table with on-demand capacity</li>
+                            <li class="fragment">&#9989; Added and queried items using Scan and Query</li>
+                            <li class="fragment">&#9989; Edited items and observed schema flexibility</li>
+                            <li class="fragment">&#9989; Created a Global Secondary Index</li>
+                            <li class="fragment">&#9989; Enabled DynamoDB Streams</li>
+                            <li class="fragment">&#9989; Configured PITR and on-demand backups</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Key Takeaways</h4>
+                        <ul>
+                            <li class="fragment">Query is always preferred over Scan</li>
+                            <li class="fragment">GSIs enable alternate access patterns</li>
+                            <li class="fragment">Streams power event-driven architectures</li>
+                            <li class="fragment">PITR + on-demand backups for data protection</li>
+                            <li class="fragment">Schema flexibility requires application-level validation</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">Review the key concepts covered. Students should now understand how to create and manage a DynamoDB table, query data efficiently, and configure data protection features. These are foundational skills for building serverless applications on AWS.</aside>
+            </section>
+
+            <!-- Questions Slide -->
+            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%)">
+                <div class="questions-slide" style="text-align: center;">
+                    <h2>&#10067; Questions?</h2>
+                    <p>Lab 5 Complete &mdash; Great work!</p>
+                    <div class="module-progress">
+                        <div class="step completed"></div>
+                        <div class="step completed"></div>
+                        <div class="step completed"></div>
+                        <div class="step completed"></div>
+                        <div class="step completed"></div>
+                        <div class="step"></div>
+                    </div>
+                </div>
+                <aside class="notes">Take questions from students. Common questions include: How do I choose between provisioned and on-demand capacity? How many GSIs can I create? What is the maximum item size? (400 KB). If time permits, briefly preview what is coming in Lab 6.</aside>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/notes/notes.js"></script>
+    <script>
+        Reveal.initialize({ hash: true, slideNumber: 'c/t', showSlideNumber: 'all', transition: 'slide', plugins: [RevealHighlight, RevealNotes] });
+    </script>
+</body>
+</html>

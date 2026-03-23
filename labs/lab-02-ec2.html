@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 2: Launch Employee Directory on EC2 | AWS Technical Essentials</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/white.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/highlight/monokai.css">
+    <style>
+        :root { --heading-color: #1a365d; --accent-color: #2b6cb0; --success-color: #2f855a; --warning-color: #c05621; --danger-color: #c53030; --text-color: #2d3748; }
+        .reveal { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--text-color); font-size: 28px; }
+        .reveal .slides section { text-align: left; padding: 20px 40px; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 { color: var(--heading-color); font-weight: 700; text-transform: none; }
+        .reveal h1 { font-size: 2.2em; } .reveal h2 { font-size: 1.6em; } .reveal h3 { font-size: 1.3em; }
+        .title-slide { text-align: center !important; }
+        .title-slide h1 { color: #ffffff; font-size: 2.4em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-bottom: 0.3em; }
+        .title-slide h2 { color: #e2e8f0; font-size: 1.4em; font-weight: 400; }
+        .title-slide h3 { color: #cbd5e0; font-size: 1.1em; font-weight: 300; }
+        .section-divider { text-align: center !important; }
+        .section-divider h2 { color: #ffffff; font-size: 2.0em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .section-divider h3 { color: #e2e8f0; font-size: 1.2em; font-weight: 400; }
+        .highlight-box { background: #ebf8ff; border-left: 4px solid var(--accent-color); padding: 20px 25px; border-radius: 0 8px 8px 0; margin: 15px 0; text-align: left; }
+        .highlight-box.success { background: #f0fff4; border-left-color: var(--success-color); }
+        .highlight-box.warning { background: #fffaf0; border-left-color: var(--warning-color); }
+        .highlight-box.danger { background: #fff5f5; border-left-color: var(--danger-color); }
+        .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; text-align: left; }
+        .three-columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: start; text-align: left; }
+        .card { background: #ffffff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; text-align: left; }
+        .card h3, .card h4 { margin-top: 0; color: var(--accent-color); }
+        .concept-box { background: linear-gradient(135deg, #ebf8ff 0%, #e2e8f0 100%); border-radius: 12px; padding: 25px; margin: 15px 0; border: 1px solid #bee3f8; text-align: left; }
+        .concept-box h3, .concept-box h4 { color: var(--heading-color); margin-top: 0; }
+        .key-point { background: #ebf8ff; border: 2px solid var(--accent-color); border-radius: 12px; padding: 20px 25px; margin: 15px 0; text-align: left; font-size: 0.95em; }
+        .key-point strong { color: var(--accent-color); }
+        .questions-slide h2 { color: #ffffff; font-size: 2.2em; }
+        .questions-slide p { color: #e2e8f0; font-size: 1.2em; }
+        .module-progress { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
+        .module-progress .step { width: 30px; height: 6px; border-radius: 3px; background: #cbd5e0; }
+        .module-progress .step.active { background: var(--accent-color); }
+        .module-progress .step.completed { background: var(--success-color); }
+        .reveal table { border-collapse: collapse; width: 100%; font-size: 0.75em; margin: 15px 0; }
+        .reveal table th { background: var(--heading-color); color: #ffffff; padding: 12px 16px; text-align: left; font-weight: 600; }
+        .reveal table td { padding: 10px 16px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+        .reveal table tr:nth-child(even) { background: #f7fafc; }
+        .reveal ul, .reveal ol { text-align: left; display: block; margin-left: 1em; }
+        .reveal li { margin-bottom: 0.5em; line-height: 1.5; font-size: 0.9em; }
+        .reveal p { line-height: 1.6; }
+        .reveal pre code { font-size: 0.7em; line-height: 1.4; max-height: 500px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Title Slide -->
+            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%)" class="title-slide">
+                <h1>&#128187; Lab 2</h1>
+                <h2>Launch the Employee Directory Application on Amazon EC2</h2>
+                <h3>AWS Technical Essentials &bull; Lab 2 of 6</h3>
+                <div class="module-progress">
+                    <div class="step completed"></div>
+                    <div class="step active"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                </div>
+                <aside class="notes">Welcome to Lab 2. In this lab, students will launch an EC2 instance running a Flask-based Employee Directory application. This is a foundational lab that later labs will build upon.</aside>
+            </section>
+
+            <!-- Lab Overview -->
+            <section>
+                <h2>&#128203; Lab Overview</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>&#127919; Objectives</h4>
+                        <ul>
+                            <li>Launch an EC2 instance with Amazon Linux 2023</li>
+                            <li>Configure security groups for HTTP and SSH access</li>
+                            <li>Attach an IAM instance profile for S3 and DynamoDB access</li>
+                            <li>Deploy a Flask application using a user data bootstrap script</li>
+                            <li>Verify the running application in a browser</li>
+                            <li>Explore EC2 instance details, security, and monitoring</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>&#128221; Prerequisites &amp; Info</h4>
+                        <ul>
+                            <li><strong>Duration:</strong> ~45 minutes</li>
+                            <li><strong>Region:</strong> Use the region assigned by your instructor</li>
+                            <li><strong>AWS Console access:</strong> Required</li>
+                            <li><strong>Prior lab:</strong> Lab 1 completed</li>
+                            <li><strong>Cost:</strong> t2.micro is Free Tier eligible</li>
+                        </ul>
+                        <div class="highlight-box warning" style="margin-top: 15px;">
+                            <strong>&#9888;&#65039; Important:</strong> Do NOT terminate the instance at the end of this lab. It will be used in later labs.
+                        </div>
+                    </div>
+                </div>
+                <aside class="notes">Review the objectives and make sure everyone has console access and knows which region to use. Emphasize that this instance will persist across multiple labs.</aside>
+            </section>
+
+            <!-- Architecture Diagram Slide -->
+            <section>
+                <h2>&#127959;&#65039; What We Are Building</h2>
+                <div class="concept-box">
+                    <h4>Architecture Overview</h4>
+                    <p>In this lab you will deploy a simple web application on a single EC2 instance:</p>
+                    <ul>
+                        <li><strong>EC2 Instance</strong> &mdash; Amazon Linux 2023, t2.micro, running a Python Flask application on port 80</li>
+                        <li><strong>Security Group</strong> &mdash; Allows inbound HTTP (port 80) from anywhere and SSH (port 22) from your IP</li>
+                        <li><strong>IAM Role</strong> &mdash; Grants the instance permission to access S3 (photos) and DynamoDB (employee data)</li>
+                        <li><strong>User Data Script</strong> &mdash; Automatically installs dependencies and starts the application at launch</li>
+                    </ul>
+                </div>
+                <div class="key-point">
+                    <strong>&#128161; Key Concept:</strong> User data scripts run only once at first boot, automating instance configuration without manual SSH access.
+                </div>
+                <aside class="notes">Walk through the architecture so students understand the full picture before diving into the steps. The Flask app reads from DynamoDB and stores photos in S3.</aside>
+            </section>
+
+            <!-- ==================== STEP 1 ==================== -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
+                <h2>Step 1</h2>
+                <h3>Navigate to EC2 and Launch an Instance</h3>
+                <div class="module-progress">
+                    <div class="step active"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                </div>
+                <aside class="notes">Step 1: Navigate to EC2 and begin the instance launch wizard.</aside>
+            </section>
+
+            <section>
+                <h2>&#128640; Navigate to EC2</h2>
+                <ol>
+                    <li class="fragment">Sign in to the <strong>AWS Management Console</strong></li>
+                    <li class="fragment">In the search bar at the top, type <strong>EC2</strong></li>
+                    <li class="fragment">Click <strong>EC2</strong> under Services to open the EC2 Dashboard</li>
+                    <li class="fragment">Click the orange <strong>Launch instance</strong> button</li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected:</strong> You should see the "Launch an instance" configuration page with the Name and tags section at the top.
+                </div>
+                <aside class="notes">Make sure students are in the correct region before launching. The region selector is in the top-right corner of the console.</aside>
+            </section>
+
+            <section>
+                <h2>&#128221; Name and AMI Selection</h2>
+                <ol>
+                    <li class="fragment">Under <strong>Name and tags</strong>, enter:
+                        <pre><code class="plaintext">employee-directory-app</code></pre>
+                    </li>
+                    <li class="fragment">Under <strong>Application and OS Images (Amazon Machine Image)</strong>:
+                        <ul>
+                            <li>Ensure <strong>Amazon Linux</strong> is selected (it is the default)</li>
+                            <li>From the Amazon Machine Image dropdown, select <strong>Amazon Linux 2023 AMI</strong></li>
+                            <li>Architecture: <strong>64-bit (x86)</strong></li>
+                        </ul>
+                    </li>
+                    <li class="fragment">Under <strong>Instance type</strong>, select <strong>t2.micro</strong>
+                        <ul><li>You should see the <em>Free tier eligible</em> label</li></ul>
+                    </li>
+                </ol>
+                <div class="highlight-box fragment">
+                    <strong>&#128161; Note:</strong> Amazon Linux 2023 is the latest generation of Amazon Linux, optimized for AWS with long-term support.
+                </div>
+                <aside class="notes">t2.micro provides 1 vCPU and 1 GiB of memory, sufficient for this lab application. Ensure students select the correct AMI.</aside>
+            </section>
+
+            <!-- ==================== STEP 2 ==================== -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
+                <h2>Step 2</h2>
+                <h3>Configure Key Pair</h3>
+                <div class="module-progress">
+                    <div class="step completed"></div>
+                    <div class="step active"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                </div>
+                <aside class="notes">Step 2: Create a key pair for SSH access to the instance.</aside>
+            </section>
+
+            <section>
+                <h2>&#128273; Create a Key Pair</h2>
+                <ol>
+                    <li class="fragment">In the <strong>Key pair (login)</strong> section, click <strong>Create new key pair</strong></li>
+                    <li class="fragment">In the dialog that appears, configure:
+                        <table>
+                            <tr><th>Setting</th><th>Value</th></tr>
+                            <tr><td>Key pair name</td><td><code>employee-dir-key</code></td></tr>
+                            <tr><td>Key pair type</td><td><strong>RSA</strong></td></tr>
+                            <tr><td>Private key file format</td><td><strong>.pem</strong></td></tr>
+                        </table>
+                    </li>
+                    <li class="fragment">Click <strong>Create key pair</strong></li>
+                    <li class="fragment">The <code>.pem</code> file will automatically download to your computer</li>
+                </ol>
+                <div class="highlight-box warning fragment">
+                    <strong>&#9888;&#65039; Important:</strong> Save this file in a known location. You cannot download this key again. If you lose it, you will need to create a new key pair.
+                </div>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected:</strong> The key pair <code>employee-dir-key</code> should now appear selected in the Key pair dropdown.
+                </div>
+                <aside class="notes">On macOS/Linux, students may need to run chmod 400 on the .pem file before using it for SSH. On Windows, they can use PuTTY with the .pem converted to .ppk format. For this lab, we primarily need the key pair to exist.</aside>
+            </section>
+
+            <!-- ==================== STEP 3 ==================== -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
+                <h2>Step 3</h2>
+                <h3>Configure Network Settings</h3>
+                <div class="module-progress">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step active"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                </div>
+                <aside class="notes">Step 3: Configure the VPC, subnet, public IP, and security group settings.</aside>
+            </section>
+
+            <section>
+                <h2>&#127760; Network Settings</h2>
+                <ol>
+                    <li class="fragment">In the <strong>Network settings</strong> section, click <strong>Edit</strong></li>
+                    <li class="fragment">Configure the following:
+                        <table>
+                            <tr><th>Setting</th><th>Value</th></tr>
+                            <tr><td>VPC</td><td>Select the <strong>default VPC</strong></td></tr>
+                            <tr><td>Subnet</td><td>Select any <strong>public subnet</strong> (or leave as "No preference")</td></tr>
+                            <tr><td>Auto-assign public IP</td><td><strong>Enable</strong></td></tr>
+                        </table>
+                    </li>
+                </ol>
+                <div class="key-point fragment">
+                    <strong>&#128161; Why a public IP?</strong> We need a public IP address so that we can access the Employee Directory web application from our browser. Without it, the instance would only be reachable from within the VPC.
+                </div>
+                <aside class="notes">Explain that the default VPC has public subnets already configured with an internet gateway. Auto-assign public IP gives the instance a public IPv4 address at launch.</aside>
+            </section>
+
+            <section>
+                <h2>&#128274; Security Group Configuration</h2>
+                <ol>
+                    <li class="fragment">Under <strong>Firewall (security groups)</strong>, select <strong>Create security group</strong></li>
+                    <li class="fragment">Security group name: <pre><code class="plaintext">employee-directory-sg</code></pre></li>
+                    <li class="fragment">Description: <pre><code class="plaintext">Security group for Employee Directory EC2 instance</code></pre></li>
+                    <li class="fragment">Configure <strong>Inbound security group rules</strong>:
+                        <table>
+                            <tr><th>Rule</th><th>Type</th><th>Port</th><th>Source</th></tr>
+                            <tr><td>Rule 1 (default)</td><td>SSH</td><td>22</td><td><strong>My IP</strong></td></tr>
+                            <tr><td>Rule 2 (click <em>Add security group rule</em>)</td><td>HTTP</td><td>80</td><td><strong>Anywhere (0.0.0.0/0)</strong></td></tr>
+                        </table>
+                    </li>
+                </ol>
+                <div class="highlight-box warning fragment">
+                    <strong>&#9888;&#65039; Security Note:</strong> SSH is restricted to "My IP" for security. HTTP is open to the internet so anyone can view the application. In production, you would place a load balancer in front and restrict direct instance access.
+                </div>
+                <aside class="notes">Discuss why SSH should be limited to the student's IP. Emphasize that opening port 22 to 0.0.0.0/0 is a security anti-pattern. The "My IP" option auto-detects the student's current public IP.</aside>
+            </section>
+
+            <!-- ==================== STEP 4 ==================== -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
+                <h2>Step 4</h2>
+                <h3>Configure IAM Instance Profile</h3>
+                <div class="module-progress">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step active"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                </div>
+                <aside class="notes">Step 4: Attach an IAM role so the application can access S3 and DynamoDB without embedding credentials.</aside>
+            </section>
+
+            <section>
+                <h2>&#128100; Create the IAM Role</h2>
+                <p>Before selecting the role on the EC2 launch page, we need to create it in IAM.</p>
+                <ol>
+                    <li class="fragment"><strong>Open a new browser tab</strong> and navigate to the <strong>IAM Console</strong> (search for "IAM")</li>
+                    <li class="fragment">In the left navigation, click <strong>Roles</strong>, then <strong>Create role</strong></li>
+                    <li class="fragment">Trusted entity type: <strong>AWS service</strong></li>
+                    <li class="fragment">Use case: Select <strong>EC2</strong>, then click <strong>Next</strong></li>
+                    <li class="fragment">Search for and select these policies:
+                        <ul>
+                            <li>&#9989; <code>AmazonS3FullAccess</code></li>
+                            <li>&#9989; <code>AmazonDynamoDBFullAccess</code></li>
+                        </ul>
+                    </li>
+                    <li class="fragment">Click <strong>Next</strong></li>
+                    <li class="fragment">Role name: <pre><code class="plaintext">EmployeeDirectoryAppRole</code></pre></li>
+                    <li class="fragment">Click <strong>Create role</strong></li>
+                </ol>
+                <aside class="notes">Explain that IAM roles are the recommended way to grant AWS permissions to EC2 instances. This avoids storing access keys on the instance. The trust policy allows EC2 to assume this role.</aside>
+            </section>
+
+            <section>
+                <h2>&#128279; Attach the IAM Role to EC2</h2>
+                <ol>
+                    <li class="fragment">Switch back to the <strong>EC2 Launch instance</strong> browser tab</li>
+                    <li class="fragment">Scroll down to <strong>Advanced details</strong> and expand it</li>
+                    <li class="fragment">In the <strong>IAM instance profile</strong> dropdown, select <strong>EmployeeDirectoryAppRole</strong>
+                        <ul><li>If you do not see it, click the refresh icon next to the dropdown</li></ul>
+                    </li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected:</strong> The IAM instance profile dropdown should show <code>EmployeeDirectoryAppRole</code> selected.
+                </div>
+                <div class="concept-box fragment">
+                    <h4>&#128161; Why Use an IAM Role?</h4>
+                    <p>An IAM instance profile passes temporary credentials to the EC2 instance via the instance metadata service. The application uses these credentials automatically through the AWS SDK &mdash; no access keys need to be stored on the instance.</p>
+                </div>
+                <aside class="notes">Stress the security benefit of roles vs. access keys. Temporary credentials are rotated automatically. This is an AWS best practice.</aside>
+            </section>
+
+            <!-- ==================== STEP 5 ==================== -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
+                <h2>Step 5</h2>
+                <h3>Add User Data Script</h3>
+                <div class="module-progress">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step active"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                </div>
+                <aside class="notes">Step 5: Add the bootstrap script that will install and start the application automatically when the instance launches.</aside>
+            </section>
+
+            <section>
+                <h2>&#128220; User Data Bootstrap Script</h2>
+                <p>Still in the <strong>Advanced details</strong> section, scroll down to <strong>User data</strong>.</p>
+                <p class="fragment">Paste the following script into the User data text box:</p>
+                <pre class="fragment"><code class="bash">#!/bin/bash -ex
+wget https://aws-tc-largeobjects.s3-us-west-2.amazonaws.com/DEV-AWS-MO-GCNv2/FlaskApp.zip
+unzip FlaskApp.zip
+cd FlaskApp/
+yum -y install python3-pip
+pip install -r requirements.txt
+yum -y install stress
+export PHOTOS_BUCKET=${SUB_PHOTOS_BUCKET}
+export AWS_DEFAULT_REGION=&lt;REGION&gt;
+export DYNAMO_MODE=on
+FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code></pre>
+                <div class="highlight-box warning fragment">
+                    <strong>&#9888;&#65039; Replace placeholders before pasting:</strong>
+                    <ul>
+                        <li>Replace <code>${SUB_PHOTOS_BUCKET}</code> with the name of your S3 bucket (created in a later lab, or provided by your instructor)</li>
+                        <li>Replace <code>&lt;REGION&gt;</code> with your AWS region (e.g., <code>us-east-1</code>, <code>us-west-2</code>)</li>
+                    </ul>
+                </div>
+                <aside class="notes">Walk through each line of the script. If students haven't created the S3 bucket yet, they can leave the placeholder for now and the app will still load, just without photo functionality.</aside>
+            </section>
+
+            <section>
+                <h2>&#128269; Understanding the User Data Script</h2>
+                <table>
+                    <tr><th>Line</th><th>What It Does</th></tr>
+                    <tr><td><code>#!/bin/bash -ex</code></td><td>Runs as Bash; <code>-e</code> exits on error, <code>-x</code> prints each command for debugging</td></tr>
+                    <tr><td><code>wget ... FlaskApp.zip</code></td><td>Downloads the Employee Directory application from S3</td></tr>
+                    <tr><td><code>unzip FlaskApp.zip</code></td><td>Extracts the application files</td></tr>
+                    <tr><td><code>yum -y install python3-pip</code></td><td>Installs pip (Python package manager)</td></tr>
+                    <tr><td><code>pip install -r requirements.txt</code></td><td>Installs Python dependencies (Flask, boto3, etc.)</td></tr>
+                    <tr><td><code>yum -y install stress</code></td><td>Installs the stress tool (used in a later scaling lab)</td></tr>
+                    <tr><td><code>export ...</code></td><td>Sets environment variables for the S3 bucket, region, and DynamoDB mode</td></tr>
+                    <tr><td><code>FLASK_APP=... flask run</code></td><td>Starts the Flask web server on port 80</td></tr>
+                </table>
+                <aside class="notes">Explain each line so students understand what happens at boot. The stress utility will be used in the Auto Scaling lab. The Flask app listens on 0.0.0.0 so it accepts connections from any IP, and port 80 is the standard HTTP port.</aside>
+            </section>
+
+            <!-- ==================== STEP 6 ==================== -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
+                <h2>Step 6</h2>
+                <h3>Review and Launch</h3>
+                <div class="module-progress">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step active"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                </div>
+                <aside class="notes">Step 6: Review all settings and launch the instance.</aside>
+            </section>
+
+            <section>
+                <h2>&#128640; Review and Launch the Instance</h2>
+                <ol>
+                    <li class="fragment">In the <strong>Summary</strong> panel on the right side, verify:
+                        <table>
+                            <tr><th>Setting</th><th>Expected Value</th></tr>
+                            <tr><td>Name</td><td>employee-directory-app</td></tr>
+                            <tr><td>AMI</td><td>Amazon Linux 2023</td></tr>
+                            <tr><td>Instance type</td><td>t2.micro</td></tr>
+                            <tr><td>Key pair</td><td>employee-dir-key</td></tr>
+                            <tr><td>Security group</td><td>employee-directory-sg</td></tr>
+                            <tr><td>Storage</td><td>8 GiB gp3 (default)</td></tr>
+                        </table>
+                    </li>
+                    <li class="fragment">Click <strong>Launch instance</strong></li>
+                    <li class="fragment">You should see a <strong>"Success"</strong> message with the instance ID</li>
+                    <li class="fragment">Click the <strong>instance ID link</strong> to go to the Instances page</li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected:</strong> The instance should appear with a state of <strong>Pending</strong>, transitioning to <strong>Running</strong> within 1&ndash;2 minutes.
+                </div>
+                <aside class="notes">Have students double-check their settings in the summary panel before clicking Launch. Common mistakes include wrong AMI, missing security group rules, or forgetting to attach the IAM role.</aside>
+            </section>
+
+            <section>
+                <h2>&#9203; Wait for the Instance to Start</h2>
+                <ol>
+                    <li class="fragment">On the <strong>Instances</strong> page, watch the <strong>Instance state</strong> column</li>
+                    <li class="fragment">Wait until the state changes from <em>Pending</em> to <strong>Running</strong></li>
+                    <li class="fragment">Wait for the <strong>Status check</strong> column to show <strong>2/2 checks passed</strong>
+                        <ul><li>Click the refresh icon (&#128260;) periodically to update the status</li></ul>
+                    </li>
+                    <li class="fragment">Once running, note the <strong>Public IPv4 address</strong> from the instance details below</li>
+                </ol>
+                <div class="highlight-box fragment">
+                    <strong>&#128203; Record this:</strong> Write down or copy the <strong>Public IPv4 address</strong>. You will need it in the next step.
+                </div>
+                <aside class="notes">Status checks take a couple of minutes. The system status check validates the underlying host, and the instance status check validates the OS is reachable.</aside>
+            </section>
+
+            <!-- ==================== STEP 7 ==================== -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
+                <h2>Step 7</h2>
+                <h3>Test the Application</h3>
+                <div class="module-progress">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step active"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                </div>
+                <aside class="notes">Step 7: Open the application in a browser and verify it is running.</aside>
+            </section>
+
+            <section>
+                <h2>&#127760; Test the Employee Directory Application</h2>
+                <ol>
+                    <li class="fragment">Open a <strong>new browser tab</strong></li>
+                    <li class="fragment">In the address bar, type:
+                        <pre><code class="plaintext">http://&lt;PUBLIC_IPv4_ADDRESS&gt;</code></pre>
+                        <ul><li>Replace <code>&lt;PUBLIC_IPv4_ADDRESS&gt;</code> with the IP you noted earlier</li></ul>
+                    </li>
+                    <li class="fragment">Press <strong>Enter</strong></li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected:</strong> The Employee Directory web application should load, showing a page where you can add and view employee records.
+                </div>
+                <div class="highlight-box warning fragment">
+                    <strong>&#9888;&#65039; Not loading?</strong> The application may take <strong>2&ndash;3 minutes</strong> after the instance reaches "Running" state for the user data script to complete. Wait a moment and refresh the page.
+                </div>
+                <aside class="notes">If the page doesn't load after several minutes, have students check: 1) Security group allows HTTP on port 80, 2) They're using http:// not https://, 3) The public IP is correct, 4) The user data script ran without errors.</aside>
+            </section>
+
+            <section>
+                <h2>&#128679; Troubleshooting</h2>
+                <p>If the application does not load, check the following:</p>
+                <div class="highlight-box danger">
+                    <strong>&#10060; Common Issues:</strong>
+                    <ul>
+                        <li><strong>Using HTTPS instead of HTTP</strong> &mdash; The app runs on HTTP only. Make sure the URL starts with <code>http://</code></li>
+                        <li><strong>Security group missing HTTP rule</strong> &mdash; Verify port 80 is open to <code>0.0.0.0/0</code></li>
+                        <li><strong>User data script errors</strong> &mdash; Check instance system log: Select instance &rarr; <strong>Actions</strong> &rarr; <strong>Monitor and troubleshoot</strong> &rarr; <strong>Get system log</strong></li>
+                        <li><strong>Wrong public IP</strong> &mdash; Refresh the Instances page and verify the IP address</li>
+                        <li><strong>Auto-assign public IP was not enabled</strong> &mdash; If no public IP is listed, you will need to terminate and re-launch</li>
+                    </ul>
+                </div>
+                <aside class="notes">Walk around and help students who are having issues. The system log is invaluable for debugging user data script failures. Look for Python errors or package installation failures.</aside>
+            </section>
+
+            <!-- ==================== STEP 8 ==================== -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
+                <h2>Step 8</h2>
+                <h3>Explore the EC2 Instance</h3>
+                <div class="module-progress">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step active"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                </div>
+                <aside class="notes">Step 8: Explore the various details and tabs of the running EC2 instance.</aside>
+            </section>
+
+            <section>
+                <h2>&#128269; Explore Instance Details</h2>
+                <ol>
+                    <li class="fragment">On the <strong>Instances</strong> page, click the <strong>Instance ID</strong> of your instance</li>
+                    <li class="fragment">Explore the <strong>Details</strong> tab:
+                        <ul>
+                            <li><strong>Instance ID</strong> &mdash; unique identifier (e.g., i-0abc123...)</li>
+                            <li><strong>Instance type</strong> &mdash; t2.micro</li>
+                            <li><strong>AMI ID</strong> &mdash; the Amazon Linux 2023 image used</li>
+                            <li><strong>Public IPv4 address</strong> &mdash; the address you used to access the app</li>
+                            <li><strong>Private IPv4 address</strong> &mdash; the internal VPC address</li>
+                            <li><strong>VPC ID</strong> and <strong>Subnet ID</strong> &mdash; where the instance is running</li>
+                            <li><strong>IAM Role</strong> &mdash; EmployeeDirectoryAppRole</li>
+                        </ul>
+                    </li>
+                </ol>
+                <aside class="notes">Point out the difference between public and private IPs. The private IP stays the same when the instance stops and starts, but the public IP can change.</aside>
+            </section>
+
+            <section>
+                <h2>&#128274; Explore Security and Monitoring</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>&#128274; Security Tab</h4>
+                        <ol>
+                            <li>Click the <strong>Security</strong> tab</li>
+                            <li>Review the security group: <code>employee-directory-sg</code></li>
+                            <li>Click the security group ID to see full details</li>
+                            <li>Verify <strong>Inbound rules</strong>:
+                                <ul>
+                                    <li>SSH (22) from your IP</li>
+                                    <li>HTTP (80) from 0.0.0.0/0</li>
+                                </ul>
+                            </li>
+                            <li>Note: <strong>Outbound rules</strong> allow all traffic by default</li>
+                        </ol>
+                    </div>
+                    <div class="card">
+                        <h4>&#128202; Monitoring Tab</h4>
+                        <ol>
+                            <li>Click the <strong>Monitoring</strong> tab</li>
+                            <li>Review CloudWatch basic metrics:
+                                <ul>
+                                    <li>CPU utilization</li>
+                                    <li>Network in/out</li>
+                                    <li>Disk read/write</li>
+                                    <li>Status checks</li>
+                                </ul>
+                            </li>
+                            <li>Note: Basic monitoring updates every 5 minutes</li>
+                        </ol>
+                    </div>
+                </div>
+                <aside class="notes">Explain that detailed monitoring (1-minute intervals) is available for an additional cost. The security tab is a quick way to audit what traffic is allowed to and from the instance.</aside>
+            </section>
+
+            <section>
+                <h2>&#128196; View Instance Metadata</h2>
+                <ol>
+                    <li class="fragment">Select your instance on the Instances page</li>
+                    <li class="fragment">Click <strong>Actions</strong> &rarr; <strong>Instance settings</strong> &rarr; <strong>Edit instance metadata options</strong></li>
+                    <li class="fragment">Review the metadata settings:
+                        <ul>
+                            <li><strong>IMDSv2</strong> &mdash; the token-based metadata service (more secure)</li>
+                            <li>The instance metadata service provides information about the instance to applications running on it</li>
+                        </ul>
+                    </li>
+                </ol>
+                <div class="concept-box fragment">
+                    <h4>&#128161; What is Instance Metadata?</h4>
+                    <p>The instance metadata service (IMDS) allows code running on the instance to access information such as instance ID, public IP, IAM role credentials, region, and more &mdash; all without needing to make external API calls. The Flask app uses IMDS to get the IAM role credentials for accessing S3 and DynamoDB.</p>
+                </div>
+                <aside class="notes">IMDSv2 requires a session token, which protects against SSRF attacks. This is the default on Amazon Linux 2023. The metadata endpoint is 169.254.169.254.</aside>
+            </section>
+
+            <!-- ==================== STEP 9 ==================== -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
+                <h2>Step 9</h2>
+                <h3>Stop and Start the Instance</h3>
+                <div class="module-progress">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step active"></div>
+                    <div class="step"></div>
+                </div>
+                <aside class="notes">Step 9: Demonstrate what happens when an EC2 instance is stopped and started, particularly the public IP behavior.</aside>
+            </section>
+
+            <section>
+                <h2>&#9209;&#65039; Stop the Instance</h2>
+                <ol>
+                    <li class="fragment">Select your <strong>employee-directory-app</strong> instance</li>
+                    <li class="fragment">Click <strong>Instance state</strong> &rarr; <strong>Stop instance</strong></li>
+                    <li class="fragment">In the confirmation dialog, click <strong>Stop</strong></li>
+                    <li class="fragment">Wait for the Instance state to change to <strong>Stopped</strong></li>
+                    <li class="fragment">Observe: the <strong>Public IPv4 address</strong> field is now <strong>empty</strong> (the public IP has been released)</li>
+                </ol>
+                <div class="highlight-box fragment">
+                    <strong>&#128161; Key Observation:</strong> When you stop an instance, its public IP address is released back to the AWS pool. The private IP address is retained.
+                </div>
+                <aside class="notes">Emphasize that stopping an instance does not delete it or its EBS volume. You are not charged for compute while stopped, but you are still charged for the EBS storage.</aside>
+            </section>
+
+            <section>
+                <h2>&#9654;&#65039; Start the Instance</h2>
+                <ol>
+                    <li class="fragment">With the instance still selected, click <strong>Instance state</strong> &rarr; <strong>Start instance</strong></li>
+                    <li class="fragment">Wait for the Instance state to change to <strong>Running</strong></li>
+                    <li class="fragment">Note the <strong>new Public IPv4 address</strong> &mdash; it is likely different from before</li>
+                    <li class="fragment">Try accessing the application at the <strong>new</strong> IP:
+                        <pre><code class="plaintext">http://&lt;NEW_PUBLIC_IP&gt;</code></pre>
+                    </li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Expected:</strong> The application should load again at the new public IP address (after the user data script completes, which may take 2&ndash;3 minutes).
+                </div>
+                <div class="concept-box fragment">
+                    <h4>&#128161; Why Does the Public IP Change?</h4>
+                    <p>Dynamic public IPs are assigned from AWS's pool at launch. To keep a fixed public IP, you would use an <strong>Elastic IP address</strong>. Alternatively, placing a <strong>load balancer</strong> in front of your instances provides a stable DNS endpoint.</p>
+                </div>
+                <aside class="notes">This is a great teaching moment about Elastic IPs and load balancers. In later labs, students will set up a load balancer, which solves this problem. Note that user data only runs on first boot by default, but the app process may need to restart.</aside>
+            </section>
+
+            <!-- ==================== STEP 10 ==================== -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
+                <h2>Step 10</h2>
+                <h3>Keep the Instance Running</h3>
+                <div class="module-progress">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step active"></div>
+                </div>
+                <aside class="notes">Step 10: Remind students to leave the instance running for use in later labs.</aside>
+            </section>
+
+            <section>
+                <h2>&#9888;&#65039; Do NOT Terminate the Instance</h2>
+                <div class="highlight-box danger" style="font-size: 1.05em;">
+                    <strong>&#10060; Important:</strong> Do <strong>NOT</strong> terminate this instance. We will continue using the <code>employee-directory-app</code> instance in the following labs:
+                    <ul>
+                        <li><strong>Lab 3:</strong> Creating an S3 bucket for employee photos</li>
+                        <li><strong>Lab 4:</strong> Setting up DynamoDB for employee data</li>
+                        <li><strong>Lab 5:</strong> Configuring a load balancer and auto scaling</li>
+                    </ul>
+                </div>
+                <div class="key-point fragment">
+                    <strong>&#128203; Before moving on, confirm:</strong>
+                    <ul>
+                        <li>&#9989; Instance state is <strong>Running</strong></li>
+                        <li>&#9989; You have the <strong>Public IPv4 address</strong> noted</li>
+                        <li>&#9989; The application loads in your browser</li>
+                        <li>&#9989; The <code>employee-dir-key.pem</code> file is saved</li>
+                    </ul>
+                </div>
+                <aside class="notes">Do a quick check with the class to make sure everyone has a running instance with the application accessible. Help any students who are behind before moving to the next module.</aside>
+            </section>
+
+            <!-- Key Takeaways -->
+            <section>
+                <h2>&#128218; Key Takeaways</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>&#127919; What You Accomplished</h4>
+                        <ul>
+                            <li>Launched an EC2 instance with Amazon Linux 2023</li>
+                            <li>Created and configured a security group</li>
+                            <li>Created an IAM role and attached it to EC2</li>
+                            <li>Used a user data script to bootstrap an application</li>
+                            <li>Tested a running web application</li>
+                            <li>Explored instance details, security, and monitoring</li>
+                            <li>Observed public IP behavior on stop/start</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>&#128161; Key Concepts</h4>
+                        <ul>
+                            <li><strong>AMI</strong> &mdash; Pre-configured OS templates</li>
+                            <li><strong>Instance type</strong> &mdash; Defines CPU, memory, network</li>
+                            <li><strong>Security groups</strong> &mdash; Virtual firewalls for instances</li>
+                            <li><strong>IAM roles</strong> &mdash; Secure credential delivery to EC2</li>
+                            <li><strong>User data</strong> &mdash; Bootstrap automation at launch</li>
+                            <li><strong>Elastic IPs</strong> &mdash; Fixed public IP addresses</li>
+                            <li><strong>Instance metadata</strong> &mdash; Self-discovery for instances</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">Summarize the key concepts before wrapping up. These concepts will build upon each other in subsequent labs and the presentation modules.</aside>
+            </section>
+
+            <!-- Lab Complete -->
+            <section data-background="linear-gradient(135deg, #2f855a 0%, #38a169 50%, #48bb78 100%)" class="title-slide">
+                <h1>&#9989; Lab 2 Complete!</h1>
+                <h2>Launch the Employee Directory Application on Amazon EC2</h2>
+                <h3>Your EC2 instance is running and ready for the next lab</h3>
+                <div class="module-progress">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                </div>
+                <aside class="notes">Lab 2 is complete. Students should have a running EC2 instance with the Employee Directory application. Transition to the next presentation module or take a break before Lab 3.</aside>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/notes/notes.js"></script>
+    <script>
+        Reveal.initialize({ hash: true, slideNumber: 'c/t', showSlideNumber: 'all', transition: 'slide', plugins: [RevealHighlight, RevealNotes] });
+    </script>
+</body>
+</html>

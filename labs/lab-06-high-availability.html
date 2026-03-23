@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 6: Configure High Availability | AWS Technical Essentials</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/white.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/highlight/monokai.css">
+    <style>
+        :root { --heading-color: #1a365d; --accent-color: #2b6cb0; --success-color: #2f855a; --warning-color: #c05621; --danger-color: #c53030; --text-color: #2d3748; }
+        .reveal { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--text-color); font-size: 28px; }
+        .reveal .slides section { text-align: left; padding: 20px 40px; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 { color: var(--heading-color); font-weight: 700; text-transform: none; }
+        .reveal h1 { font-size: 2.2em; } .reveal h2 { font-size: 1.6em; } .reveal h3 { font-size: 1.3em; }
+        .title-slide { text-align: center !important; }
+        .title-slide h1 { color: #ffffff; font-size: 2.4em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-bottom: 0.3em; }
+        .title-slide h2 { color: #e2e8f0; font-size: 1.4em; font-weight: 400; }
+        .title-slide h3 { color: #cbd5e0; font-size: 1.1em; font-weight: 300; }
+        .section-divider { text-align: center !important; }
+        .section-divider h2 { color: #ffffff; font-size: 2.0em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .section-divider h3 { color: #e2e8f0; font-size: 1.2em; font-weight: 400; }
+        .highlight-box { background: #ebf8ff; border-left: 4px solid var(--accent-color); padding: 20px 25px; border-radius: 0 8px 8px 0; margin: 15px 0; text-align: left; }
+        .highlight-box.success { background: #f0fff4; border-left-color: var(--success-color); }
+        .highlight-box.warning { background: #fffaf0; border-left-color: var(--warning-color); }
+        .highlight-box.danger { background: #fff5f5; border-left-color: var(--danger-color); }
+        .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; text-align: left; }
+        .three-columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: start; text-align: left; }
+        .card { background: #ffffff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; text-align: left; }
+        .card h3, .card h4 { margin-top: 0; color: var(--accent-color); }
+        .concept-box { background: linear-gradient(135deg, #ebf8ff 0%, #e2e8f0 100%); border-radius: 12px; padding: 25px; margin: 15px 0; border: 1px solid #bee3f8; text-align: left; }
+        .concept-box h3, .concept-box h4 { color: var(--heading-color); margin-top: 0; }
+        .key-point { background: #ebf8ff; border: 2px solid var(--accent-color); border-radius: 12px; padding: 20px 25px; margin: 15px 0; text-align: left; font-size: 0.95em; }
+        .key-point strong { color: var(--accent-color); }
+        .questions-slide h2 { color: #ffffff; font-size: 2.2em; }
+        .questions-slide p { color: #e2e8f0; font-size: 1.2em; }
+        .module-progress { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
+        .module-progress .step { width: 30px; height: 6px; border-radius: 3px; background: #cbd5e0; }
+        .module-progress .step.active { background: var(--accent-color); }
+        .module-progress .step.completed { background: var(--success-color); }
+        .reveal table { border-collapse: collapse; width: 100%; font-size: 0.75em; margin: 15px 0; }
+        .reveal table th { background: var(--heading-color); color: #ffffff; padding: 12px 16px; text-align: left; font-weight: 600; }
+        .reveal table td { padding: 10px 16px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+        .reveal table tr:nth-child(even) { background: #f7fafc; }
+        .reveal ul, .reveal ol { text-align: left; display: block; margin-left: 1em; }
+        .reveal li { margin-bottom: 0.5em; line-height: 1.5; font-size: 0.9em; }
+        .reveal p { line-height: 1.6; }
+        .reveal pre code { font-size: 0.7em; line-height: 1.4; max-height: 500px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ============================================================ -->
+            <!-- TITLE SLIDE                                                  -->
+            <!-- ============================================================ -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="title-slide">
+                <h1>&#9889; Lab 6: Configure High Availability</h1>
+                <h2>AWS Technical Essentials</h2>
+                <h3>Load Balancing, Auto Scaling &#38; Self-Healing Architecture</h3>
+                <div class="module-progress">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step active"></div>
+                </div>
+                <aside class="notes">
+                    Welcome to Lab 6 — the capstone lab. This is the most complex lab in the course and ties together
+                    everything students have learned: VPC networking, EC2, IAM roles, S3, DynamoDB, and now
+                    load balancing with Auto Scaling. Expected duration is approximately 60 minutes.
+                    Ensure all students have their employee-directory-app-v2 instance running from Lab 5.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- LAB OVERVIEW                                                 -->
+            <!-- ============================================================ -->
+            <section>
+                <h2>&#128203; Lab Overview</h2>
+                <div class="highlight-box">
+                    <strong>Objective:</strong> Configure high availability for the Employee Directory application
+                    using an Application Load Balancer and Auto Scaling Group.
+                </div>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>&#128338; Duration</h4>
+                        <p>~60 minutes</p>
+                    </div>
+                    <div class="card">
+                        <h4>&#127919; Capstone Lab</h4>
+                        <p>Lab 6 of 6</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    This is the capstone lab. Students will build a production-style architecture with load balancing,
+                    auto scaling, and self-healing capabilities. Emphasize that this is what real-world AWS deployments look like.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- WHAT YOU WILL BUILD                                          -->
+            <!-- ============================================================ -->
+            <section>
+                <h2>&#128736;&#65039; What You Will Build</h2>
+                <ol>
+                    <li class="fragment">Create an <strong>Application Load Balancer</strong> to distribute traffic</li>
+                    <li class="fragment">Restrict application access to <strong>ALB-only traffic</strong></li>
+                    <li class="fragment">Create a <strong>Launch Template</strong> for consistent instance configuration</li>
+                    <li class="fragment">Configure an <strong>Auto Scaling Group</strong> with scaling policies</li>
+                    <li class="fragment">Test <strong>self-healing</strong> by terminating an instance</li>
+                    <li class="fragment">Observe <strong>dynamic scaling</strong> with a stress test</li>
+                    <li class="fragment">Monitor with <strong>CloudWatch</strong> metrics and dashboards</li>
+                    <li class="fragment"><strong>Clean up</strong> all course resources</li>
+                </ol>
+                <aside class="notes">
+                    Walk through the high-level architecture before diving into steps. This lab combines ALB, ASG,
+                    Launch Templates, security groups, and CloudWatch — everything from the monitoring and optimization module.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- PREREQUISITES                                                -->
+            <!-- ============================================================ -->
+            <section>
+                <h2>&#9989; Prerequisites</h2>
+                <div class="highlight-box warning">
+                    <strong>Before starting:</strong> Verify you have the following resources from previous labs.
+                </div>
+                <ul>
+                    <li class="fragment"><strong>VPC:</strong> employee-directory-vpc with 2 public subnets in different AZs</li>
+                    <li class="fragment"><strong>EC2 Instance:</strong> employee-directory-app-v2 (running)</li>
+                    <li class="fragment"><strong>Security Group:</strong> employee-directory-app-sg</li>
+                    <li class="fragment"><strong>IAM Role:</strong> EmployeeDirectoryAppRole</li>
+                    <li class="fragment"><strong>S3 Bucket:</strong> employee-photo-bucket-&lt;unique-id&gt;</li>
+                    <li class="fragment"><strong>DynamoDB Table:</strong> Employees</li>
+                </ul>
+                <aside class="notes">
+                    Have students verify each of these resources exists before proceeding. If anything is missing,
+                    they will need to recreate it. The app-v2 instance must be running and accessible.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- STEP 1: CREATE ALB — SECTION DIVIDER                        -->
+            <!-- ============================================================ -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
+                <h2>Step 1</h2>
+                <h3>Create an Application Load Balancer</h3>
+                <aside class="notes">
+                    This is the first major component. The ALB will sit in front of the application instances
+                    and distribute incoming HTTP traffic across multiple Availability Zones.
+                </aside>
+            </section>
+
+            <!-- STEP 1a: Navigate and Select ALB -->
+            <section>
+                <h2>&#128295; Step 1a: Create the Load Balancer</h2>
+                <ol>
+                    <li class="fragment">Navigate to <strong>EC2</strong> in the AWS Management Console</li>
+                    <li class="fragment">In the left navigation, scroll down to <strong>Load Balancers</strong></li>
+                    <li class="fragment">Click <strong>&#8220;Create load balancer&#8221;</strong></li>
+                    <li class="fragment">Under <strong>Application Load Balancer</strong>, click <strong>&#8220;Create&#8221;</strong></li>
+                </ol>
+                <div class="highlight-box fragment">
+                    <strong>Why ALB?</strong> Application Load Balancers operate at Layer 7 (HTTP/HTTPS) and are ideal
+                    for web applications. They support path-based routing, host-based routing, and integrate
+                    with Auto Scaling.
+                </div>
+                <aside class="notes">
+                    Explain the difference between ALB, NLB, and CLB briefly. ALB is the right choice for
+                    HTTP-based web applications like our Flask app.
+                </aside>
+            </section>
+
+            <!-- STEP 1b: Basic Configuration -->
+            <section>
+                <h2>&#128295; Step 1b: Basic Configuration</h2>
+                <p>Configure the load balancer settings:</p>
+                <table>
+                    <tr><th>Setting</th><th>Value</th></tr>
+                    <tr class="fragment"><td>Load balancer name</td><td><code>employee-directory-alb</code></td></tr>
+                    <tr class="fragment"><td>Scheme</td><td><strong>Internet-facing</strong></td></tr>
+                    <tr class="fragment"><td>IP address type</td><td><strong>IPv4</strong></td></tr>
+                </table>
+                <div class="highlight-box fragment">
+                    <strong>Internet-facing</strong> means the ALB gets a public DNS name and accepts traffic from the internet.
+                    An internal ALB would only be accessible from within the VPC.
+                </div>
+                <aside class="notes">
+                    The scheme is important — internet-facing gives us a public endpoint. Internal ALBs are used
+                    for microservices communication within a VPC.
+                </aside>
+            </section>
+
+            <!-- STEP 1c: Network Mapping -->
+            <section>
+                <h2>&#128295; Step 1c: Network Mapping</h2>
+                <p>Under <strong>Network mapping</strong>:</p>
+                <ol>
+                    <li class="fragment">VPC: Select <strong>employee-directory-vpc</strong></li>
+                    <li class="fragment">Availability Zones: Check <strong>BOTH</strong> public subnets</li>
+                </ol>
+                <div class="highlight-box warning fragment">
+                    <strong>&#9888;&#65039; Important:</strong> You must select subnets in at least <strong>two different Availability Zones</strong>.
+                    This is what provides high availability — if one AZ goes down, the ALB routes traffic to the other.
+                </div>
+                <div class="key-point fragment">
+                    <strong>Key Concept:</strong> The ALB itself is a managed, highly available service. By selecting
+                    multiple AZs, AWS deploys ALB nodes in each zone automatically.
+                </div>
+                <aside class="notes">
+                    Emphasize that the ALB requires at least two AZs. This is a fundamental requirement for high availability.
+                    Each AZ gets its own ALB node, and Route 53 handles DNS-based load balancing across them.
+                </aside>
+            </section>
+
+            <!-- STEP 1d: Security Group -->
+            <section>
+                <h2>&#128295; Step 1d: ALB Security Group</h2>
+                <p>Create a <strong>new</strong> security group for the ALB:</p>
+                <ol>
+                    <li class="fragment">Click <strong>&#8220;Create a new security group&#8221;</strong> (opens new tab)</li>
+                    <li class="fragment">Security group name: <code>employee-directory-alb-sg</code></li>
+                    <li class="fragment">Description: <em>Security group for the Employee Directory ALB</em></li>
+                    <li class="fragment">VPC: Select <strong>employee-directory-vpc</strong></li>
+                </ol>
+                <div class="fragment">
+                    <h4>Inbound Rules:</h4>
+                    <table>
+                        <tr><th>Type</th><th>Port</th><th>Source</th></tr>
+                        <tr><td>HTTP</td><td>80</td><td><code>0.0.0.0/0</code></td></tr>
+                    </table>
+                </div>
+                <ol start="5">
+                    <li class="fragment">Click <strong>&#8220;Create security group&#8221;</strong></li>
+                    <li class="fragment">Return to the ALB creation tab and <strong>refresh</strong> the security group list</li>
+                    <li class="fragment">Select <strong>employee-directory-alb-sg</strong> and remove the default SG</li>
+                </ol>
+                <aside class="notes">
+                    The ALB needs its own security group that allows HTTP from anywhere. Later, we will lock down
+                    the application security group to only accept traffic from this ALB security group.
+                </aside>
+            </section>
+
+            <!-- STEP 1e: Target Group -->
+            <section>
+                <h2>&#128295; Step 1e: Create Target Group</h2>
+                <p>Under <strong>Listeners and routing</strong>:</p>
+                <ol>
+                    <li class="fragment">Protocol: <strong>HTTP</strong>, Port: <strong>80</strong></li>
+                    <li class="fragment">Click <strong>&#8220;Create target group&#8221;</strong> (opens new tab)</li>
+                </ol>
+                <div class="fragment">
+                    <h4>Target group configuration:</h4>
+                    <table>
+                        <tr><th>Setting</th><th>Value</th></tr>
+                        <tr><td>Target type</td><td><strong>Instances</strong></td></tr>
+                        <tr><td>Target group name</td><td><code>employee-directory-tg</code></td></tr>
+                        <tr><td>Protocol / Port</td><td>HTTP / 80</td></tr>
+                        <tr><td>VPC</td><td>employee-directory-vpc</td></tr>
+                    </table>
+                </div>
+                <aside class="notes">
+                    The target group defines where the ALB sends traffic. We configure it for instances on port 80,
+                    matching our Flask application's listening port.
+                </aside>
+            </section>
+
+            <!-- STEP 1f: Health Check Settings -->
+            <section>
+                <h2>&#128295; Step 1f: Health Check Configuration</h2>
+                <p>Configure the health check settings:</p>
+                <table>
+                    <tr><th>Setting</th><th>Value</th></tr>
+                    <tr class="fragment"><td>Health check protocol</td><td>HTTP</td></tr>
+                    <tr class="fragment"><td>Health check path</td><td><code>/</code></td></tr>
+                    <tr class="fragment"><td>Health check interval</td><td><strong>30 seconds</strong></td></tr>
+                    <tr class="fragment"><td>Healthy threshold</td><td><strong>2</strong> consecutive checks</td></tr>
+                    <tr class="fragment"><td>Unhealthy threshold</td><td><strong>5</strong> consecutive checks</td></tr>
+                </table>
+                <div class="highlight-box fragment">
+                    <strong>How health checks work:</strong> The ALB sends an HTTP GET to <code>/</code> every 30 seconds.
+                    After 2 successful responses (HTTP 200), the target is marked healthy. After 5 failures, it is marked unhealthy
+                    and removed from rotation.
+                </div>
+                <aside class="notes">
+                    Health checks are critical for high availability. The ALB will only send traffic to healthy targets.
+                    The path "/" works because our Flask app returns a 200 on the root endpoint.
+                </aside>
+            </section>
+
+            <!-- STEP 1g: Register Targets -->
+            <section>
+                <h2>&#128295; Step 1g: Register Targets</h2>
+                <ol>
+                    <li class="fragment">On the <strong>Register targets</strong> page, find your <strong>employee-directory-app-v2</strong> instance</li>
+                    <li class="fragment">Select the instance checkbox</li>
+                    <li class="fragment">Click <strong>&#8220;Include as pending below&#8221;</strong></li>
+                    <li class="fragment">Verify the instance appears in the <strong>Review targets</strong> section with port <strong>80</strong></li>
+                    <li class="fragment">Click <strong>&#8220;Create target group&#8221;</strong></li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Checkpoint:</strong> You should see the target group created successfully. Return to the
+                    ALB creation tab.
+                </div>
+                <aside class="notes">
+                    Make sure students click "Include as pending below" — this is a common step that gets missed.
+                    The instance won't be registered if they skip this button.
+                </aside>
+            </section>
+
+            <!-- STEP 1h: Finish ALB Creation -->
+            <section>
+                <h2>&#128295; Step 1h: Finish ALB Creation</h2>
+                <ol>
+                    <li class="fragment">Back on the ALB creation page, <strong>refresh</strong> the target group dropdown</li>
+                    <li class="fragment">Select <strong>employee-directory-tg</strong> as the default action</li>
+                    <li class="fragment">Scroll down and click <strong>&#8220;Create load balancer&#8221;</strong></li>
+                    <li class="fragment">Wait for the ALB state to change from <strong>Provisioning</strong> to <strong>Active</strong></li>
+                </ol>
+                <div class="highlight-box warning fragment">
+                    <strong>&#9202; Wait Time:</strong> The ALB typically takes <strong>2&#8211;3 minutes</strong> to become Active.
+                    You can refresh the page to check the status.
+                </div>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Checkpoint:</strong> The ALB state shows <strong>Active</strong> and the target group shows
+                    at least one <strong>healthy</strong> target.
+                </div>
+                <aside class="notes">
+                    While waiting, explain how the ALB provisions nodes in each selected AZ. The DNS name will
+                    resolve to the IP addresses of these nodes. Students can use this time to review what they configured.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- STEP 2: TEST THE LOAD BALANCER — SECTION DIVIDER            -->
+            <!-- ============================================================ -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
+                <h2>Step 2</h2>
+                <h3>Test the Load Balancer</h3>
+                <aside class="notes">
+                    Now we verify that the ALB is routing traffic correctly to our application instance.
+                </aside>
+            </section>
+
+            <!-- STEP 2: Test ALB -->
+            <section>
+                <h2>&#128270; Step 2: Test the Load Balancer</h2>
+                <ol>
+                    <li class="fragment">Go to <strong>EC2 &gt; Load Balancers</strong></li>
+                    <li class="fragment">Select <strong>employee-directory-alb</strong></li>
+                    <li class="fragment">In the <strong>Description</strong> tab, copy the <strong>DNS name</strong>
+                        <br><em>(e.g., employee-directory-alb-123456789.us-east-1.elb.amazonaws.com)</em></li>
+                    <li class="fragment">Open a new browser tab and navigate to: <code>http://&lt;ALB_DNS_NAME&gt;</code></li>
+                    <li class="fragment">Verify the <strong>Employee Directory</strong> application loads correctly</li>
+                </ol>
+                <div class="highlight-box warning fragment">
+                    <strong>&#128161; Note:</strong> It may take up to <strong>60 seconds</strong> for the target to pass its first
+                    health check and become healthy. If you see a 503 error, wait and retry.
+                </div>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Checkpoint:</strong> The Employee Directory application loads when accessed through the ALB DNS name.
+                    You can add, view, and manage employees just as before.
+                </div>
+                <aside class="notes">
+                    If students get a 503 error, have them check the target group health status. The target
+                    needs to pass 2 consecutive health checks (about 60 seconds) before it is marked healthy.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- STEP 3: UPDATE SECURITY GROUP — SECTION DIVIDER             -->
+            <!-- ============================================================ -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
+                <h2>Step 3</h2>
+                <h3>Update the Application Security Group</h3>
+                <aside class="notes">
+                    Now we lock down the application so it only accepts traffic through the ALB.
+                    This is an important security best practice.
+                </aside>
+            </section>
+
+            <!-- STEP 3: Update Security Group -->
+            <section>
+                <h2>&#128274; Step 3: Restrict Traffic to ALB Only</h2>
+                <ol>
+                    <li class="fragment">Navigate to <strong>EC2 &gt; Security Groups</strong></li>
+                    <li class="fragment">Select <strong>employee-directory-app-sg</strong></li>
+                    <li class="fragment">Click <strong>&#8220;Edit inbound rules&#8221;</strong></li>
+                    <li class="fragment">Find the <strong>HTTP (port 80)</strong> rule</li>
+                    <li class="fragment">Change the <strong>Source</strong> from <code>0.0.0.0/0</code> to the <strong>ALB security group</strong>:
+                        <br>Type <code>employee-directory-alb-sg</code> and select it from the dropdown</li>
+                    <li class="fragment">Click <strong>&#8220;Save rules&#8221;</strong></li>
+                </ol>
+                <div class="key-point fragment">
+                    <strong>Security Best Practice:</strong> By referencing the ALB security group as the source,
+                    only traffic originating from the ALB can reach the application. Direct access via the instance&#8217;s
+                    public IP on port 80 is now blocked.
+                </div>
+                <aside class="notes">
+                    This is a security group chaining pattern. The app SG trusts the ALB SG, not a CIDR block.
+                    This is more secure and dynamic — if the ALB IPs change, the rule still works.
+                </aside>
+            </section>
+
+            <!-- STEP 3: Verify -->
+            <section>
+                <h2>&#128274; Step 3: Verify the Security Change</h2>
+                <div class="two-columns">
+                    <div class="card fragment">
+                        <h4>&#9989; Should Work</h4>
+                        <p>Access the app via the <strong>ALB DNS name</strong>:</p>
+                        <p><code>http://&lt;ALB_DNS_NAME&gt;</code></p>
+                        <p>The Employee Directory should load normally.</p>
+                    </div>
+                    <div class="card fragment">
+                        <h4>&#10060; Should NOT Work</h4>
+                        <p>Access the app via the <strong>instance public IP</strong>:</p>
+                        <p><code>http://&lt;INSTANCE_IP&gt;</code></p>
+                        <p>The connection should <strong>time out</strong>.</p>
+                    </div>
+                </div>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Checkpoint:</strong> ALB access works. Direct IP access on port 80 is blocked.
+                    Traffic must flow through the load balancer.
+                </div>
+                <aside class="notes">
+                    Have students test both paths. The direct IP access should time out (not get a connection refused).
+                    This confirms the security group change is working correctly.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- STEP 4: LAUNCH TEMPLATE — SECTION DIVIDER                   -->
+            <!-- ============================================================ -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
+                <h2>Step 4</h2>
+                <h3>Create a Launch Template</h3>
+                <aside class="notes">
+                    Launch templates define the instance configuration that Auto Scaling will use to launch new instances.
+                    This ensures every instance is configured identically.
+                </aside>
+            </section>
+
+            <!-- STEP 4a: Launch Template Basics -->
+            <section>
+                <h2>&#128196; Step 4a: Launch Template Settings</h2>
+                <ol>
+                    <li class="fragment">Navigate to <strong>EC2 &gt; Launch Templates</strong></li>
+                    <li class="fragment">Click <strong>&#8220;Create launch template&#8221;</strong></li>
+                </ol>
+                <div class="fragment">
+                    <table>
+                        <tr><th>Setting</th><th>Value</th></tr>
+                        <tr><td>Launch template name</td><td><code>employee-directory-lt</code></td></tr>
+                        <tr><td>Template version description</td><td><em>Employee Directory app launch template</em></td></tr>
+                        <tr><td>AMI</td><td><strong>Amazon Linux 2023</strong></td></tr>
+                        <tr><td>Instance type</td><td><strong>t2.micro</strong></td></tr>
+                        <tr><td>Key pair</td><td><strong>employee-dir-key</strong></td></tr>
+                    </table>
+                </div>
+                <aside class="notes">
+                    The launch template captures all the settings we previously configured manually when launching
+                    EC2 instances. Auto Scaling uses this as a blueprint.
+                </aside>
+            </section>
+
+            <!-- STEP 4b: Network and IAM -->
+            <section>
+                <h2>&#128196; Step 4b: Network and IAM Settings</h2>
+                <h4>Network Settings:</h4>
+                <ol>
+                    <li class="fragment">Under <strong>Network settings</strong>, click <strong>&#8220;Select existing security group&#8221;</strong></li>
+                    <li class="fragment">Choose: <strong>employee-directory-app-sg</strong></li>
+                </ol>
+                <h4 class="fragment">Advanced Details:</h4>
+                <ol start="3">
+                    <li class="fragment">Expand <strong>&#8220;Advanced details&#8221;</strong></li>
+                    <li class="fragment">IAM instance profile: Select <strong>EmployeeDirectoryAppRole</strong></li>
+                </ol>
+                <div class="highlight-box fragment">
+                    <strong>&#128161; Remember:</strong> The IAM instance profile gives the EC2 instances permission
+                    to access S3 (for photos) and DynamoDB (for employee data) without embedding credentials.
+                </div>
+                <aside class="notes">
+                    The security group and IAM role are the same ones used by the existing instance. This ensures
+                    new instances launched by Auto Scaling have identical permissions and network access.
+                </aside>
+            </section>
+
+            <!-- STEP 4c: User Data -->
+            <section>
+                <h2>&#128196; Step 4c: User Data (Bootstrap Script)</h2>
+                <p>Still in <strong>Advanced details</strong>, scroll to <strong>User data</strong> and paste:</p>
+                <pre><code class="bash">#!/bin/bash -ex
+wget https://aws-tc-largeobjects.s3-us-west-2.amazonaws.com/DEV-AWS-MO-GCNv2/FlaskApp.zip
+unzip FlaskApp.zip
+cd FlaskApp/
+yum -y install python3-pip
+pip install -r requirements.txt
+yum -y install stress
+export PHOTOS_BUCKET=${SUB_PHOTOS_BUCKET}
+export AWS_DEFAULT_REGION=&lt;REGION&gt;
+export DYNAMO_MODE=on
+FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code></pre>
+                <div class="highlight-box warning fragment">
+                    <strong>&#9888;&#65039; Important:</strong> Replace <code>${SUB_PHOTOS_BUCKET}</code> with your actual S3 bucket name
+                    and <code>&lt;REGION&gt;</code> with your AWS region (e.g., <code>us-east-1</code>).
+                </div>
+                <aside class="notes">
+                    This is the same bootstrap script from Lab 4. Remind students to substitute their actual
+                    bucket name and region. The stress tool is also installed for the optional scaling test later.
+                </aside>
+            </section>
+
+            <!-- STEP 4d: Create Template -->
+            <section>
+                <h2>&#128196; Step 4d: Create the Launch Template</h2>
+                <ol>
+                    <li class="fragment">Review all settings one more time</li>
+                    <li class="fragment">Click <strong>&#8220;Create launch template&#8221;</strong></li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Checkpoint:</strong> You should see &#8220;Successfully created launch template&#8221;.
+                    The template <strong>employee-directory-lt</strong> appears in the Launch Templates list.
+                </div>
+                <div class="concept-box fragment">
+                    <h4>&#128161; Why Launch Templates?</h4>
+                    <ul>
+                        <li>Ensure <strong>consistency</strong> — every instance is identical</li>
+                        <li>Support <strong>versioning</strong> — update configs without recreating</li>
+                        <li>Required by <strong>Auto Scaling Groups</strong> to launch instances</li>
+                    </ul>
+                </div>
+                <aside class="notes">
+                    The launch template is now ready for Auto Scaling to use. Point out that launch templates
+                    support versioning, so you can update the configuration and roll out changes gradually.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- STEP 5: AUTO SCALING GROUP — SECTION DIVIDER                -->
+            <!-- ============================================================ -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
+                <h2>Step 5</h2>
+                <h3>Create an Auto Scaling Group</h3>
+                <aside class="notes">
+                    The Auto Scaling Group is the core component that manages the fleet of instances.
+                    It maintains desired capacity, replaces unhealthy instances, and scales based on demand.
+                </aside>
+            </section>
+
+            <!-- STEP 5a: ASG Name and Template -->
+            <section>
+                <h2>&#128200; Step 5a: ASG Name and Launch Template</h2>
+                <ol>
+                    <li class="fragment">Navigate to <strong>EC2 &gt; Auto Scaling Groups</strong></li>
+                    <li class="fragment">Click <strong>&#8220;Create Auto Scaling group&#8221;</strong></li>
+                </ol>
+                <div class="fragment">
+                    <table>
+                        <tr><th>Setting</th><th>Value</th></tr>
+                        <tr><td>Auto Scaling group name</td><td><code>employee-directory-asg</code></td></tr>
+                        <tr><td>Launch template</td><td><strong>employee-directory-lt</strong></td></tr>
+                    </table>
+                </div>
+                <ol start="3">
+                    <li class="fragment">Click <strong>Next</strong></li>
+                </ol>
+                <aside class="notes">
+                    The ASG references the launch template we just created. The ASG wizard walks through
+                    several pages of configuration — take it step by step.
+                </aside>
+            </section>
+
+            <!-- STEP 5b: Network -->
+            <section>
+                <h2>&#128200; Step 5b: Network Configuration</h2>
+                <p>On the <strong>Choose instance launch options</strong> page:</p>
+                <ol>
+                    <li class="fragment">VPC: Select <strong>employee-directory-vpc</strong></li>
+                    <li class="fragment">Availability Zones and subnets: Select <strong>BOTH public subnets</strong></li>
+                    <li class="fragment">Click <strong>Next</strong></li>
+                </ol>
+                <div class="highlight-box fragment">
+                    <strong>&#128161; Multi-AZ Deployment:</strong> By selecting subnets in two different Availability Zones,
+                    Auto Scaling will distribute instances evenly across both AZs. If one AZ experiences issues,
+                    the other AZ continues serving traffic.
+                </div>
+                <aside class="notes">
+                    This is the same multi-AZ pattern used by the ALB. The ASG will try to balance instances
+                    evenly across the selected subnets. This is the foundation of high availability on AWS.
+                </aside>
+            </section>
+
+            <!-- STEP 5c: Load Balancing Integration -->
+            <section>
+                <h2>&#128200; Step 5c: Attach Load Balancer</h2>
+                <p>On the <strong>Configure advanced options</strong> page:</p>
+                <ol>
+                    <li class="fragment">Load balancing: Select <strong>&#8220;Attach to an existing load balancer&#8221;</strong></li>
+                    <li class="fragment">Choose <strong>&#8220;Choose from your load balancer target groups&#8221;</strong></li>
+                    <li class="fragment">Select: <strong>employee-directory-tg</strong></li>
+                </ol>
+                <div class="fragment">
+                    <h4>Health Checks:</h4>
+                    <table>
+                        <tr><th>Setting</th><th>Value</th></tr>
+                        <tr><td>Health check type</td><td>&#9745; <strong>Turn on Elastic Load Balancing health checks</strong></td></tr>
+                        <tr><td>Health check grace period</td><td><strong>300 seconds</strong></td></tr>
+                    </table>
+                </div>
+                <ol start="4">
+                    <li class="fragment">Click <strong>Next</strong></li>
+                </ol>
+                <aside class="notes">
+                    Enabling ELB health checks means the ASG will use the ALB's health check results in addition
+                    to EC2 status checks. The 300-second grace period gives new instances time to boot and start
+                    the application before health checks begin.
+                </aside>
+            </section>
+
+            <!-- STEP 5c: Health Check Explanation -->
+            <section>
+                <h2>&#128200; Understanding Health Checks</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>EC2 Health Checks</h4>
+                        <ul>
+                            <li>Default for all ASGs</li>
+                            <li>Checks if the instance is <strong>running</strong></li>
+                            <li>Detects hardware/hypervisor failures</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>ELB Health Checks</h4>
+                        <ul>
+                            <li>Enabled when attached to a load balancer</li>
+                            <li>Checks if the <strong>application</strong> responds</li>
+                            <li>Detects app crashes, port not listening</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="key-point fragment">
+                    <strong>Grace Period (300s):</strong> New instances get 5 minutes to boot and start the Flask
+                    application before health checks begin. Without this, instances could be terminated before
+                    they finish initializing.
+                </div>
+                <aside class="notes">
+                    The combination of EC2 and ELB health checks gives comprehensive coverage. EC2 checks
+                    detect infrastructure issues, while ELB checks detect application-level problems.
+                </aside>
+            </section>
+
+            <!-- STEP 5d: Group Size -->
+            <section>
+                <h2>&#128200; Step 5d: Configure Group Size and Scaling</h2>
+                <p>On the <strong>Configure group size and scaling</strong> page:</p>
+                <h4>Group Size:</h4>
+                <table>
+                    <tr><th>Setting</th><th>Value</th></tr>
+                    <tr class="fragment"><td>Desired capacity</td><td><strong>2</strong></td></tr>
+                    <tr class="fragment"><td>Minimum capacity</td><td><strong>2</strong></td></tr>
+                    <tr class="fragment"><td>Maximum capacity</td><td><strong>4</strong></td></tr>
+                </table>
+                <div class="highlight-box fragment">
+                    <strong>What these mean:</strong>
+                    <ul>
+                        <li><strong>Desired:</strong> How many instances the ASG tries to maintain right now</li>
+                        <li><strong>Minimum:</strong> The ASG will never scale below this number</li>
+                        <li><strong>Maximum:</strong> The ASG will never scale above this number</li>
+                    </ul>
+                </div>
+                <aside class="notes">
+                    With min=2, we always have at least 2 instances for redundancy. With max=4, we can handle
+                    traffic spikes by doubling capacity. The desired starts at 2.
+                </aside>
+            </section>
+
+            <!-- STEP 5e: Scaling Policy -->
+            <section>
+                <h2>&#128200; Step 5e: Scaling Policies</h2>
+                <p>Still on the same page, configure the scaling policy:</p>
+                <ol>
+                    <li class="fragment">Select <strong>&#8220;Target tracking scaling policy&#8221;</strong></li>
+                </ol>
+                <div class="fragment">
+                    <table>
+                        <tr><th>Setting</th><th>Value</th></tr>
+                        <tr><td>Scaling policy name</td><td><em>Target Tracking Policy</em></td></tr>
+                        <tr><td>Metric type</td><td><strong>Average CPU utilization</strong></td></tr>
+                        <tr><td>Target value</td><td><strong>60</strong></td></tr>
+                    </table>
+                </div>
+                <div class="concept-box fragment">
+                    <h4>&#128161; How Target Tracking Works</h4>
+                    <p>Auto Scaling automatically adjusts the number of instances to keep average CPU
+                    utilization at <strong>60%</strong>. If CPU exceeds 60%, it scales out (adds instances).
+                    If CPU drops well below 60%, it scales in (removes instances).</p>
+                </div>
+                <ol start="2">
+                    <li class="fragment">Click <strong>Next</strong> through the remaining pages (notifications, tags)</li>
+                    <li class="fragment">Review the configuration and click <strong>&#8220;Create Auto Scaling group&#8221;</strong></li>
+                </ol>
+                <aside class="notes">
+                    Target tracking is the simplest and most effective scaling policy. AWS manages the CloudWatch
+                    alarms and scaling actions automatically. 60% CPU is a good target — it leaves headroom for
+                    traffic spikes while keeping utilization reasonable.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- STEP 6: VERIFY AUTO SCALING — SECTION DIVIDER               -->
+            <!-- ============================================================ -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
+                <h2>Step 6</h2>
+                <h3>Verify Auto Scaling</h3>
+                <aside class="notes">
+                    Now we verify that Auto Scaling has launched the desired number of instances and that
+                    the load balancer is distributing traffic to them.
+                </aside>
+            </section>
+
+            <!-- STEP 6: Verify -->
+            <section>
+                <h2>&#9989; Step 6: Verify Auto Scaling</h2>
+                <ol>
+                    <li class="fragment">Wait <strong>2&#8211;3 minutes</strong> for instances to launch</li>
+                    <li class="fragment">Navigate to <strong>EC2 &gt; Instances</strong>
+                        <br>&#8594; You should see <strong>2 new instances</strong> launching (plus your original instance)</li>
+                    <li class="fragment">Navigate to <strong>EC2 &gt; Target Groups &gt; employee-directory-tg</strong>
+                        <br>&#8594; Check the <strong>Targets</strong> tab — both new instances should become <strong>healthy</strong></li>
+                    <li class="fragment">Open <code>http://&lt;ALB_DNS_NAME&gt;</code> in your browser</li>
+                    <li class="fragment">Refresh the page several times — the app works regardless of which instance handles the request</li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Checkpoint:</strong> Two new instances are running, both are healthy in the target group,
+                    and the application loads consistently through the ALB.
+                </div>
+                <aside class="notes">
+                    The original instance from Lab 5 may also still be running. It was registered manually in the
+                    target group. Students now have 3 instances total (1 manual + 2 from ASG). The ASG manages only the 2 it launched.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- STEP 7: TEST HIGH AVAILABILITY — SECTION DIVIDER            -->
+            <!-- ============================================================ -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
+                <h2>Step 7</h2>
+                <h3>Test High Availability (Self-Healing)</h3>
+                <aside class="notes">
+                    This is the most exciting part of the lab — students will intentionally break something
+                    and watch the infrastructure heal itself automatically.
+                </aside>
+            </section>
+
+            <!-- STEP 7: Terminate and Observe -->
+            <section>
+                <h2>&#128165; Step 7a: Terminate an Instance</h2>
+                <ol>
+                    <li class="fragment">Go to <strong>EC2 &gt; Instances</strong></li>
+                    <li class="fragment">Identify one of the instances launched by the <strong>Auto Scaling group</strong>
+                        <br><em>(check the &#8220;Auto Scaling group&#8221; column or instance tags)</em></li>
+                    <li class="fragment">Select the instance &#8594; <strong>Instance state &gt; Terminate instance</strong></li>
+                    <li class="fragment">Confirm the termination</li>
+                </ol>
+                <div class="highlight-box warning fragment">
+                    <strong>&#128064; Now observe what happens:</strong> Keep the instances page open and watch closely over
+                    the next 1&#8211;2 minutes.
+                </div>
+                <aside class="notes">
+                    Tell students to watch carefully. This demonstrates the self-healing nature of Auto Scaling.
+                    The terminated instance will be replaced automatically.
+                </aside>
+            </section>
+
+            <!-- STEP 7b: Observe Self-Healing -->
+            <section>
+                <h2>&#128165; Step 7b: Observe Self-Healing</h2>
+                <p>After terminating the instance, watch for these events:</p>
+                <ol>
+                    <li class="fragment">The ALB <strong>immediately stops</strong> sending traffic to the terminated instance</li>
+                    <li class="fragment">The Auto Scaling group <strong>detects</strong> that the instance count has dropped below desired capacity</li>
+                    <li class="fragment">A <strong>new instance</strong> is automatically launched to replace the terminated one</li>
+                    <li class="fragment">The new instance passes health checks and the ALB begins routing traffic to it</li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Checkpoint:</strong> After a few minutes, you should see 2 healthy instances again in the target group.
+                    The application continued working through the ALB during the entire process.
+                </div>
+                <div class="key-point fragment">
+                    <strong>This is self-healing!</strong> No manual intervention was required. Auto Scaling
+                    maintained the desired capacity automatically.
+                </div>
+                <aside class="notes">
+                    Emphasize that during this entire process, the application remained available to end users.
+                    The ALB routed all traffic to the remaining healthy instance while the replacement launched.
+                    This is the power of combining ALB with Auto Scaling.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- STEP 8: STRESS TEST — SECTION DIVIDER                       -->
+            <!-- ============================================================ -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
+                <h2>Step 8 (Optional)</h2>
+                <h3>Test Scaling with a Stress Test</h3>
+                <aside class="notes">
+                    This step is optional but highly recommended if time permits. It demonstrates dynamic
+                    scaling based on CPU utilization — the target tracking policy in action.
+                </aside>
+            </section>
+
+            <!-- STEP 8: Stress Test -->
+            <section>
+                <h2>&#128293; Step 8: Stress Test (Optional)</h2>
+                <ol>
+                    <li class="fragment">SSH into one of the Auto Scaling instances:
+                        <pre><code class="bash">ssh -i employee-dir-key.pem ec2-user@&lt;INSTANCE_PUBLIC_IP&gt;</code></pre>
+                    </li>
+                    <li class="fragment">Run the stress tool to spike CPU utilization:
+                        <pre><code class="bash">stress --cpu 2 --timeout 300</code></pre>
+                    </li>
+                    <li class="fragment">This runs for <strong>5 minutes</strong>, consuming CPU on 2 cores</li>
+                </ol>
+                <div class="highlight-box fragment">
+                    <strong>What to watch:</strong>
+                    <ul>
+                        <li>CloudWatch CPU metric increases above 60%</li>
+                        <li>After a few minutes, Auto Scaling launches <strong>additional instances</strong> (up to max of 4)</li>
+                        <li>When the stress test ends, CPU drops and instances eventually <strong>scale back in</strong></li>
+                    </ul>
+                </div>
+                <aside class="notes">
+                    The stress tool was installed by the user data script. The target tracking policy will detect
+                    CPU above 60% and scale out. Scale-in happens more slowly (typically 5-15 minutes after load drops)
+                    to avoid flapping.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- STEP 9: CLOUDWATCH MONITORING — SECTION DIVIDER             -->
+            <!-- ============================================================ -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
+                <h2>Step 9</h2>
+                <h3>Monitor with CloudWatch</h3>
+                <aside class="notes">
+                    CloudWatch provides visibility into the health and performance of our entire architecture.
+                    Students will explore the metrics generated by ALB and Auto Scaling.
+                </aside>
+            </section>
+
+            <!-- STEP 9a: ALB Metrics -->
+            <section>
+                <h2>&#128202; Step 9a: Explore ALB Metrics</h2>
+                <ol>
+                    <li class="fragment">Navigate to <strong>CloudWatch</strong> in the AWS Console</li>
+                    <li class="fragment">Go to <strong>Metrics &gt; All metrics</strong></li>
+                    <li class="fragment">Select <strong>ApplicationELB</strong> namespace</li>
+                    <li class="fragment">Explore the following key metrics:</li>
+                </ol>
+                <div class="fragment">
+                    <table>
+                        <tr><th>Metric</th><th>What It Tells You</th></tr>
+                        <tr><td><strong>RequestCount</strong></td><td>Total number of requests processed</td></tr>
+                        <tr><td><strong>HealthyHostCount</strong></td><td>Number of healthy targets behind the ALB</td></tr>
+                        <tr><td><strong>TargetResponseTime</strong></td><td>Average time for targets to respond</td></tr>
+                    </table>
+                </div>
+                <aside class="notes">
+                    Walk students through the CloudWatch metrics console. Show them how to graph metrics
+                    over time and change the time period. HealthyHostCount should show the self-healing event
+                    if they terminated an instance earlier.
+                </aside>
+            </section>
+
+            <!-- STEP 9b: ASG Metrics -->
+            <section>
+                <h2>&#128202; Step 9b: Auto Scaling Metrics</h2>
+                <ol>
+                    <li class="fragment">Still in CloudWatch, select the <strong>Auto Scaling</strong> namespace</li>
+                    <li class="fragment">Explore these metrics:</li>
+                </ol>
+                <div class="fragment">
+                    <table>
+                        <tr><th>Metric</th><th>What It Tells You</th></tr>
+                        <tr><td><strong>GroupInServiceInstances</strong></td><td>Current number of running instances</td></tr>
+                        <tr><td><strong>GroupDesiredCapacity</strong></td><td>Target number the ASG is trying to maintain</td></tr>
+                    </table>
+                </div>
+                <aside class="notes">
+                    If students ran the stress test, the GroupDesiredCapacity metric will show the scaling event.
+                    These metrics are essential for understanding Auto Scaling behavior in production.
+                </aside>
+            </section>
+
+            <!-- STEP 9c: Create Dashboard -->
+            <section>
+                <h2>&#128202; Step 9c: Create a CloudWatch Dashboard</h2>
+                <ol>
+                    <li class="fragment">In CloudWatch, go to <strong>Dashboards</strong></li>
+                    <li class="fragment">Click <strong>&#8220;Create dashboard&#8221;</strong></li>
+                    <li class="fragment">Name: <code>employee-directory-dashboard</code></li>
+                    <li class="fragment">Add widgets for:</li>
+                </ol>
+                <ul>
+                    <li class="fragment"><strong>Line chart:</strong> ALB RequestCount over time</li>
+                    <li class="fragment"><strong>Number widget:</strong> HealthyHostCount (current value)</li>
+                    <li class="fragment"><strong>Line chart:</strong> GroupInServiceInstances over time</li>
+                    <li class="fragment"><strong>Line chart:</strong> Average CPU utilization across ASG instances</li>
+                </ul>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Checkpoint:</strong> Your dashboard displays real-time metrics for the ALB and Auto Scaling Group.
+                    This is the kind of operational visibility used in production environments.
+                </div>
+                <aside class="notes">
+                    Dashboards provide a single-pane-of-glass view for operations teams. In production, you would
+                    also add alarms for critical thresholds. This dashboard will be deleted during cleanup.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- STEP 10: CLEAN UP — SECTION DIVIDER                         -->
+            <!-- ============================================================ -->
+            <section data-background="linear-gradient(135deg, #c53030 0%, #9b2c2c 100%)" class="section-divider">
+                <h2>&#9888;&#65039; Step 10</h2>
+                <h3>Clean Up All Course Resources</h3>
+                <aside class="notes">
+                    This is the most critical section. Students MUST complete cleanup to avoid ongoing AWS charges.
+                    Walk through each step carefully. Some resources depend on others being deleted first.
+                </aside>
+            </section>
+
+            <!-- STEP 10: Clean Up Intro -->
+            <section>
+                <h2>&#128680; Step 10: Clean Up — Overview</h2>
+                <div class="highlight-box danger">
+                    <strong>&#9888;&#65039; Critical:</strong> You must delete all resources created during this course to avoid
+                    ongoing AWS charges. Resources like NAT Gateways and Elastic IPs incur costs even when idle.
+                    Follow the order below carefully — some resources must be deleted before others.
+                </div>
+                <div class="concept-box fragment">
+                    <h4>Deletion Order Matters!</h4>
+                    <p>Resources have dependencies. For example, you cannot delete a VPC until all instances,
+                    load balancers, and NAT gateways inside it are removed first.</p>
+                </div>
+                <aside class="notes">
+                    Stress the importance of cleanup. NAT Gateways cost about $0.045/hour and Elastic IPs cost
+                    when not attached. Walk through the order carefully.
+                </aside>
+            </section>
+
+            <!-- STEP 10a: Delete ASG and Launch Template -->
+            <section>
+                <h2>&#128465;&#65039; Step 10a: Delete Auto Scaling Group</h2>
+                <ol>
+                    <li class="fragment">Navigate to <strong>EC2 &gt; Auto Scaling Groups</strong></li>
+                    <li class="fragment">Select <strong>employee-directory-asg</strong></li>
+                    <li class="fragment">Click <strong>Delete</strong> &#8594; Confirm by typing <code>delete</code></li>
+                    <li class="fragment">Wait for all managed instances to terminate (this may take a few minutes)</li>
+                </ol>
+                <div class="highlight-box warning fragment">
+                    <strong>&#128161; Note:</strong> Deleting the ASG automatically terminates all instances it manages.
+                    Wait until they are fully terminated before proceeding.
+                </div>
+                <h4 class="fragment">Delete Launch Template:</h4>
+                <ol start="5">
+                    <li class="fragment">Navigate to <strong>EC2 &gt; Launch Templates</strong></li>
+                    <li class="fragment">Select <strong>employee-directory-lt</strong> &#8594; <strong>Actions &gt; Delete template</strong></li>
+                    <li class="fragment">Confirm by typing <code>Delete</code></li>
+                </ol>
+                <aside class="notes">
+                    The ASG must be deleted first because it will keep launching new instances to maintain
+                    desired capacity. Deleting instances without deleting the ASG is futile — it will replace them.
+                </aside>
+            </section>
+
+            <!-- STEP 10b: Delete ALB and Target Group -->
+            <section>
+                <h2>&#128465;&#65039; Step 10b: Delete Load Balancer and Target Group</h2>
+                <h4>Delete the Load Balancer:</h4>
+                <ol>
+                    <li class="fragment">Navigate to <strong>EC2 &gt; Load Balancers</strong></li>
+                    <li class="fragment">Select <strong>employee-directory-alb</strong></li>
+                    <li class="fragment">Click <strong>Actions &gt; Delete load balancer</strong></li>
+                    <li class="fragment">Type <code>confirm</code> and click <strong>Delete</strong></li>
+                </ol>
+                <h4 class="fragment">Delete the Target Group:</h4>
+                <ol start="5">
+                    <li class="fragment">Navigate to <strong>EC2 &gt; Target Groups</strong></li>
+                    <li class="fragment">Select <strong>employee-directory-tg</strong></li>
+                    <li class="fragment">Click <strong>Actions &gt; Delete</strong> &#8594; Confirm</li>
+                </ol>
+                <h4 class="fragment">Delete the ALB Security Group:</h4>
+                <ol start="8">
+                    <li class="fragment">Navigate to <strong>EC2 &gt; Security Groups</strong></li>
+                    <li class="fragment">Select <strong>employee-directory-alb-sg</strong> &#8594; <strong>Actions &gt; Delete security group</strong></li>
+                </ol>
+                <aside class="notes">
+                    The load balancer must be deleted before its security group. The target group must be deleted
+                    after the load balancer. Follow this order carefully.
+                </aside>
+            </section>
+
+            <!-- STEP 10c: Terminate Remaining Instances -->
+            <section>
+                <h2>&#128465;&#65039; Step 10c: Terminate Remaining Instances</h2>
+                <ol>
+                    <li class="fragment">Navigate to <strong>EC2 &gt; Instances</strong></li>
+                    <li class="fragment">Select <strong>any remaining running instances</strong>
+                        <br><em>(including the original employee-directory-app-v2)</em></li>
+                    <li class="fragment"><strong>Instance state &gt; Terminate instance</strong></li>
+                    <li class="fragment">Wait for all instances to show <strong>Terminated</strong> state</li>
+                </ol>
+                <div class="highlight-box warning fragment">
+                    <strong>&#128161; Tip:</strong> Filter by &#8220;Instance state = running&#8221; to quickly find any instances
+                    still active. Ensure nothing is left running.
+                </div>
+                <aside class="notes">
+                    Double-check for any instances that might have been missed. The ASG deletion should have
+                    handled its instances, but the original v2 instance needs manual termination.
+                </aside>
+            </section>
+
+            <!-- STEP 10d: Delete Networking Resources -->
+            <section>
+                <h2>&#128465;&#65039; Step 10d: Delete Networking Resources</h2>
+                <h4>Delete NAT Gateway:</h4>
+                <ol>
+                    <li class="fragment">Navigate to <strong>VPC &gt; NAT Gateways</strong></li>
+                    <li class="fragment">Select any NAT Gateway in the employee-directory-vpc</li>
+                    <li class="fragment">Click <strong>Actions &gt; Delete NAT gateway</strong> &#8594; Type <code>delete</code> and confirm</li>
+                    <li class="fragment"><strong>Wait</strong> for the NAT Gateway status to change to <strong>Deleted</strong> (1&#8211;2 minutes)</li>
+                </ol>
+                <h4 class="fragment">Release Elastic IPs:</h4>
+                <ol start="5">
+                    <li class="fragment">Navigate to <strong>VPC &gt; Elastic IPs</strong></li>
+                    <li class="fragment">Select any allocated Elastic IPs</li>
+                    <li class="fragment">Click <strong>Actions &gt; Release Elastic IP addresses</strong> &#8594; Confirm</li>
+                </ol>
+                <div class="highlight-box danger fragment">
+                    <strong>&#128176; Cost Alert:</strong> NAT Gateways cost ~$0.045/hour and unattached Elastic IPs
+                    incur charges. Always delete these when no longer needed.
+                </div>
+                <aside class="notes">
+                    The NAT Gateway must be fully deleted before the VPC can be removed. Elastic IPs must be
+                    released after the NAT Gateway is deleted. These are common sources of unexpected charges.
+                </aside>
+            </section>
+
+            <!-- STEP 10e: Delete VPC -->
+            <section>
+                <h2>&#128465;&#65039; Step 10e: Delete the VPC</h2>
+                <ol>
+                    <li class="fragment">Navigate to <strong>VPC &gt; Your VPCs</strong></li>
+                    <li class="fragment">Select <strong>employee-directory-vpc</strong></li>
+                    <li class="fragment">Click <strong>Actions &gt; Delete VPC</strong></li>
+                    <li class="fragment">This will also delete associated resources:
+                        <ul>
+                            <li>Subnets</li>
+                            <li>Route tables</li>
+                            <li>Internet Gateway</li>
+                            <li>Network ACLs</li>
+                            <li>Remaining security groups (except default)</li>
+                        </ul>
+                    </li>
+                    <li class="fragment">Type <code>delete</code> and confirm</li>
+                </ol>
+                <div class="highlight-box success fragment">
+                    <strong>&#9989; Checkpoint:</strong> The VPC and all its networking components are deleted.
+                </div>
+                <aside class="notes">
+                    The VPC delete operation cascades to subnets, route tables, and the internet gateway.
+                    If deletion fails, check for remaining ENIs, instances, or load balancers that still reference the VPC.
+                </aside>
+            </section>
+
+            <!-- STEP 10f: Delete S3 and DynamoDB -->
+            <section>
+                <h2>&#128465;&#65039; Step 10f: Delete S3 Bucket and DynamoDB Table</h2>
+                <h4>Delete S3 Bucket:</h4>
+                <ol>
+                    <li class="fragment">Navigate to <strong>S3</strong></li>
+                    <li class="fragment">Select your employee photo bucket</li>
+                    <li class="fragment">Click <strong>&#8220;Empty&#8221;</strong> &#8594; Type <code>permanently delete</code> &#8594; Confirm</li>
+                    <li class="fragment">Then click <strong>&#8220;Delete&#8221;</strong> &#8594; Type the bucket name &#8594; Confirm</li>
+                </ol>
+                <div class="highlight-box warning fragment">
+                    <strong>&#9888;&#65039; Important:</strong> You must empty the bucket before deleting it.
+                    S3 will not allow deletion of a bucket that still contains objects.
+                </div>
+                <h4 class="fragment">Delete DynamoDB Table:</h4>
+                <ol start="5">
+                    <li class="fragment">Navigate to <strong>DynamoDB &gt; Tables</strong></li>
+                    <li class="fragment">Select the <strong>Employees</strong> table</li>
+                    <li class="fragment">Click <strong>Delete</strong> &#8594; Uncheck &#8220;Create a backup&#8221; &#8594; Type <code>confirm</code> &#8594; Delete</li>
+                </ol>
+                <aside class="notes">
+                    The S3 bucket must be emptied first. DynamoDB deletion is straightforward but make sure
+                    students uncheck the backup option since this is a lab environment.
+                </aside>
+            </section>
+
+            <!-- STEP 10g: Delete CloudWatch Dashboard -->
+            <section>
+                <h2>&#128465;&#65039; Step 10g: Delete Remaining Resources</h2>
+                <h4>Delete CloudWatch Dashboard:</h4>
+                <ol>
+                    <li class="fragment">Navigate to <strong>CloudWatch &gt; Dashboards</strong></li>
+                    <li class="fragment">Select <strong>employee-directory-dashboard</strong> &#8594; <strong>Delete</strong></li>
+                </ol>
+                <h4 class="fragment">Verify Nothing is Left:</h4>
+                <div class="fragment">
+                    <table>
+                        <tr><th>Service</th><th>Check</th></tr>
+                        <tr><td>EC2 Instances</td><td>No running instances</td></tr>
+                        <tr><td>Load Balancers</td><td>None listed</td></tr>
+                        <tr><td>Auto Scaling Groups</td><td>None listed</td></tr>
+                        <tr><td>Launch Templates</td><td>None listed</td></tr>
+                        <tr><td>VPCs</td><td>Only the default VPC remains</td></tr>
+                        <tr><td>NAT Gateways</td><td>None listed</td></tr>
+                        <tr><td>Elastic IPs</td><td>None allocated</td></tr>
+                        <tr><td>S3 Buckets</td><td>No employee photo buckets</td></tr>
+                        <tr><td>DynamoDB Tables</td><td>No Employees table</td></tr>
+                    </table>
+                </div>
+                <aside class="notes">
+                    Have students go through each service one final time to verify everything is cleaned up.
+                    This is the most important step to avoid unexpected charges.
+                </aside>
+            </section>
+
+            <!-- STEP 10: Final Checklist -->
+            <section>
+                <h2>&#128203; Clean Up Checklist</h2>
+                <div class="highlight-box danger">
+                    <strong>Complete Deletion Checklist — Verify each item:</strong>
+                </div>
+                <div class="two-columns">
+                    <div>
+                        <ul>
+                            <li class="fragment">&#9744; Auto Scaling Group deleted</li>
+                            <li class="fragment">&#9744; Launch Template deleted</li>
+                            <li class="fragment">&#9744; Application Load Balancer deleted</li>
+                            <li class="fragment">&#9744; Target Group deleted</li>
+                            <li class="fragment">&#9744; ALB Security Group deleted</li>
+                            <li class="fragment">&#9744; All EC2 Instances terminated</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul>
+                            <li class="fragment">&#9744; NAT Gateway deleted</li>
+                            <li class="fragment">&#9744; Elastic IPs released</li>
+                            <li class="fragment">&#9744; VPC deleted (with subnets, routes, IGW)</li>
+                            <li class="fragment">&#9744; S3 Bucket emptied and deleted</li>
+                            <li class="fragment">&#9744; DynamoDB Table deleted</li>
+                            <li class="fragment">&#9744; CloudWatch Dashboard deleted</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">
+                    Read through each item and have students confirm they completed each deletion.
+                    This checklist covers all resources created across all 6 labs in the course.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- LAB SUMMARY                                                  -->
+            <!-- ============================================================ -->
+            <section>
+                <h2>&#127942; Lab 6 Summary</h2>
+                <div class="concept-box">
+                    <h4>What You Accomplished</h4>
+                    <ul>
+                        <li class="fragment"><strong>Application Load Balancer:</strong> Distributed traffic across multiple instances and AZs</li>
+                        <li class="fragment"><strong>Security Group Chaining:</strong> Restricted app access to ALB-only traffic</li>
+                        <li class="fragment"><strong>Launch Template:</strong> Created a reusable, versioned instance configuration</li>
+                        <li class="fragment"><strong>Auto Scaling Group:</strong> Maintained desired capacity with automatic scaling</li>
+                        <li class="fragment"><strong>Self-Healing:</strong> Observed automatic instance replacement after termination</li>
+                        <li class="fragment"><strong>CloudWatch:</strong> Monitored ALB and ASG metrics with a custom dashboard</li>
+                    </ul>
+                </div>
+                <aside class="notes">
+                    Congratulate students on completing the capstone lab. They have built a production-style
+                    architecture that is highly available, scalable, and self-healing.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- ARCHITECTURE RECAP                                           -->
+            <!-- ============================================================ -->
+            <section>
+                <h2>&#127959;&#65039; Final Architecture</h2>
+                <div class="concept-box">
+                    <h4>What You Built Across All 6 Labs</h4>
+                </div>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>&#128737;&#65039; Security</h4>
+                        <ul>
+                            <li>IAM roles and policies</li>
+                            <li>Security group chaining</li>
+                            <li>Least-privilege access</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>&#128421;&#65039; Compute</h4>
+                        <ul>
+                            <li>EC2 instances with user data</li>
+                            <li>Launch templates</li>
+                            <li>Auto Scaling Groups</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="two-columns fragment">
+                    <div class="card">
+                        <h4>&#128230; Storage &#38; Database</h4>
+                        <ul>
+                            <li>S3 for photos</li>
+                            <li>DynamoDB for data</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>&#9889; High Availability</h4>
+                        <ul>
+                            <li>Multi-AZ deployment</li>
+                            <li>Application Load Balancer</li>
+                            <li>Self-healing infrastructure</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">
+                    This is a great moment to recap the entire course journey. From IAM in Lab 1 through
+                    high availability in Lab 6, students have built a complete, production-ready architecture.
+                </aside>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- COURSE COMPLETE                                              -->
+            <!-- ============================================================ -->
+            <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="questions-slide">
+                <h2>&#127881; Course Complete!</h2>
+                <p>You have built a highly available, scalable, and self-healing application on AWS.</p>
+                <p style="font-size: 0.9em; margin-top: 30px;">Questions? Feedback?</p>
+                <div class="module-progress" style="margin-top: 40px;">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                </div>
+                <aside class="notes">
+                    Congratulate students on completing all 6 labs. Open the floor for questions.
+                    Remind them to double-check their cleanup to avoid charges. Suggest next steps:
+                    AWS Solutions Architect Associate certification, hands-on practice, AWS Free Tier exploration.
+                </aside>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/notes/notes.js"></script>
+    <script>
+        Reveal.initialize({ hash: true, slideNumber: 'c/t', showSlideNumber: 'all', transition: 'slide', plugins: [RevealHighlight, RevealNotes] });
+    </script>
+</body>
+</html>
