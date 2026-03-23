@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Summary | AWS Technical Essentials</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/white.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/highlight/monokai.css">
+    <style>
+        :root { --heading-color: #1a365d; --accent-color: #2b6cb0; --success-color: #2f855a; --warning-color: #c05621; --danger-color: #c53030; --text-color: #2d3748; }
+        .reveal { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--text-color); font-size: 28px; }
+        .reveal .slides section { text-align: left; padding: 20px 40px; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 { color: var(--heading-color); font-weight: 700; text-transform: none; }
+        .reveal h1 { font-size: 2.2em; } .reveal h2 { font-size: 1.6em; } .reveal h3 { font-size: 1.3em; }
+        .title-slide { text-align: center !important; }
+        .title-slide h1 { color: #ffffff; font-size: 2.4em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-bottom: 0.3em; }
+        .title-slide h2 { color: #e2e8f0; font-size: 1.4em; font-weight: 400; }
+        .section-divider { text-align: center !important; }
+        .section-divider h2 { color: #ffffff; font-size: 2.0em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .section-divider h3 { color: #e2e8f0; font-size: 1.2em; font-weight: 400; }
+        .highlight-box { background: #ebf8ff; border-left: 4px solid var(--accent-color); padding: 20px 25px; border-radius: 0 8px 8px 0; margin: 15px 0; text-align: left; }
+        .highlight-box.success { background: #f0fff4; border-left-color: var(--success-color); }
+        .highlight-box.warning { background: #fffaf0; border-left-color: var(--warning-color); }
+        .highlight-box.danger { background: #fff5f5; border-left-color: var(--danger-color); }
+        .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; text-align: left; }
+        .three-columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: start; text-align: left; }
+        .card { background: #ffffff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; text-align: left; }
+        .card h3, .card h4 { margin-top: 0; color: var(--accent-color); }
+        .concept-box { background: linear-gradient(135deg, #ebf8ff 0%, #e2e8f0 100%); border-radius: 12px; padding: 25px; margin: 15px 0; border: 1px solid #bee3f8; text-align: left; }
+        .concept-box h3, .concept-box h4 { color: var(--heading-color); margin-top: 0; }
+        .key-point { background: #ebf8ff; border: 2px solid var(--accent-color); border-radius: 12px; padding: 20px 25px; margin: 15px 0; text-align: left; font-size: 0.95em; }
+        .key-point strong { color: var(--accent-color); }
+        .lab-callout h2 { color: #ffffff; font-size: 1.8em; margin-bottom: 0.3em; }
+        .lab-callout h3 { color: #90cdf4; font-size: 1.3em; font-weight: 400; }
+        .lab-callout p { color: #e2e8f0; font-size: 1.0em; }
+        .lab-callout ul { color: #e2e8f0; text-align: left; display: inline-block; }
+        .lab-callout .highlight-box { background: rgba(255,255,255,0.1); border-left-color: #90cdf4; color: #e2e8f0; }
+        .questions-slide h2 { color: #ffffff; font-size: 2.2em; }
+        .questions-slide p { color: #e2e8f0; font-size: 1.2em; }
+        .module-progress { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
+        .module-progress .step { width: 30px; height: 6px; border-radius: 3px; background: #cbd5e0; }
+        .module-progress .step.active { background: var(--accent-color); }
+        .module-progress .step.completed { background: var(--success-color); }
+        .reveal table { border-collapse: collapse; width: 100%; font-size: 0.75em; margin: 15px 0; }
+        .reveal table th { background: var(--heading-color); color: #ffffff; padding: 12px 16px; text-align: left; font-weight: 600; }
+        .reveal table td { padding: 10px 16px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+        .reveal table tr:nth-child(even) { background: #f7fafc; }
+        .reveal ul, .reveal ol { text-align: left; display: block; margin-left: 1em; }
+        .reveal li { margin-bottom: 0.5em; line-height: 1.5; font-size: 0.9em; }
+        .reveal p { line-height: 1.6; }
+        .reveal pre code { font-size: 0.7em; line-height: 1.4; max-height: 500px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Title Slide -->
+            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #2f855a 100%)" class="title-slide">
+                <h1>&#128640; Course Summary</h1>
+                <h2>Module 7 &mdash; AWS Technical Essentials</h2>
+                <p style="color: #a0aec0; font-size: 0.8em; margin-top: 2em;">Wrapping Up Your AWS Journey</p>
+                <div class="module-progress">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step active"></div>
+                </div>
+                <aside class="notes">Final module of the course. Recap everything we covered today and provide guidance for continuing the AWS learning journey.</aside>
+            </section>
+
+            <!-- Section Divider: Course Recap -->
+            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="section-divider">
+                <h2>&#128218; Course Recap</h2>
+                <h3>What We Covered Today</h3>
+                <aside class="notes">Let's walk through each module and recall the key concepts from today.</aside>
+            </section>
+
+            <!-- Module 1 Recap -->
+            <section>
+                <h2>&#9729;&#65039; Module 1: AWS Cloud Fundamentals</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>Cloud Concepts</h4>
+                        <ul>
+                            <li class="fragment fade-up">What is cloud computing and why AWS</li>
+                            <li class="fragment fade-up">AWS Global Infrastructure &mdash; Regions, Availability Zones, Edge Locations</li>
+                            <li class="fragment fade-up">Interacting with AWS: Console, CLI, SDKs</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Security Foundations</h4>
+                        <ul>
+                            <li class="fragment fade-up">AWS Identity and Access Management (IAM)</li>
+                            <li class="fragment fade-up">Users, groups, roles, and policies</li>
+                            <li class="fragment fade-up">Shared Responsibility Model &mdash; security <em>of</em> vs. <em>in</em> the cloud</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">Module 1 established the foundation. We learned about the global infrastructure that makes AWS resilient and the IAM service that secures everything we build.</aside>
+            </section>
+
+            <!-- Module 2 Recap -->
+            <section>
+                <h2>&#128187; Module 2: Compute Services</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>Compute Options</h4>
+                        <ul>
+                            <li class="fragment fade-up"><strong>Amazon EC2</strong> &mdash; Virtual servers with full control</li>
+                            <li class="fragment fade-up"><strong>Containers</strong> &mdash; ECS and EKS for containerized workloads</li>
+                            <li class="fragment fade-up"><strong>AWS Lambda</strong> &mdash; Serverless, event-driven functions</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Key Decisions</h4>
+                        <ul>
+                            <li class="fragment fade-up">Instance types and sizing</li>
+                            <li class="fragment fade-up">AMIs and user data for bootstrapping</li>
+                            <li class="fragment fade-up">Choosing the right compute model for your workload</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">Module 2 covered the full spectrum of compute, from traditional VMs to fully serverless. The right choice depends on your workload requirements.</aside>
+            </section>
+
+            <!-- Module 3 Recap -->
+            <section>
+                <h2>&#128274; Module 3: Networking</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>VPC Architecture</h4>
+                        <ul>
+                            <li class="fragment fade-up">Amazon VPC &mdash; your isolated network in the cloud</li>
+                            <li class="fragment fade-up">Public and private subnets across AZs</li>
+                            <li class="fragment fade-up">Internet Gateways and route tables</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Network Security</h4>
+                        <ul>
+                            <li class="fragment fade-up"><strong>Security Groups</strong> &mdash; stateful, instance-level firewall</li>
+                            <li class="fragment fade-up"><strong>NACLs</strong> &mdash; stateless, subnet-level firewall</li>
+                            <li class="fragment fade-up">Defense in depth with layered security</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">Module 3 taught us how to build secure, isolated networks. Security groups and NACLs work together for defense in depth.</aside>
+            </section>
+
+            <!-- Module 4 Recap -->
+            <section>
+                <h2>&#128451; Module 4: Storage</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>Storage Services</h4>
+                        <ul>
+                            <li class="fragment fade-up"><strong>Amazon EBS</strong> &mdash; block storage for EC2 instances</li>
+                            <li class="fragment fade-up"><strong>Amazon S3</strong> &mdash; object storage with 11 9s durability</li>
+                            <li class="fragment fade-up">S3 storage classes for cost optimization</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Choosing Storage</h4>
+                        <ul>
+                            <li class="fragment fade-up">Block vs. object vs. file storage</li>
+                            <li class="fragment fade-up">Access patterns and performance needs</li>
+                            <li class="fragment fade-up">Lifecycle policies and intelligent tiering</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">Module 4 covered the two primary storage services. EBS for block-level attached storage and S3 for scalable object storage with various storage classes.</aside>
+            </section>
+
+            <!-- Module 5 Recap -->
+            <section>
+                <h2>&#128450; Module 5: Databases</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>Database Services</h4>
+                        <ul>
+                            <li class="fragment fade-up"><strong>Amazon RDS</strong> &mdash; managed relational databases</li>
+                            <li class="fragment fade-up"><strong>Amazon Aurora</strong> &mdash; cloud-native relational DB</li>
+                            <li class="fragment fade-up"><strong>Amazon DynamoDB</strong> &mdash; serverless NoSQL</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Purpose-Built Approach</h4>
+                        <ul>
+                            <li class="fragment fade-up">Choose the right database for the job</li>
+                            <li class="fragment fade-up">Relational vs. non-relational use cases</li>
+                            <li class="fragment fade-up">Managed services reduce operational burden</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">Module 5 introduced the purpose-built database philosophy. AWS provides specialized databases so you can choose the best fit rather than forcing everything into one engine.</aside>
+            </section>
+
+            <!-- Module 6 Recap -->
+            <section>
+                <h2>&#128200; Module 6: Monitoring, Optimization &#38; Serverless</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>Monitoring &#38; Scaling</h4>
+                        <ul>
+                            <li class="fragment fade-up"><strong>CloudWatch</strong> &mdash; metrics, alarms, logs, dashboards</li>
+                            <li class="fragment fade-up"><strong>ELB</strong> &mdash; distribute traffic across targets</li>
+                            <li class="fragment fade-up"><strong>Auto Scaling</strong> &mdash; dynamic capacity management</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Serverless Architecture</h4>
+                        <ul>
+                            <li class="fragment fade-up">Lambda + API Gateway + DynamoDB</li>
+                            <li class="fragment fade-up">Event-driven, pay-per-use model</li>
+                            <li class="fragment fade-up">Reduced operational overhead</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">Module 6 brought it all together with monitoring, high availability patterns, and an alternative serverless architecture for our application.</aside>
+            </section>
+
+            <!-- Section Divider: Application Journey -->
+            <section data-background="linear-gradient(135deg, #2f855a 0%, #2b6cb0 100%)" class="section-divider">
+                <h2>&#128736;&#65039; Employee Directory App Journey</h2>
+                <h3>How Our Application Evolved</h3>
+                <aside class="notes">Let's trace how our Employee Directory application grew throughout the day, incorporating each new service we learned about.</aside>
+            </section>
+
+            <!-- Application Evolution -->
+            <section>
+                <h2>&#128736;&#65039; Application Evolution</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Module</th>
+                            <th>What We Added</th>
+                            <th>AWS Services</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="fragment fade-up">
+                            <td><strong>1 &mdash; Foundations</strong></td>
+                            <td>Identity and access setup</td>
+                            <td>IAM roles, policies</td>
+                        </tr>
+                        <tr class="fragment fade-up">
+                            <td><strong>2 &mdash; Compute</strong></td>
+                            <td>Deployed application on a server</td>
+                            <td>Amazon EC2</td>
+                        </tr>
+                        <tr class="fragment fade-up">
+                            <td><strong>3 &mdash; Networking</strong></td>
+                            <td>Isolated network with security controls</td>
+                            <td>VPC, subnets, security groups</td>
+                        </tr>
+                        <tr class="fragment fade-up">
+                            <td><strong>4 &mdash; Storage</strong></td>
+                            <td>Photo storage for employee profiles</td>
+                            <td>Amazon S3</td>
+                        </tr>
+                        <tr class="fragment fade-up">
+                            <td><strong>5 &mdash; Databases</strong></td>
+                            <td>Scalable data backend</td>
+                            <td>Amazon DynamoDB</td>
+                        </tr>
+                        <tr class="fragment fade-up">
+                            <td><strong>6 &mdash; Optimization</strong></td>
+                            <td>HA, monitoring, serverless alternative</td>
+                            <td>ELB, Auto Scaling, CloudWatch, Lambda</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <aside class="notes">Each module added a new layer to the application. By the end, we had a fully architected, highly available, and monitored application. We also explored what it looks like as a serverless architecture.</aside>
+            </section>
+
+            <!-- Application Architecture Final State -->
+            <section>
+                <h2>&#127959;&#65039; From Simple to Production-Ready</h2>
+                <div class="two-columns">
+                    <div class="concept-box">
+                        <h4>&#9654;&#65039; Where We Started</h4>
+                        <ul>
+                            <li class="fragment fade-up">Single EC2 instance</li>
+                            <li class="fragment fade-up">No load balancing</li>
+                            <li class="fragment fade-up">Local storage</li>
+                            <li class="fragment fade-up">No monitoring</li>
+                        </ul>
+                    </div>
+                    <div class="concept-box">
+                        <h4>&#9989; Where We Ended</h4>
+                        <ul>
+                            <li class="fragment fade-up">Multi-AZ with Auto Scaling</li>
+                            <li class="fragment fade-up">ELB distributing traffic</li>
+                            <li class="fragment fade-up">S3 + DynamoDB for data</li>
+                            <li class="fragment fade-up">CloudWatch monitoring &#38; alarms</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="key-point fragment fade-up" style="margin-top: 20px;">
+                    <strong>Key Insight:</strong> Production-ready architectures are built incrementally &mdash; one service layer at a time.
+                </div>
+                <aside class="notes">The transformation from a single server to a resilient, scalable architecture demonstrates how AWS services work together. Each layer added reliability, security, or performance.</aside>
+            </section>
+
+            <!-- Section Divider: Key Takeaways -->
+            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="section-divider">
+                <h2>&#127919; Key Takeaways</h2>
+                <h3>Principles to Remember</h3>
+                <aside class="notes">These are the overarching principles that should guide every decision you make on AWS.</aside>
+            </section>
+
+            <!-- Well-Architected Framework -->
+            <section>
+                <h2>&#127959;&#65039; AWS Well-Architected Framework</h2>
+                <div class="three-columns">
+                    <div class="card">
+                        <h4>&#128736;&#65039; Operational Excellence</h4>
+                        <p style="font-size: 0.8em;">Run and monitor systems to deliver business value and continuously improve</p>
+                    </div>
+                    <div class="card">
+                        <h4>&#128274; Security</h4>
+                        <p style="font-size: 0.8em;">Protect information, systems, and assets through risk assessment and mitigation</p>
+                    </div>
+                    <div class="card">
+                        <h4>&#9889; Reliability</h4>
+                        <p style="font-size: 0.8em;">Recover from failures and meet demand with minimal disruption</p>
+                    </div>
+                </div>
+                <div class="three-columns" style="margin-top: 20px;">
+                    <div class="card">
+                        <h4>&#128640; Performance Efficiency</h4>
+                        <p style="font-size: 0.8em;">Use resources efficiently as demand changes and technologies evolve</p>
+                    </div>
+                    <div class="card">
+                        <h4>&#128176; Cost Optimization</h4>
+                        <p style="font-size: 0.8em;">Avoid unnecessary costs and understand spending to run at the lowest price point</p>
+                    </div>
+                    <div class="card">
+                        <h4>&#127793; Sustainability</h4>
+                        <p style="font-size: 0.8em;">Minimize environmental impact of running cloud workloads</p>
+                    </div>
+                </div>
+                <aside class="notes">The Well-Architected Framework has six pillars. Every architecture decision should be evaluated against these pillars. AWS provides the Well-Architected Tool to help you review your workloads.</aside>
+            </section>
+
+            <!-- Design Principles -->
+            <section>
+                <h2>&#128161; Design Principles to Live By</h2>
+                <div class="highlight-box danger">
+                    <h4 style="margin-top: 0; color: var(--danger-color);">&#128165; Design for Failure</h4>
+                    <p style="font-size: 0.85em; margin: 0;">"Everything fails all the time." &mdash; Werner Vogels, CTO of Amazon</p>
+                </div>
+                <div class="highlight-box success fragment fade-up">
+                    <h4 style="margin-top: 0; color: var(--success-color);">&#9989; Use Managed Services</h4>
+                    <p style="font-size: 0.85em; margin: 0;">Let AWS handle the undifferentiated heavy lifting so you can focus on your business logic.</p>
+                </div>
+                <div class="highlight-box warning fragment fade-up">
+                    <h4 style="margin-top: 0; color: var(--warning-color);">&#128176; Right-Size Your Resources</h4>
+                    <p style="font-size: 0.85em; margin: 0;">Start small, measure, and scale. Don't over-provision &mdash; use Auto Scaling and monitoring.</p>
+                </div>
+                <div class="highlight-box fragment fade-up">
+                    <h4 style="margin-top: 0; color: var(--accent-color);">&#128274; Security Is Job Zero</h4>
+                    <p style="font-size: 0.85em; margin: 0;">Apply least privilege, encrypt everything, and automate security controls from day one.</p>
+                </div>
+                <aside class="notes">These four principles are foundational to building well on AWS. Design for failure means assuming components will fail and building resilience into the architecture from the start.</aside>
+            </section>
+
+            <!-- Section Divider: Next Steps -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #2f855a 100%)" class="section-divider">
+                <h2>&#128640; Next Steps</h2>
+                <h3>Continuing Your AWS Journey</h3>
+                <aside class="notes">Now that you have the essentials, here's how to keep building your AWS knowledge and skills.</aside>
+            </section>
+
+            <!-- Certification Paths -->
+            <section>
+                <h2>&#127891; AWS Certification Paths</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>Recommended Next Certifications</h4>
+                        <ul>
+                            <li class="fragment fade-up"><strong>AWS Cloud Practitioner</strong> &mdash; Foundational; validates overall AWS understanding</li>
+                            <li class="fragment fade-up"><strong>Solutions Architect Associate</strong> &mdash; Design resilient, performant architectures</li>
+                            <li class="fragment fade-up"><strong>SysOps Administrator Associate</strong> &mdash; Operations and deployment on AWS</li>
+                            <li class="fragment fade-up"><strong>Developer Associate</strong> &mdash; Developing and maintaining applications on AWS</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Certification Tips</h4>
+                        <ul>
+                            <li class="fragment fade-up">Start with Cloud Practitioner if new to AWS</li>
+                            <li class="fragment fade-up">Use official exam guides and sample questions</li>
+                            <li class="fragment fade-up">Hands-on practice is essential</li>
+                            <li class="fragment fade-up">AWS Skill Builder offers exam prep courses</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">Cloud Practitioner is a great next step for a foundational certification. Solutions Architect Associate is the most popular and broadly applicable certification.</aside>
+            </section>
+
+            <!-- Hands-On Practice -->
+            <section>
+                <h2>&#128170; Hands-On Practice Resources</h2>
+                <div class="card">
+                    <h4>&#9889; AWS Free Tier</h4>
+                    <ul>
+                        <li class="fragment fade-up"><strong>Always Free</strong> &mdash; Lambda (1M requests/month), DynamoDB (25 GB), and more</li>
+                        <li class="fragment fade-up"><strong>12-Month Free</strong> &mdash; EC2 (750 hrs/month t2.micro), S3 (5 GB), RDS (750 hrs/month)</li>
+                        <li class="fragment fade-up"><strong>Short-Term Trials</strong> &mdash; Various services with limited-time free usage</li>
+                    </ul>
+                </div>
+                <div class="highlight-box warning fragment fade-up" style="margin-top: 20px;">
+                    <strong>&#9888;&#65039; Pro Tip:</strong> Set up billing alerts in CloudWatch before experimenting. Use AWS Budgets to prevent unexpected charges.
+                </div>
+                <aside class="notes">The Free Tier is the best way to get hands-on experience. Strongly recommend setting up billing alerts so there are no surprises. Many of the services we covered today have free tier options.</aside>
+            </section>
+
+            <!-- Learning Resources -->
+            <section>
+                <h2>&#128218; Learning Resources</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>AWS Training &#38; Documentation</h4>
+                        <ul>
+                            <li class="fragment fade-up"><strong>AWS Skill Builder</strong> &mdash; Free and paid digital courses</li>
+                            <li class="fragment fade-up"><strong>AWS Documentation</strong> &mdash; Comprehensive service guides</li>
+                            <li class="fragment fade-up"><strong>AWS Well-Architected Labs</strong> &mdash; Hands-on best practices</li>
+                            <li class="fragment fade-up"><strong>AWS Workshops</strong> &mdash; Self-paced guided tutorials</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Community &#38; Events</h4>
+                        <ul>
+                            <li class="fragment fade-up"><strong>AWS re:Invent</strong> &mdash; Annual conference in Las Vegas</li>
+                            <li class="fragment fade-up"><strong>AWS Summits</strong> &mdash; Free regional events worldwide</li>
+                            <li class="fragment fade-up"><strong>AWS User Groups</strong> &mdash; Local community meetups</li>
+                            <li class="fragment fade-up"><strong>AWS Blog &#38; YouTube</strong> &mdash; Announcements and tutorials</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">AWS Skill Builder is the official learning platform. The Well-Architected Labs are particularly valuable for applying the principles we discussed. re:Invent sessions are also available for free on YouTube.</aside>
+            </section>
+
+            <!-- Questions Slide -->
+            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="questions-slide" style="text-align: center !important;">
+                <h2>&#10067; Questions?</h2>
+                <p>Let's discuss anything from today's course</p>
+                <aside class="notes">Open the floor for any final questions about the course content, AWS services, certifications, or next steps.</aside>
+            </section>
+
+            <!-- Thank You Slide -->
+            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #2f855a 100%)" style="text-align: center !important;">
+                <h1 style="color: #ffffff; font-size: 2.4em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">&#127881; Thank You!</h1>
+                <p style="color: #e2e8f0; font-size: 1.2em; margin-top: 1em;">Thank you for participating in<br><strong style="color: #ffffff;">AWS Technical Essentials</strong></p>
+                <div style="margin-top: 2em;">
+                    <p style="color: #a0aec0; font-size: 0.9em;">Please complete your course evaluation<br>Your feedback helps us improve!</p>
+                </div>
+                <div class="module-progress" style="margin-top: 2em;">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                </div>
+                <p style="color: #68d391; font-size: 0.85em; margin-top: 10px;">All modules complete &#9989;</p>
+                <aside class="notes">Thank participants for their time and engagement. Remind them to complete the course evaluation. Wish them well on their AWS journey.</aside>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/notes/notes.js"></script>
+    <script>
+        Reveal.initialize({ hash: true, slideNumber: 'c/t', showSlideNumber: 'all', transition: 'slide', plugins: [RevealHighlight, RevealNotes] });
+    </script>
+</body>
+</html>
