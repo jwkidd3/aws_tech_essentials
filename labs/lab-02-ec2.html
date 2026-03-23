@@ -87,7 +87,7 @@
                     <div class="card">
                         <h4>&#128221; Prerequisites &amp; Info</h4>
                         <ul>
-                            <li><strong>Duration:</strong> ~45 minutes</li>
+                            <li><strong>Duration:</strong> ~30 minutes</li>
                             <li><strong>Region:</strong> Use the region assigned by your instructor</li>
                             <li><strong>AWS Console access:</strong> Required</li>
                             <li><strong>Prior lab:</strong> Lab 1 completed</li>
@@ -210,13 +210,10 @@
                     <li class="fragment">Click <strong>Create key pair</strong></li>
                     <li class="fragment">The <code>.pem</code> file will automatically download to your computer</li>
                 </ol>
-                <div class="highlight-box warning fragment">
-                    <strong>&#9888;&#65039; Important:</strong> Save this file in a known location. You cannot download this key again. If you lose it, you will need to create a new key pair.
-                </div>
                 <div class="highlight-box success fragment">
                     <strong>&#9989; Expected:</strong> The key pair <code>employee-dir-key</code> should now appear selected in the Key pair dropdown.
                 </div>
-                <aside class="notes">On macOS/Linux, students may need to run chmod 400 on the .pem file before using it for SSH. On Windows, they can use PuTTY with the .pem converted to .ppk format. For this lab, we primarily need the key pair to exist.</aside>
+                <aside class="notes">IMPORTANT: Save the .pem file in a known location. You cannot download this key again. If you lose it, you will need to create a new key pair. On macOS/Linux, students may need to run chmod 400 on the .pem file before using it for SSH. On Windows, they can use PuTTY with the .pem converted to .ppk format. For this lab, we primarily need the key pair to exist.</aside>
             </section>
 
             <!-- ==================== STEP 3 ==================== -->
@@ -297,13 +294,20 @@
             </section>
 
             <section>
-                <h2>&#128100; Create the IAM Role</h2>
+                <h2>&#128100; Create the IAM Role (1/2)</h2>
                 <p>Before selecting the role on the EC2 launch page, we need to create it in IAM.</p>
                 <ol>
                     <li class="fragment"><strong>Open a new browser tab</strong> and navigate to the <strong>IAM Console</strong> (search for "IAM")</li>
                     <li class="fragment">In the left navigation, click <strong>Roles</strong>, then <strong>Create role</strong></li>
                     <li class="fragment">Trusted entity type: <strong>AWS service</strong></li>
                     <li class="fragment">Use case: Select <strong>EC2</strong>, then click <strong>Next</strong></li>
+                </ol>
+                <aside class="notes">Explain that IAM roles are the recommended way to grant AWS permissions to EC2 instances. This avoids storing access keys on the instance. The trust policy allows EC2 to assume this role.</aside>
+            </section>
+
+            <section>
+                <h2>&#128100; Create the IAM Role (2/2)</h2>
+                <ol start="5">
                     <li class="fragment">Search for and select these policies:
                         <ul>
                             <li>&#9989; <code>AmazonS3FullAccess</code></li>
@@ -314,7 +318,7 @@
                     <li class="fragment">Role name: <pre><code class="plaintext">EmployeeDirectoryAppRole</code></pre></li>
                     <li class="fragment">Click <strong>Create role</strong></li>
                 </ol>
-                <aside class="notes">Explain that IAM roles are the recommended way to grant AWS permissions to EC2 instances. This avoids storing access keys on the instance. The trust policy allows EC2 to assume this role.</aside>
+                <aside class="notes">The trust policy allows EC2 to assume this role. The two policies grant the instance full access to S3 (for photos) and DynamoDB (for employee data).</aside>
             </section>
 
             <section>
@@ -370,26 +374,23 @@ export PHOTOS_BUCKET=${SUB_PHOTOS_BUCKET}
 export AWS_DEFAULT_REGION=&lt;REGION&gt;
 export DYNAMO_MODE=on
 FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code></pre>
-                <div class="highlight-box warning fragment">
-                    <strong>&#9888;&#65039; Replace placeholders before pasting:</strong>
-                    <ul>
-                        <li>Replace <code>${SUB_PHOTOS_BUCKET}</code> with the name of your S3 bucket (created in a later lab, or provided by your instructor)</li>
-                        <li>Replace <code>&lt;REGION&gt;</code> with your AWS region (e.g., <code>us-east-1</code>, <code>us-west-2</code>)</li>
-                    </ul>
-                </div>
-                <aside class="notes">Walk through each line of the script. If students haven't created the S3 bucket yet, they can leave the placeholder for now and the app will still load, just without photo functionality.</aside>
+                <aside class="notes">Walk through each line of the script. If students haven't created the S3 bucket yet, they can leave the placeholder for now and the app will still load, just without photo functionality. IMPORTANT: Replace ${SUB_PHOTOS_BUCKET} with the S3 bucket name and &lt;REGION&gt; with the AWS region before pasting.</aside>
             </section>
 
             <section>
                 <h2>&#128269; Understanding the User Data Script</h2>
+                <div class="highlight-box warning">
+                    <strong>&#9888;&#65039; Replace placeholders before pasting:</strong>
+                    <ul>
+                        <li>Replace <code>${SUB_PHOTOS_BUCKET}</code> with your S3 bucket name</li>
+                        <li>Replace <code>&lt;REGION&gt;</code> with your AWS region (e.g., <code>us-east-1</code>)</li>
+                    </ul>
+                </div>
                 <table>
                     <tr><th>Line</th><th>What It Does</th></tr>
                     <tr><td><code>#!/bin/bash -ex</code></td><td>Runs as Bash; <code>-e</code> exits on error, <code>-x</code> prints each command for debugging</td></tr>
-                    <tr><td><code>wget ... FlaskApp.zip</code></td><td>Downloads the Employee Directory application from S3</td></tr>
-                    <tr><td><code>unzip FlaskApp.zip</code></td><td>Extracts the application files</td></tr>
-                    <tr><td><code>yum -y install python3-pip</code></td><td>Installs pip (Python package manager)</td></tr>
-                    <tr><td><code>pip install -r requirements.txt</code></td><td>Installs Python dependencies (Flask, boto3, etc.)</td></tr>
-                    <tr><td><code>yum -y install stress</code></td><td>Installs the stress tool (used in a later scaling lab)</td></tr>
+                    <tr><td><code>wget</code> + <code>unzip</code></td><td>Downloads and extracts the Flask application from S3</td></tr>
+                    <tr><td><code>yum -y install</code> + <code>pip install</code></td><td>Installs Python dependencies (Flask, boto3, etc.) and the stress tool</td></tr>
                     <tr><td><code>export ...</code></td><td>Sets environment variables for the S3 bucket, region, and DynamoDB mode</td></tr>
                     <tr><td><code>FLASK_APP=... flask run</code></td><td>Starts the Flask web server on port 80</td></tr>
                 </table>
@@ -496,15 +497,22 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
             <section>
                 <h2>&#128679; Troubleshooting</h2>
                 <p>If the application does not load, check the following:</p>
-                <div class="highlight-box danger">
-                    <strong>&#10060; Common Issues:</strong>
-                    <ul>
-                        <li><strong>Using HTTPS instead of HTTP</strong> &mdash; The app runs on HTTP only. Make sure the URL starts with <code>http://</code></li>
-                        <li><strong>Security group missing HTTP rule</strong> &mdash; Verify port 80 is open to <code>0.0.0.0/0</code></li>
-                        <li><strong>User data script errors</strong> &mdash; Check instance system log: Select instance &rarr; <strong>Actions</strong> &rarr; <strong>Monitor and troubleshoot</strong> &rarr; <strong>Get system log</strong></li>
-                        <li><strong>Wrong public IP</strong> &mdash; Refresh the Instances page and verify the IP address</li>
-                        <li><strong>Auto-assign public IP was not enabled</strong> &mdash; If no public IP is listed, you will need to terminate and re-launch</li>
-                    </ul>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>&#128423;&#65039; Network Issues</h4>
+                        <ul>
+                            <li><strong>Using HTTPS instead of HTTP</strong> &mdash; Make sure URL starts with <code>http://</code></li>
+                            <li><strong>Security group missing HTTP rule</strong> &mdash; Verify port 80 is open to <code>0.0.0.0/0</code></li>
+                            <li><strong>Wrong public IP</strong> &mdash; Refresh and verify the IP address</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>&#128736;&#65039; Instance Issues</h4>
+                        <ul>
+                            <li><strong>User data script errors</strong> &mdash; Check system log: Actions &rarr; Monitor &rarr; Get system log</li>
+                            <li><strong>No public IP</strong> &mdash; Auto-assign was not enabled; terminate and re-launch</li>
+                        </ul>
+                    </div>
                 </div>
                 <aside class="notes">Walk around and help students who are having issues. The system log is invaluable for debugging user data script failures. Look for Python errors or package installation failures.</aside>
             </section>
@@ -555,33 +563,21 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                         <ol>
                             <li>Click the <strong>Security</strong> tab</li>
                             <li>Review the security group: <code>employee-directory-sg</code></li>
-                            <li>Click the security group ID to see full details</li>
-                            <li>Verify <strong>Inbound rules</strong>:
-                                <ul>
-                                    <li>SSH (22) from your IP</li>
-                                    <li>HTTP (80) from 0.0.0.0/0</li>
-                                </ul>
-                            </li>
-                            <li>Note: <strong>Outbound rules</strong> allow all traffic by default</li>
+                            <li>Verify inbound rules: SSH (22) from your IP, HTTP (80) from 0.0.0.0/0</li>
+                            <li>Note: outbound rules allow all traffic by default</li>
                         </ol>
                     </div>
                     <div class="card">
                         <h4>&#128202; Monitoring Tab</h4>
                         <ol>
                             <li>Click the <strong>Monitoring</strong> tab</li>
-                            <li>Review CloudWatch basic metrics:
-                                <ul>
-                                    <li>CPU utilization</li>
-                                    <li>Network in/out</li>
-                                    <li>Disk read/write</li>
-                                    <li>Status checks</li>
-                                </ul>
-                            </li>
-                            <li>Note: Basic monitoring updates every 5 minutes</li>
+                            <li>Review CloudWatch metrics: CPU, network, disk, status checks</li>
+                            <li>Note: basic monitoring updates every 5 minutes</li>
+                            <li>Detailed monitoring (1-min) is available at extra cost</li>
                         </ol>
                     </div>
                 </div>
-                <aside class="notes">Explain that detailed monitoring (1-minute intervals) is available for an additional cost. The security tab is a quick way to audit what traffic is allowed to and from the instance.</aside>
+                <aside class="notes">Click the security group ID to see full details including inbound and outbound rules. The security tab is a quick way to audit what traffic is allowed to and from the instance. Detailed monitoring at 1-minute intervals is available for an additional cost.</aside>
             </section>
 
             <section>
@@ -706,10 +702,8 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                         <h4>&#127919; What You Accomplished</h4>
                         <ul>
                             <li>Launched an EC2 instance with Amazon Linux 2023</li>
-                            <li>Created and configured a security group</li>
-                            <li>Created an IAM role and attached it to EC2</li>
-                            <li>Used a user data script to bootstrap an application</li>
-                            <li>Tested a running web application</li>
+                            <li>Configured a security group and IAM role</li>
+                            <li>Bootstrapped a Flask app using user data</li>
                             <li>Explored instance details, security, and monitoring</li>
                             <li>Observed public IP behavior on stop/start</li>
                         </ul>
@@ -717,13 +711,11 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                     <div class="card">
                         <h4>&#128161; Key Concepts</h4>
                         <ul>
-                            <li><strong>AMI</strong> &mdash; Pre-configured OS templates</li>
-                            <li><strong>Instance type</strong> &mdash; Defines CPU, memory, network</li>
+                            <li><strong>AMI + Instance type</strong> &mdash; OS template and compute sizing</li>
                             <li><strong>Security groups</strong> &mdash; Virtual firewalls for instances</li>
                             <li><strong>IAM roles</strong> &mdash; Secure credential delivery to EC2</li>
                             <li><strong>User data</strong> &mdash; Bootstrap automation at launch</li>
                             <li><strong>Elastic IPs</strong> &mdash; Fixed public IP addresses</li>
-                            <li><strong>Instance metadata</strong> &mdash; Self-discovery for instances</li>
                         </ul>
                     </div>
                 </div>

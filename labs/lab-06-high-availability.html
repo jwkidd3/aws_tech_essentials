@@ -88,7 +88,7 @@
                 <div class="two-columns">
                     <div class="card">
                         <h4>&#128338; Duration</h4>
-                        <p>~60 minutes</p>
+                        <p>~40 minutes</p>
                     </div>
                     <div class="card">
                         <h4>&#127919; Capstone Lab</h4>
@@ -106,16 +106,24 @@
             <!-- ============================================================ -->
             <section>
                 <h2>&#128736;&#65039; What You Will Build</h2>
-                <ol>
-                    <li class="fragment">Create an <strong>Application Load Balancer</strong> to distribute traffic</li>
-                    <li class="fragment">Restrict application access to <strong>ALB-only traffic</strong></li>
-                    <li class="fragment">Create a <strong>Launch Template</strong> for consistent instance configuration</li>
-                    <li class="fragment">Configure an <strong>Auto Scaling Group</strong> with scaling policies</li>
-                    <li class="fragment">Test <strong>self-healing</strong> by terminating an instance</li>
-                    <li class="fragment">Observe <strong>dynamic scaling</strong> with a stress test</li>
-                    <li class="fragment">Monitor with <strong>CloudWatch</strong> metrics and dashboards</li>
-                    <li class="fragment"><strong>Clean up</strong> all course resources</li>
-                </ol>
+                <div class="two-columns">
+                    <div>
+                        <ol>
+                            <li class="fragment">Create an <strong>Application Load Balancer</strong></li>
+                            <li class="fragment">Restrict access to <strong>ALB-only traffic</strong></li>
+                            <li class="fragment">Create a <strong>Launch Template</strong></li>
+                            <li class="fragment">Configure an <strong>Auto Scaling Group</strong></li>
+                        </ol>
+                    </div>
+                    <div>
+                        <ol start="5">
+                            <li class="fragment">Test <strong>self-healing</strong></li>
+                            <li class="fragment">Observe <strong>dynamic scaling</strong></li>
+                            <li class="fragment">Monitor with <strong>CloudWatch</strong></li>
+                            <li class="fragment"><strong>Clean up</strong> all resources</li>
+                        </ol>
+                    </div>
+                </div>
                 <aside class="notes">
                     Walk through the high-level architecture before diving into steps. This lab combines ALB, ASG,
                     Launch Templates, security groups, and CloudWatch — everything from the monitoring and optimization module.
@@ -218,9 +226,9 @@
                 </aside>
             </section>
 
-            <!-- STEP 1d: Security Group -->
+            <!-- STEP 1d: Security Group - Part 1 -->
             <section>
-                <h2>&#128295; Step 1d: ALB Security Group</h2>
+                <h2>&#128295; Step 1d: ALB Security Group (1/2)</h2>
                 <p>Create a <strong>new</strong> security group for the ALB:</p>
                 <ol>
                     <li class="fragment">Click <strong>&#8220;Create a new security group&#8221;</strong> (opens new tab)</li>
@@ -235,6 +243,15 @@
                         <tr><td>HTTP</td><td>80</td><td><code>0.0.0.0/0</code></td></tr>
                     </table>
                 </div>
+                <aside class="notes">
+                    The ALB needs its own security group that allows HTTP from anywhere. Later, we will lock down
+                    the application security group to only accept traffic from this ALB security group.
+                </aside>
+            </section>
+
+            <!-- STEP 1d: Security Group - Part 2 -->
+            <section>
+                <h2>&#128295; Step 1d: ALB Security Group (2/2)</h2>
                 <ol start="5">
                     <li class="fragment">Click <strong>&#8220;Create security group&#8221;</strong></li>
                     <li class="fragment">Return to the ALB creation tab and <strong>refresh</strong> the security group list</li>
@@ -358,16 +375,12 @@
                     <li class="fragment">Open a new browser tab and navigate to: <code>http://&lt;ALB_DNS_NAME&gt;</code></li>
                     <li class="fragment">Verify the <strong>Employee Directory</strong> application loads correctly</li>
                 </ol>
-                <div class="highlight-box warning fragment">
-                    <strong>&#128161; Note:</strong> It may take up to <strong>60 seconds</strong> for the target to pass its first
-                    health check and become healthy. If you see a 503 error, wait and retry.
-                </div>
                 <div class="highlight-box success fragment">
                     <strong>&#9989; Checkpoint:</strong> The Employee Directory application loads when accessed through the ALB DNS name.
                     You can add, view, and manage employees just as before.
                 </div>
                 <aside class="notes">
-                    If students get a 503 error, have them check the target group health status. The target
+                    Note: It may take up to 60 seconds for the target to pass its first health check and become healthy. If students see a 503 error, have them wait and retry. Check the target group health status. The target
                     needs to pass 2 consecutive health checks (about 60 seconds) before it is marked healthy.
                 </aside>
             </section>
@@ -384,13 +397,24 @@
                 </aside>
             </section>
 
-            <!-- STEP 3: Update Security Group -->
+            <!-- STEP 3: Update Security Group - Part 1 -->
             <section>
-                <h2>&#128274; Step 3: Restrict Traffic to ALB Only</h2>
+                <h2>&#128274; Step 3: Restrict Traffic (1/2)</h2>
                 <ol>
                     <li class="fragment">Navigate to <strong>EC2 &gt; Security Groups</strong></li>
                     <li class="fragment">Select <strong>employee-directory-app-sg</strong></li>
                     <li class="fragment">Click <strong>&#8220;Edit inbound rules&#8221;</strong></li>
+                </ol>
+                <aside class="notes">
+                    This is a security group chaining pattern. The app SG trusts the ALB SG, not a CIDR block.
+                    This is more secure and dynamic — if the ALB IPs change, the rule still works.
+                </aside>
+            </section>
+
+            <!-- STEP 3: Update Security Group - Part 2 -->
+            <section>
+                <h2>&#128274; Step 3: Restrict Traffic (2/2)</h2>
+                <ol start="4">
                     <li class="fragment">Find the <strong>HTTP (port 80)</strong> rule</li>
                     <li class="fragment">Change the <strong>Source</strong> from <code>0.0.0.0/0</code> to the <strong>ALB security group</strong>:
                         <br>Type <code>employee-directory-alb-sg</code> and select it from the dropdown</li>
@@ -507,10 +531,6 @@ export PHOTOS_BUCKET=${SUB_PHOTOS_BUCKET}
 export AWS_DEFAULT_REGION=&lt;REGION&gt;
 export DYNAMO_MODE=on
 FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code></pre>
-                <div class="highlight-box warning fragment">
-                    <strong>&#9888;&#65039; Important:</strong> Replace <code>${SUB_PHOTOS_BUCKET}</code> with your actual S3 bucket name
-                    and <code>&lt;REGION&gt;</code> with your AWS region (e.g., <code>us-east-1</code>).
-                </div>
                 <aside class="notes">
                     This is the same bootstrap script from Lab 4. Remind students to substitute their actual
                     bucket name and region. The stress tool is also installed for the optional scaling test later.
@@ -520,6 +540,10 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
             <!-- STEP 4d: Create Template -->
             <section>
                 <h2>&#128196; Step 4d: Create the Launch Template</h2>
+                <div class="highlight-box warning">
+                    <strong>&#9888;&#65039; Important:</strong> Replace <code>${SUB_PHOTOS_BUCKET}</code> with your actual S3 bucket name
+                    and <code>&lt;REGION&gt;</code> with your AWS region (e.g., <code>us-east-1</code>).
+                </div>
                 <ol>
                     <li class="fragment">Review all settings one more time</li>
                     <li class="fragment">Click <strong>&#8220;Create launch template&#8221;</strong></li>
@@ -696,18 +720,12 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                         <tr><td>Target value</td><td><strong>60</strong></td></tr>
                     </table>
                 </div>
-                <div class="concept-box fragment">
-                    <h4>&#128161; How Target Tracking Works</h4>
-                    <p>Auto Scaling automatically adjusts the number of instances to keep average CPU
-                    utilization at <strong>60%</strong>. If CPU exceeds 60%, it scales out (adds instances).
-                    If CPU drops well below 60%, it scales in (removes instances).</p>
-                </div>
                 <ol start="2">
                     <li class="fragment">Click <strong>Next</strong> through the remaining pages (notifications, tags)</li>
                     <li class="fragment">Review the configuration and click <strong>&#8220;Create Auto Scaling group&#8221;</strong></li>
                 </ol>
                 <aside class="notes">
-                    Target tracking is the simplest and most effective scaling policy. AWS manages the CloudWatch
+                    How Target Tracking Works: Auto Scaling automatically adjusts the number of instances to keep average CPU utilization at 60%. If CPU exceeds 60%, it scales out (adds instances). If CPU drops well below 60%, it scales in (removes instances). Target tracking is the simplest and most effective scaling policy. AWS manages the CloudWatch
                     alarms and scaling actions automatically. 60% CPU is a good target — it leaves headroom for
                     traffic spikes while keeping utilization reasonable.
                 </aside>
@@ -793,12 +811,8 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                     <strong>&#9989; Checkpoint:</strong> After a few minutes, you should see 2 healthy instances again in the target group.
                     The application continued working through the ALB during the entire process.
                 </div>
-                <div class="key-point fragment">
-                    <strong>This is self-healing!</strong> No manual intervention was required. Auto Scaling
-                    maintained the desired capacity automatically.
-                </div>
                 <aside class="notes">
-                    Emphasize that during this entire process, the application remained available to end users.
+                    This is self-healing! No manual intervention was required. Auto Scaling maintained the desired capacity automatically. Emphasize that during this entire process, the application remained available to end users.
                     The ALB routed all traffic to the remaining healthy instance while the replacement launched.
                     This is the power of combining ALB with Auto Scaling.
                 </aside>
@@ -903,23 +917,14 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
             <section>
                 <h2>&#128202; Step 9c: Create a CloudWatch Dashboard</h2>
                 <ol>
-                    <li class="fragment">In CloudWatch, go to <strong>Dashboards</strong></li>
-                    <li class="fragment">Click <strong>&#8220;Create dashboard&#8221;</strong></li>
+                    <li class="fragment">In CloudWatch, go to <strong>Dashboards</strong> and click <strong>&#8220;Create dashboard&#8221;</strong></li>
                     <li class="fragment">Name: <code>employee-directory-dashboard</code></li>
-                    <li class="fragment">Add widgets for:</li>
+                    <li class="fragment">Add a <strong>Line chart</strong> widget for ALB RequestCount over time</li>
+                    <li class="fragment">Add a <strong>Number widget</strong> for HealthyHostCount (current value)</li>
+                    <li class="fragment">Add <strong>Line charts</strong> for GroupInServiceInstances and Average CPU utilization</li>
                 </ol>
-                <ul>
-                    <li class="fragment"><strong>Line chart:</strong> ALB RequestCount over time</li>
-                    <li class="fragment"><strong>Number widget:</strong> HealthyHostCount (current value)</li>
-                    <li class="fragment"><strong>Line chart:</strong> GroupInServiceInstances over time</li>
-                    <li class="fragment"><strong>Line chart:</strong> Average CPU utilization across ASG instances</li>
-                </ul>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Checkpoint:</strong> Your dashboard displays real-time metrics for the ALB and Auto Scaling Group.
-                    This is the kind of operational visibility used in production environments.
-                </div>
                 <aside class="notes">
-                    Dashboards provide a single-pane-of-glass view for operations teams. In production, you would
+                    Checkpoint: Your dashboard displays real-time metrics for the ALB and Auto Scaling Group. This is the kind of operational visibility used in production environments. Dashboards provide a single-pane-of-glass view for operations teams. In production, you would
                     also add alarms for critical thresholds. This dashboard will be deleted during cleanup.
                 </aside>
             </section>
@@ -955,7 +960,7 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                 </aside>
             </section>
 
-            <!-- STEP 10a: Delete ASG and Launch Template -->
+            <!-- STEP 10a: Delete ASG -->
             <section>
                 <h2>&#128465;&#65039; Step 10a: Delete Auto Scaling Group</h2>
                 <ol>
@@ -968,36 +973,51 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                     <strong>&#128161; Note:</strong> Deleting the ASG automatically terminates all instances it manages.
                     Wait until they are fully terminated before proceeding.
                 </div>
-                <h4 class="fragment">Delete Launch Template:</h4>
-                <ol start="5">
-                    <li class="fragment">Navigate to <strong>EC2 &gt; Launch Templates</strong></li>
-                    <li class="fragment">Select <strong>employee-directory-lt</strong> &#8594; <strong>Actions &gt; Delete template</strong></li>
-                    <li class="fragment">Confirm by typing <code>Delete</code></li>
-                </ol>
                 <aside class="notes">
                     The ASG must be deleted first because it will keep launching new instances to maintain
                     desired capacity. Deleting instances without deleting the ASG is futile — it will replace them.
                 </aside>
             </section>
 
-            <!-- STEP 10b: Delete ALB and Target Group -->
+            <!-- STEP 10a: Delete Launch Template -->
             <section>
-                <h2>&#128465;&#65039; Step 10b: Delete Load Balancer and Target Group</h2>
-                <h4>Delete the Load Balancer:</h4>
+                <h2>&#128465;&#65039; Step 10a: Delete Launch Template</h2>
+                <ol>
+                    <li class="fragment">Navigate to <strong>EC2 &gt; Launch Templates</strong></li>
+                    <li class="fragment">Select <strong>employee-directory-lt</strong> &#8594; <strong>Actions &gt; Delete template</strong></li>
+                    <li class="fragment">Confirm by typing <code>Delete</code></li>
+                </ol>
+                <aside class="notes">
+                    The launch template is no longer needed after the ASG is deleted.
+                </aside>
+            </section>
+
+            <!-- STEP 10b: Delete Load Balancer -->
+            <section>
+                <h2>&#128465;&#65039; Step 10b: Delete Load Balancer</h2>
                 <ol>
                     <li class="fragment">Navigate to <strong>EC2 &gt; Load Balancers</strong></li>
                     <li class="fragment">Select <strong>employee-directory-alb</strong></li>
                     <li class="fragment">Click <strong>Actions &gt; Delete load balancer</strong></li>
                     <li class="fragment">Type <code>confirm</code> and click <strong>Delete</strong></li>
                 </ol>
-                <h4 class="fragment">Delete the Target Group:</h4>
-                <ol start="5">
+                <aside class="notes">
+                    The load balancer must be deleted before its security group. The target group must be deleted
+                    after the load balancer. Follow this order carefully.
+                </aside>
+            </section>
+
+            <!-- STEP 10b: Delete Target Group and SG -->
+            <section>
+                <h2>&#128465;&#65039; Step 10b: Delete Target Group and SG</h2>
+                <h4>Delete the Target Group:</h4>
+                <ol>
                     <li class="fragment">Navigate to <strong>EC2 &gt; Target Groups</strong></li>
                     <li class="fragment">Select <strong>employee-directory-tg</strong></li>
                     <li class="fragment">Click <strong>Actions &gt; Delete</strong> &#8594; Confirm</li>
                 </ol>
                 <h4 class="fragment">Delete the ALB Security Group:</h4>
-                <ol start="8">
+                <ol start="4">
                     <li class="fragment">Navigate to <strong>EC2 &gt; Security Groups</strong></li>
                     <li class="fragment">Select <strong>employee-directory-alb-sg</strong> &#8594; <strong>Actions &gt; Delete security group</strong></li>
                 </ol>
@@ -1027,18 +1047,25 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                 </aside>
             </section>
 
-            <!-- STEP 10d: Delete Networking Resources -->
+            <!-- STEP 10d: Delete NAT Gateway -->
             <section>
-                <h2>&#128465;&#65039; Step 10d: Delete Networking Resources</h2>
-                <h4>Delete NAT Gateway:</h4>
+                <h2>&#128465;&#65039; Step 10d: Delete NAT Gateway</h2>
                 <ol>
                     <li class="fragment">Navigate to <strong>VPC &gt; NAT Gateways</strong></li>
                     <li class="fragment">Select any NAT Gateway in the employee-directory-vpc</li>
                     <li class="fragment">Click <strong>Actions &gt; Delete NAT gateway</strong> &#8594; Type <code>delete</code> and confirm</li>
                     <li class="fragment"><strong>Wait</strong> for the NAT Gateway status to change to <strong>Deleted</strong> (1&#8211;2 minutes)</li>
                 </ol>
-                <h4 class="fragment">Release Elastic IPs:</h4>
-                <ol start="5">
+                <aside class="notes">
+                    The NAT Gateway must be fully deleted before the VPC can be removed. Elastic IPs must be
+                    released after the NAT Gateway is deleted. These are common sources of unexpected charges.
+                </aside>
+            </section>
+
+            <!-- STEP 10d: Release Elastic IPs -->
+            <section>
+                <h2>&#128465;&#65039; Step 10d: Release Elastic IPs</h2>
+                <ol>
                     <li class="fragment">Navigate to <strong>VPC &gt; Elastic IPs</strong></li>
                     <li class="fragment">Select any allocated Elastic IPs</li>
                     <li class="fragment">Click <strong>Actions &gt; Release Elastic IP addresses</strong> &#8594; Confirm</li>
@@ -1060,15 +1087,7 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                     <li class="fragment">Navigate to <strong>VPC &gt; Your VPCs</strong></li>
                     <li class="fragment">Select <strong>employee-directory-vpc</strong></li>
                     <li class="fragment">Click <strong>Actions &gt; Delete VPC</strong></li>
-                    <li class="fragment">This will also delete associated resources:
-                        <ul>
-                            <li>Subnets</li>
-                            <li>Route tables</li>
-                            <li>Internet Gateway</li>
-                            <li>Network ACLs</li>
-                            <li>Remaining security groups (except default)</li>
-                        </ul>
-                    </li>
+                    <li class="fragment">VPC deletion cascades to subnets, route tables, Internet Gateway, and remaining security groups</li>
                     <li class="fragment">Type <code>delete</code> and confirm</li>
                 </ol>
                 <div class="highlight-box success fragment">
@@ -1080,10 +1099,9 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                 </aside>
             </section>
 
-            <!-- STEP 10f: Delete S3 and DynamoDB -->
+            <!-- STEP 10f: Delete S3 Bucket -->
             <section>
-                <h2>&#128465;&#65039; Step 10f: Delete S3 Bucket and DynamoDB Table</h2>
-                <h4>Delete S3 Bucket:</h4>
+                <h2>&#128465;&#65039; Step 10f: Delete S3 Bucket</h2>
                 <ol>
                     <li class="fragment">Navigate to <strong>S3</strong></li>
                     <li class="fragment">Select your employee photo bucket</li>
@@ -1094,41 +1112,53 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                     <strong>&#9888;&#65039; Important:</strong> You must empty the bucket before deleting it.
                     S3 will not allow deletion of a bucket that still contains objects.
                 </div>
-                <h4 class="fragment">Delete DynamoDB Table:</h4>
-                <ol start="5">
-                    <li class="fragment">Navigate to <strong>DynamoDB &gt; Tables</strong></li>
-                    <li class="fragment">Select the <strong>Employees</strong> table</li>
-                    <li class="fragment">Click <strong>Delete</strong> &#8594; Uncheck &#8220;Create a backup&#8221; &#8594; Type <code>confirm</code> &#8594; Delete</li>
-                </ol>
                 <aside class="notes">
                     The S3 bucket must be emptied first. DynamoDB deletion is straightforward but make sure
                     students uncheck the backup option since this is a lab environment.
                 </aside>
             </section>
 
+            <!-- STEP 10f: Delete DynamoDB Table -->
+            <section>
+                <h2>&#128465;&#65039; Step 10f: Delete DynamoDB Table</h2>
+                <ol>
+                    <li class="fragment">Navigate to <strong>DynamoDB &gt; Tables</strong></li>
+                    <li class="fragment">Select the <strong>Employees</strong> table</li>
+                    <li class="fragment">Click <strong>Delete</strong> &#8594; Uncheck &#8220;Create a backup&#8221; &#8594; Type <code>confirm</code> &#8594; Delete</li>
+                </ol>
+                <aside class="notes">
+                    DynamoDB deletion is straightforward but make sure students uncheck the backup option since this is a lab environment.
+                </aside>
+            </section>
+
             <!-- STEP 10g: Delete CloudWatch Dashboard -->
             <section>
-                <h2>&#128465;&#65039; Step 10g: Delete Remaining Resources</h2>
-                <h4>Delete CloudWatch Dashboard:</h4>
+                <h2>&#128465;&#65039; Step 10g: Delete CloudWatch Dashboard</h2>
                 <ol>
                     <li class="fragment">Navigate to <strong>CloudWatch &gt; Dashboards</strong></li>
                     <li class="fragment">Select <strong>employee-directory-dashboard</strong> &#8594; <strong>Delete</strong></li>
                 </ol>
-                <h4 class="fragment">Verify Nothing is Left:</h4>
-                <div class="fragment">
-                    <table>
-                        <tr><th>Service</th><th>Check</th></tr>
-                        <tr><td>EC2 Instances</td><td>No running instances</td></tr>
-                        <tr><td>Load Balancers</td><td>None listed</td></tr>
-                        <tr><td>Auto Scaling Groups</td><td>None listed</td></tr>
-                        <tr><td>Launch Templates</td><td>None listed</td></tr>
-                        <tr><td>VPCs</td><td>Only the default VPC remains</td></tr>
-                        <tr><td>NAT Gateways</td><td>None listed</td></tr>
-                        <tr><td>Elastic IPs</td><td>None allocated</td></tr>
-                        <tr><td>S3 Buckets</td><td>No employee photo buckets</td></tr>
-                        <tr><td>DynamoDB Tables</td><td>No Employees table</td></tr>
-                    </table>
-                </div>
+                <aside class="notes">
+                    Have students go through each service one final time to verify everything is cleaned up.
+                    This is the most important step to avoid unexpected charges.
+                </aside>
+            </section>
+
+            <!-- STEP 10g: Verification Checklist -->
+            <section>
+                <h2>&#128465;&#65039; Verification Checklist</h2>
+                <table>
+                    <tr><th>Service</th><th>Check</th></tr>
+                    <tr><td>EC2 Instances</td><td>No running instances</td></tr>
+                    <tr><td>Load Balancers</td><td>None listed</td></tr>
+                    <tr><td>Auto Scaling Groups</td><td>None listed</td></tr>
+                    <tr><td>Launch Templates</td><td>None listed</td></tr>
+                    <tr><td>VPCs</td><td>Only the default VPC remains</td></tr>
+                    <tr><td>NAT Gateways</td><td>None listed</td></tr>
+                    <tr><td>Elastic IPs</td><td>None allocated</td></tr>
+                    <tr><td>S3 Buckets</td><td>No employee photo buckets</td></tr>
+                    <tr><td>DynamoDB Tables</td><td>No Employees table</td></tr>
+                </table>
                 <aside class="notes">
                     Have students go through each service one final time to verify everything is cleaned up.
                     This is the most important step to avoid unexpected charges.
@@ -1138,25 +1168,20 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
             <!-- STEP 10: Final Checklist -->
             <section>
                 <h2>&#128203; Clean Up Checklist</h2>
-                <div class="highlight-box danger">
-                    <strong>Complete Deletion Checklist — Verify each item:</strong>
-                </div>
                 <div class="two-columns">
                     <div>
                         <ul>
                             <li class="fragment">&#9744; Auto Scaling Group deleted</li>
                             <li class="fragment">&#9744; Launch Template deleted</li>
-                            <li class="fragment">&#9744; Application Load Balancer deleted</li>
-                            <li class="fragment">&#9744; Target Group deleted</li>
+                            <li class="fragment">&#9744; ALB and Target Group deleted</li>
                             <li class="fragment">&#9744; ALB Security Group deleted</li>
                             <li class="fragment">&#9744; All EC2 Instances terminated</li>
                         </ul>
                     </div>
                     <div>
                         <ul>
-                            <li class="fragment">&#9744; NAT Gateway deleted</li>
-                            <li class="fragment">&#9744; Elastic IPs released</li>
-                            <li class="fragment">&#9744; VPC deleted (with subnets, routes, IGW)</li>
+                            <li class="fragment">&#9744; NAT Gateway and Elastic IPs released</li>
+                            <li class="fragment">&#9744; VPC deleted (subnets, routes, IGW)</li>
                             <li class="fragment">&#9744; S3 Bucket emptied and deleted</li>
                             <li class="fragment">&#9744; DynamoDB Table deleted</li>
                             <li class="fragment">&#9744; CloudWatch Dashboard deleted</li>
@@ -1164,7 +1189,7 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                     </div>
                 </div>
                 <aside class="notes">
-                    Read through each item and have students confirm they completed each deletion.
+                    Complete Deletion Checklist — Verify each item. Read through each item and have students confirm they completed each deletion.
                     This checklist covers all resources created across all 6 labs in the course.
                 </aside>
             </section>
@@ -1196,40 +1221,27 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
             <!-- ============================================================ -->
             <section>
                 <h2>&#127959;&#65039; Final Architecture</h2>
-                <div class="concept-box">
-                    <h4>What You Built Across All 6 Labs</h4>
-                </div>
+                <p>What You Built Across All 6 Labs:</p>
                 <div class="two-columns">
-                    <div class="card">
+                    <div>
                         <h4>&#128737;&#65039; Security</h4>
                         <ul>
-                            <li>IAM roles and policies</li>
+                            <li>IAM roles, policies, least-privilege</li>
                             <li>Security group chaining</li>
-                            <li>Least-privilege access</li>
                         </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#128421;&#65039; Compute</h4>
-                        <ul>
-                            <li>EC2 instances with user data</li>
-                            <li>Launch templates</li>
-                            <li>Auto Scaling Groups</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="two-columns fragment">
-                    <div class="card">
                         <h4>&#128230; Storage &#38; Database</h4>
                         <ul>
-                            <li>S3 for photos</li>
-                            <li>DynamoDB for data</li>
+                            <li>S3 for photos, DynamoDB for data</li>
                         </ul>
                     </div>
-                    <div class="card">
+                    <div>
+                        <h4>&#128421;&#65039; Compute</h4>
+                        <ul>
+                            <li>EC2, Launch Templates, Auto Scaling</li>
+                        </ul>
                         <h4>&#9889; High Availability</h4>
                         <ul>
-                            <li>Multi-AZ deployment</li>
-                            <li>Application Load Balancer</li>
+                            <li>Multi-AZ with ALB</li>
                             <li>Self-healing infrastructure</li>
                         </ul>
                     </div>

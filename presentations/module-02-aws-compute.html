@@ -497,7 +497,7 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
                 <aside class="notes">A stopped instance retains its instance ID, EBS volumes, Elastic IP associations, and private IP. However, data on instance store volumes is lost when stopping. A terminated instance is gone permanently, though EBS volumes can be configured to persist via the DeleteOnTermination attribute.</aside>
             </section>
 
-            <!-- Slide 18: Lifecycle Actions -->
+            <!-- Slide 18a: Lifecycle Actions - Start/Stop & Reboot -->
             <section>
                 <h2>&#128295; Instance Lifecycle Actions</h2>
                 <div class="two-columns">
@@ -511,6 +511,8 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
                                 <li>Public IPv4 changes on restart (unless Elastic IP)</li>
                             </ul>
                         </div>
+                    </div>
+                    <div>
                         <div class="highlight-box">
                             <h4>Reboot</h4>
                             <ul>
@@ -521,6 +523,14 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
                             </ul>
                         </div>
                     </div>
+                </div>
+                <aside class="notes">Termination protection is a simple flag that prevents accidental termination via the console or API. It does not prevent termination from within the OS (shutdown command) or from Auto Scaling events. Hibernate is useful for long-running processes that take a long time to initialize.</aside>
+            </section>
+
+            <!-- Slide 18b: Lifecycle Actions - Terminate & Hibernate -->
+            <section>
+                <h2>&#128295; Instance Lifecycle Actions (cont.)</h2>
+                <div class="two-columns">
                     <div>
                         <div class="highlight-box danger">
                             <h4>Terminate</h4>
@@ -531,6 +541,8 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
                                 <li>Instance store data always lost</li>
                             </ul>
                         </div>
+                    </div>
+                    <div>
                         <div class="highlight-box warning">
                             <h4>Hibernate</h4>
                             <ul>
@@ -569,10 +581,7 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
                         </ul>
                     </div>
                 </div>
-                <div class="key-point">
-                    <strong>Key takeaway:</strong> Use EBS-backed instances for most workloads. Use instance store for ephemeral, high-performance scratch data only.
-                </div>
-                <aside class="notes">Most modern instances are EBS-backed. Instance store volumes provide very high IOPS because they are physically attached to the host. Some instance types like i3 and d2 are specifically designed to leverage local NVMe storage for workloads like distributed databases.</aside>
+                <aside class="notes">Key takeaway: Use EBS-backed instances for most workloads. Use instance store for ephemeral, high-performance scratch data only. Most modern instances are EBS-backed. Instance store volumes provide very high IOPS because they are physically attached to the host. Some instance types like i3 and d2 are specifically designed to leverage local NVMe storage for workloads like distributed databases.</aside>
             </section>
 
             <!-- Slide 20: Section Divider - Container Services -->
@@ -607,10 +616,7 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
                         </ul>
                     </div>
                 </div>
-                <div class="highlight-box">
-                    <p><strong>Containers package</strong> application code, runtime, libraries, and dependencies into a single portable unit that runs consistently across environments.</p>
-                </div>
-                <aside class="notes">Containers are not a replacement for VMs — they solve different problems. VMs provide hardware-level isolation; containers provide application-level isolation. In AWS, containers often run ON EC2 instances (or Fargate), so both technologies are used together.</aside>
+                <aside class="notes">Containers package application code, runtime, libraries, and dependencies into a single portable unit that runs consistently across environments. Containers are not a replacement for VMs — they solve different problems. VMs provide hardware-level isolation; containers provide application-level isolation. In AWS, containers often run ON EC2 instances (or Fargate), so both technologies are used together.</aside>
             </section>
 
             <!-- Slide 22: Amazon ECS -->
@@ -744,10 +750,7 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
                         <td>Yes</td>
                     </tr>
                 </table>
-                <div class="key-point">
-                    <strong>Rule of thumb:</strong> If you have no strong preference, start with ECS + Fargate for simplicity. Use EKS when Kubernetes portability or ecosystem features are required.
-                </div>
-                <aside class="notes">Both services are production-grade and used by thousands of customers. The choice is primarily about team expertise and organizational requirements, not about technical capability. Both support Fargate for serverless container execution.</aside>
+                <aside class="notes">Rule of thumb: If you have no strong preference, start with ECS + Fargate for simplicity. Use EKS when Kubernetes portability or ecosystem features are required. Both services are production-grade and used by thousands of customers. The choice is primarily about team expertise and organizational requirements, not about technical capability. Both support Fargate for serverless container execution.</aside>
             </section>
 
             <!-- Slide 26: Section Divider - Serverless -->
@@ -781,12 +784,10 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
                             <li class="fragment fade-up"><strong>Amazon API Gateway</strong> &mdash; REST/WebSocket APIs</li>
                             <li class="fragment fade-up"><strong>Amazon DynamoDB</strong> &mdash; database</li>
                             <li class="fragment fade-up"><strong>Amazon S3</strong> &mdash; storage</li>
-                            <li class="fragment fade-up"><strong>AWS Fargate</strong> &mdash; containers</li>
-                            <li class="fragment fade-up"><strong>Amazon EventBridge</strong> &mdash; events</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Serverless is a spectrum, not a binary. Some services like Lambda are fully serverless while others like Fargate are "serverless containers." The key criteria: no server management, automatic scaling, pay-per-use pricing, and built-in fault tolerance.</aside>
+                <aside class="notes">Other serverless services include AWS Fargate (containers) and Amazon EventBridge (events). Serverless is a spectrum, not a binary. Some services like Lambda are fully serverless while others like Fargate are "serverless containers." The key criteria: no server management, automatic scaling, pay-per-use pricing, and built-in fault tolerance.</aside>
             </section>
 
             <!-- Slide 28: Section Divider - Lambda -->
@@ -807,12 +808,10 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
                     <div>
                         <h4>Common Event Sources</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>API Gateway</strong> &mdash; HTTP requests</li>
                             <li class="fragment fade-up"><strong>S3</strong> &mdash; object uploads/deletes</li>
-                            <li class="fragment fade-up"><strong>DynamoDB Streams</strong> &mdash; table changes</li>
-                            <li class="fragment fade-up"><strong>SQS / SNS</strong> &mdash; messages</li>
+                            <li class="fragment fade-up"><strong>API Gateway</strong> &mdash; HTTP requests</li>
                             <li class="fragment fade-up"><strong>CloudWatch Events</strong> &mdash; scheduled (cron)</li>
-                            <li class="fragment fade-up"><strong>Kinesis</strong> &mdash; stream processing</li>
+                            <li class="fragment fade-up"><strong>DynamoDB Streams</strong> &mdash; table changes</li>
                         </ul>
                     </div>
                     <div>
@@ -825,7 +824,7 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
                         </ol>
                     </div>
                 </div>
-                <aside class="notes">Lambda automatically scales by creating new execution environments for each concurrent invocation. Cold starts occur when a new environment is provisioned; warm environments are reused for subsequent invocations. Provisioned Concurrency can eliminate cold starts for latency-sensitive applications.</aside>
+                <aside class="notes">Other common event sources include SQS/SNS (messages) and Kinesis (stream processing). Lambda automatically scales by creating new execution environments for each concurrent invocation. Cold starts occur when a new environment is provisioned; warm environments are reused for subsequent invocations. Provisioned Concurrency can eliminate cold starts for latency-sensitive applications.</aside>
             </section>
 
             <!-- Slide 30: Lambda Function Components -->
@@ -908,8 +907,6 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
                             <li class="fragment fade-up">Real-time file processing (S3 triggers)</li>
                             <li class="fragment fade-up">Data transformation in ETL pipelines</li>
                             <li class="fragment fade-up">Scheduled tasks (cron jobs)</li>
-                            <li class="fragment fade-up">IoT event processing</li>
-                            <li class="fragment fade-up">Chatbot and notification workflows</li>
                         </ul>
                     </div>
                     <div>
@@ -925,7 +922,7 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
                         </div>
                     </div>
                 </div>
-                <aside class="notes">Lambda is not suited for long-running processes (over 15 minutes) or workloads requiring persistent connections. For container-based functions that exceed deployment size limits, use Lambda container images (up to 10 GB). The concurrency limit is per-region and can be increased via a support request.</aside>
+                <aside class="notes">Other use cases include IoT event processing and chatbot/notification workflows. Lambda is not suited for long-running processes (over 15 minutes) or workloads requiring persistent connections. For container-based functions that exceed deployment size limits, use Lambda container images (up to 10 GB). The concurrency limit is per-region and can be increased via a support request.</aside>
             </section>
 
             <!-- Slide 33: Lambda vs EC2 -->
@@ -962,18 +959,8 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
                         <td>Stateless</td>
                         <td>Stateful (persistent disk)</td>
                     </tr>
-                    <tr>
-                        <td><strong>Cold Start</strong></td>
-                        <td>Yes (ms to seconds)</td>
-                        <td>No (always running)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Customization</strong></td>
-                        <td>Limited (runtime, memory)</td>
-                        <td>Full OS control</td>
-                    </tr>
                 </table>
-                <aside class="notes">The key trade-off is control vs. operational simplicity. Lambda eliminates server management but restricts runtime, state, and customization. EC2 gives full control but requires you to manage everything. Many architectures use both — Lambda for event-driven glue logic and EC2 for core application workloads.</aside>
+                <aside class="notes">Additional differences: Lambda has cold starts (ms to seconds) while EC2 is always running; Lambda offers limited customization (runtime, memory) while EC2 gives full OS control. The key trade-off is control vs. operational simplicity. Lambda eliminates server management but restricts runtime, state, and customization. EC2 gives full control but requires you to manage everything. Many architectures use both — Lambda for event-driven glue logic and EC2 for core application workloads.</aside>
             </section>
 
             <!-- Slide 34: Section Divider - Choosing Compute -->

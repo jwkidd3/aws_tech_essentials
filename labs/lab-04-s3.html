@@ -58,7 +58,7 @@
                 <div class="title-slide">
                     <h1>&#128230; Lab 4: Create an Amazon S3 Bucket</h1>
                     <h2>AWS Technical Essentials</h2>
-                    <h3>Duration: ~40 minutes</h3>
+                    <h3>Duration: ~25 minutes</h3>
                     <div class="module-progress">
                         <div class="step completed"></div>
                         <div class="step completed"></div>
@@ -285,18 +285,24 @@
                 <aside class="notes">Explain that every object has a unique key within the bucket. The combination of bucket name and key uniquely identifies every object in S3 globally.</aside>
             </section>
 
-            <!-- Step 4: Object URL and Presigned URL -->
+            <!-- Step 4b: Test Object URL -->
             <section>
-                <h2>&#128279; Step 4b: Object URL vs Presigned URL</h2>
+                <h2>&#128279; Step 4b: Test the Object URL</h2>
                 <ol>
                     <li class="fragment">Copy the <strong>Object URL</strong> from the object details page</li>
                     <li class="fragment">Open it in a new browser tab</li>
+                    <li class="fragment">Go back to the object in the S3 console</li>
                 </ol>
                 <div class="highlight-box danger fragment">
                     <strong>&#10060; Expected Result:</strong> You will see an <strong>Access Denied</strong> XML error message. This is expected because Block Public Access is enabled.
                 </div>
-                <ol start="3">
-                    <li class="fragment">Go back to the object in the S3 console</li>
+                <aside class="notes">Presigned URLs are critical for applications that need to provide temporary access to private objects. They are commonly used for file downloads, image previews, and upload workflows. The URL expires after the specified duration.</aside>
+            </section>
+
+            <!-- Step 4c: Generate Presigned URL -->
+            <section>
+                <h2>&#128279; Step 4c: Generate a Presigned URL</h2>
+                <ol>
                     <li class="fragment">Select the object using the checkbox, then click <strong>Actions</strong> &rarr; <strong>Share with a presigned URL</strong></li>
                     <li class="fragment">Set the time interval to <strong>5 minutes</strong></li>
                     <li class="fragment">Click <strong>Create presigned URL</strong></li>
@@ -328,7 +334,13 @@
                     <li class="fragment">Click <strong>Upload</strong> and upload an image file into this folder</li>
                     <li class="fragment">After uploading, note the object key: <code>employee-photos/yourfile.jpg</code></li>
                 </ol>
-                <div class="key-point fragment">
+                <aside class="notes">This is a commonly misunderstood concept. The folder is actually a zero-byte object with the key ending in a forward slash. Applications use the delimiter and prefix parameters in API calls to simulate folder navigation.</aside>
+            </section>
+
+            <!-- Step 5: Key Concept - Flat Namespace -->
+            <section>
+                <h2>&#128193; S3 Flat Namespace</h2>
+                <div class="key-point">
                     <strong>Key Concept:</strong> S3 does not actually have folders or directories. It is a <em>flat namespace</em>. What appears as a folder is simply a shared key prefix. The object key <code>employee-photos/image.jpg</code> is a single string &mdash; the <code>/</code> is just part of the name. The console displays prefixes as folders for convenience.
                 </div>
                 <aside class="notes">This is a commonly misunderstood concept. The folder is actually a zero-byte object with the key ending in a forward slash. Applications use the delimiter and prefix parameters in API calls to simulate folder navigation.</aside>
@@ -361,12 +373,10 @@
                 <aside class="notes">Point out the difference between the S3 REST endpoint and the website endpoint. The website endpoint supports index documents and redirects. The REST endpoint does not.</aside>
             </section>
 
-            <!-- Step 6: Upload index.html -->
+            <!-- Step 6b: Create index.html -->
             <section>
-                <h2>&#127760; Step 6b: Create and Upload index.html</h2>
-                <ol>
-                    <li class="fragment">On your local computer, create a file named <code>index.html</code> with this content:</li>
-                </ol>
+                <h2>&#127760; Step 6b: Create index.html</h2>
+                <p>On your local computer, create a file named <code>index.html</code> with this content:</p>
                 <pre class="fragment"><code class="html">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;&lt;title&gt;Employee Directory&lt;/title&gt;&lt;/head&gt;
@@ -376,7 +386,13 @@
      hosted on S3!&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-                <ol start="2">
+                <aside class="notes">Have students try the endpoint to see the 403 error. This reinforces that enabling static website hosting alone is not enough &mdash; you also need to configure permissions.</aside>
+            </section>
+
+            <!-- Step 6c: Upload index.html -->
+            <section>
+                <h2>&#127760; Step 6c: Upload index.html</h2>
+                <ol>
                     <li class="fragment">In your S3 bucket, click <strong>Upload</strong></li>
                     <li class="fragment">Upload the <code>index.html</code> file</li>
                     <li class="fragment">Click <strong>Upload</strong>, then <strong>Close</strong></li>
@@ -466,7 +482,7 @@
 
             <!-- Step 8: Upload New Version -->
             <section>
-                <h2>&#128260; Step 8: Explore Versioning</h2>
+                <h2>&#128260; Step 8a: Upload a New Version</h2>
                 <ol>
                     <li class="fragment">Modify your local <code>index.html</code> file &mdash; change the content to:
                         <pre><code class="html">&lt;h1&gt;Employee Directory Application - v2&lt;/h1&gt;
@@ -475,7 +491,15 @@
                     <li class="fragment">Upload the modified <code>index.html</code> to your bucket (same process as before)</li>
                     <li class="fragment">Refresh your website endpoint &mdash; you should see the updated text</li>
                     <li class="fragment">In the S3 console, click on <strong>index.html</strong></li>
-                    <li class="fragment">Click the <strong>Versions</strong> tab</li>
+                </ol>
+                <aside class="notes">Show students both versions and explain that the latest version is served by default. Discuss the cost implications &mdash; all versions count toward storage costs. Mention that lifecycle rules can be used to manage old versions.</aside>
+            </section>
+
+            <!-- Step 8b: Review Versions -->
+            <section>
+                <h2>&#128260; Step 8b: Review Versions</h2>
+                <ol>
+                    <li class="fragment">Click the <strong>Versions</strong> tab on the index.html object</li>
                     <li class="fragment">You should see <strong>two versions</strong> listed, each with a unique Version ID</li>
                     <li class="fragment">Back in the Objects list, toggle <strong>Show versions</strong> to see version IDs for all objects</li>
                 </ol>
@@ -510,8 +534,6 @@
                         <tr><td>Standard</td><td>Frequently accessed data</td><td>Immediate</td></tr>
                         <tr><td>Intelligent-Tiering</td><td>Unknown or changing access patterns</td><td>Immediate</td></tr>
                         <tr><td>Standard-IA</td><td>Infrequent access, rapid retrieval needed</td><td>Immediate</td></tr>
-                        <tr><td>One Zone-IA</td><td>Infrequent, re-creatable data</td><td>Immediate</td></tr>
-                        <tr><td>Glacier Instant Retrieval</td><td>Archive with instant access</td><td>Milliseconds</td></tr>
                         <tr><td>Glacier Flexible Retrieval</td><td>Archive, minutes to hours retrieval</td><td>1&ndash;12 hours</td></tr>
                         <tr><td>Glacier Deep Archive</td><td>Long-term archive, rare access</td><td>12&ndash;48 hours</td></tr>
                     </tbody>
@@ -565,7 +587,13 @@
                 <div class="highlight-box success fragment">
                     <strong>&#9989; Expected Result:</strong> The lifecycle rule <strong>MoveToIA</strong> appears in the lifecycle rules list with status <em>Enabled</em>.
                 </div>
-                <div class="concept-box fragment">
+                <aside class="notes">Explain the cost savings at each tier. Standard costs about $0.023/GB, Standard-IA about $0.0125/GB, Glacier about $0.004/GB. Over the lifecycle of data, this can represent significant savings. The 30-day minimum for IA transitions is enforced by S3.</aside>
+            </section>
+
+            <!-- Step 10: Lifecycle Timeline -->
+            <section>
+                <h2>&#9851;&#65039; Lifecycle Rule Timeline</h2>
+                <div class="concept-box">
                     <h4>What This Rule Does</h4>
                     <p><strong>Day 0&ndash;30:</strong> Standard &#8594; <strong>Day 30:</strong> Standard-IA &#8594; <strong>Day 90:</strong> Glacier Flexible Retrieval &#8594; <strong>Day 365:</strong> Deleted</p>
                     <p>This automates cost optimization as data ages and is accessed less frequently.</p>
@@ -610,12 +638,9 @@
                         <h4>&#9989; What You Accomplished</h4>
                         <ul>
                             <li>Created an S3 bucket with versioning and encryption</li>
-                            <li>Uploaded objects and explored properties</li>
-                            <li>Generated presigned URLs for secure sharing</li>
-                            <li>Configured static website hosting</li>
-                            <li>Applied bucket policies for public access</li>
-                            <li>Explored versioning behavior</li>
-                            <li>Reviewed storage classes</li>
+                            <li>Uploaded objects and generated presigned URLs</li>
+                            <li>Configured static website hosting with bucket policies</li>
+                            <li>Explored versioning and storage classes</li>
                             <li>Created lifecycle rules for cost optimization</li>
                         </ul>
                     </div>
@@ -626,7 +651,6 @@
                             <li>Block Public Access is a security safety net</li>
                             <li>Presigned URLs provide temporary secure access</li>
                             <li>Versioning protects against accidental changes</li>
-                            <li>Storage classes optimize costs by access pattern</li>
                             <li>Lifecycle rules automate storage transitions</li>
                         </ul>
                     </div>

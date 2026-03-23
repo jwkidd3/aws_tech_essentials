@@ -58,7 +58,7 @@
                 <div class="title-slide">
                     <h1>&#128218; Lab 5</h1>
                     <h2>Implement and Manage Amazon DynamoDB</h2>
-                    <h3>AWS Technical Essentials &bull; ~40 Minutes</h3>
+                    <h3>AWS Technical Essentials &bull; ~25 Minutes</h3>
                     <div class="module-progress">
                         <div class="step completed"></div>
                         <div class="step completed"></div>
@@ -221,26 +221,26 @@
                 <aside class="notes">Students will add three employee records. This demonstrates that DynamoDB is schema-flexible: each item can have different attributes beyond the primary key.</aside>
             </section>
 
-            <!-- Step 3: First Item -->
+            <!-- Step 3: First Item - Part 1 -->
             <section>
-                <h2>&#10133; Create the First Item</h2>
+                <h2>&#10133; Create the First Item (1/2)</h2>
                 <ol>
                     <li class="fragment">Click <strong>Explore table items</strong> (or use the left navigation)</li>
                     <li class="fragment">Click <strong>Create item</strong></li>
                     <li class="fragment">In the <strong>id</strong> field (String), enter: <code>1</code></li>
+                </ol>
+                <aside class="notes">Walk students through the item editor carefully. The JSON view can also be used, but the form view is more intuitive for this exercise. Note that all values are strings here for simplicity.</aside>
+            </section>
+
+            <!-- Step 3: First Item - Part 2 -->
+            <section>
+                <h2>&#10133; Create the First Item (2/2)</h2>
+                <ol start="4">
                     <li class="fragment">Click <strong>Add new attribute</strong> &rarr; <strong>String</strong>:
-                        <ul>
-                            <li>Attribute name: <code>name</code> &mdash; Value: <code>John Smith</code></li>
-                        </ul>
-                    </li>
-                    <li class="fragment">Repeat <strong>Add new attribute</strong> &rarr; <strong>String</strong> for each:
-                        <ul>
-                            <li><code>location</code> = <code>Seattle</code></li>
-                            <li><code>department</code> = <code>Engineering</code></li>
-                            <li><code>email</code> = <code>jsmith@example.com</code></li>
-                            <li><code>badge_number</code> = <code>12345</code></li>
-                        </ul>
-                    </li>
+                        <br>Attribute name: <code>name</code> &mdash; Value: <code>John Smith</code></li>
+                    <li class="fragment">Repeat <strong>Add new attribute</strong> &rarr; <strong>String</strong> for:
+                        <br><code>location</code> = <code>Seattle</code>, <code>department</code> = <code>Engineering</code>,
+                        <br><code>email</code> = <code>jsmith@example.com</code>, <code>badge_number</code> = <code>12345</code></li>
                     <li class="fragment">Click <strong>Create item</strong></li>
                 </ol>
                 <aside class="notes">Walk students through the item editor carefully. The JSON view can also be used, but the form view is more intuitive for this exercise. Note that all values are strings here for simplicity.</aside>
@@ -374,14 +374,22 @@
                 <aside class="notes">GSIs are one of the most powerful DynamoDB features. They allow you to query the table using an alternate key, enabling different access patterns without duplicating data.</aside>
             </section>
 
-            <!-- Step 6: Create GSI -->
+            <!-- Step 6: Create GSI - Part 1 -->
             <section>
-                <h2>&#128204; Create the GSI</h2>
+                <h2>&#128204; Create the GSI (1/2)</h2>
                 <ol>
                     <li class="fragment">Navigate to the <strong>Employees</strong> table &rarr; <strong>Indexes</strong> tab</li>
                     <li class="fragment">Click <strong>Create index</strong></li>
                     <li class="fragment">For <strong>Partition key</strong>, enter: <code>department</code> (String)</li>
                     <li class="fragment">For <strong>Sort key</strong>, enter: <code>name</code> (String)</li>
+                </ol>
+                <aside class="notes">While students wait for the index to become active, explain that a GSI is essentially a separate table managed by DynamoDB that is kept in sync with the base table. It has its own partition and sort key, allowing completely different query patterns. 'All' projected attributes means every attribute from the base table is copied to the index.</aside>
+            </section>
+
+            <!-- Step 6: Create GSI - Part 2 -->
+            <section>
+                <h2>&#128204; Create the GSI (2/2)</h2>
+                <ol start="5">
                     <li class="fragment">For <strong>Index name</strong>, enter: <code>department-name-index</code></li>
                     <li class="fragment">For <strong>Projected attributes</strong>, select: <strong>All</strong></li>
                     <li class="fragment">Click <strong>Create index</strong></li>
@@ -405,10 +413,7 @@
                 <div class="highlight-box success fragment">
                     <strong>&#9989; Expected Result:</strong> The query returns John Smith&#39;s record (the only employee in the Engineering department). All attributes are visible because we projected <strong>All</strong>.
                 </div>
-                <div class="key-point fragment">
-                    <strong>Why GSIs matter:</strong> Without this index, finding employees by department would require a full table Scan with a filter. The GSI makes this a fast, efficient Query operation.
-                </div>
-                <aside class="notes">Highlight that the GSI allows querying by department without touching the entire table. This is how DynamoDB supports multiple access patterns. In real applications, you might have several GSIs for different query needs. Note the sort key (name) allows results within a department to be returned in alphabetical order.</aside>
+                <aside class="notes">Why GSIs matter: Without this index, finding employees by department would require a full table Scan with a filter. The GSI makes this a fast, efficient Query operation. Highlight that the GSI allows querying by department without touching the entire table. This is how DynamoDB supports multiple access patterns. In real applications, you might have several GSIs for different query needs. Note the sort key (name) allows results within a department to be returned in alphabetical order.</aside>
             </section>
 
             <!-- Step 7 Divider -->
@@ -568,10 +573,8 @@
                     <div>
                         <h4>What You Accomplished</h4>
                         <ul>
-                            <li class="fragment">&#9989; Created a DynamoDB table with on-demand capacity</li>
-                            <li class="fragment">&#9989; Added and queried items using Scan and Query</li>
-                            <li class="fragment">&#9989; Edited items and observed schema flexibility</li>
-                            <li class="fragment">&#9989; Created a Global Secondary Index</li>
+                            <li class="fragment">&#9989; Created a DynamoDB table and added items</li>
+                            <li class="fragment">&#9989; Queried data using Scan, Query, and GSI</li>
                             <li class="fragment">&#9989; Enabled DynamoDB Streams</li>
                             <li class="fragment">&#9989; Configured PITR and on-demand backups</li>
                         </ul>
@@ -582,8 +585,7 @@
                             <li class="fragment">Query is always preferred over Scan</li>
                             <li class="fragment">GSIs enable alternate access patterns</li>
                             <li class="fragment">Streams power event-driven architectures</li>
-                            <li class="fragment">PITR + on-demand backups for data protection</li>
-                            <li class="fragment">Schema flexibility requires application-level validation</li>
+                            <li class="fragment">PITR + backups provide data protection</li>
                         </ul>
                     </div>
                 </div>

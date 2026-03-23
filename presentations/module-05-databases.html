@@ -191,15 +191,13 @@
             <section>
                 <h2>RDS Key Features</h2>
                 <ul>
-                    <li class="fragment fade-up"><strong>Automated backups</strong> &mdash; point-in-time recovery within retention window (up to 35 days)</li>
-                    <li class="fragment fade-up"><strong>DB snapshots</strong> &mdash; user-initiated, stored in S3, retained until deleted</li>
+                    <li class="fragment fade-up"><strong>Automated backups &amp; snapshots</strong> &mdash; point-in-time recovery (up to 35 days) plus user-initiated snapshots in S3</li>
                     <li class="fragment fade-up"><strong>Multi-AZ deployments</strong> &mdash; synchronous standby replica in a different AZ</li>
                     <li class="fragment fade-up"><strong>Read replicas</strong> &mdash; asynchronous replicas for read-heavy workloads</li>
                     <li class="fragment fade-up"><strong>Encryption</strong> &mdash; at rest (KMS) and in transit (SSL/TLS)</li>
-                    <li class="fragment fade-up"><strong>Monitoring</strong> &mdash; CloudWatch metrics, Enhanced Monitoring, Performance Insights</li>
-                    <li class="fragment fade-up"><strong>Automatic minor version upgrades</strong> during maintenance windows</li>
+                    <li class="fragment fade-up"><strong>Monitoring &amp; maintenance</strong> &mdash; CloudWatch metrics, Enhanced Monitoring, Performance Insights, automatic minor version upgrades</li>
                 </ul>
-                <aside class="notes">These features are available across all RDS engines. Automated backups and snapshots together provide robust data protection. Multi-AZ and read replicas address availability and scaling.</aside>
+                <aside class="notes">These features are available across all RDS engines. Automated backups and snapshots together provide robust data protection. Multi-AZ and read replicas address availability and scaling. Automatic minor version upgrades occur during maintenance windows.</aside>
             </section>
 
             <!-- Slide 10: Multi-AZ Deployments -->
@@ -228,10 +226,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="key-point fragment fade-up">
-                    <strong>Multi-AZ = High Availability.</strong> It does not improve read performance. Use read replicas for read scaling.
-                </div>
-                <aside class="notes">Multi-AZ is about availability, not performance. The standby is invisible to your application. Failover is automatic and handled via a DNS CNAME flip. The application connects to the same endpoint before and after failover.</aside>
+                <aside class="notes">Multi-AZ is about availability, not performance. The standby is invisible to your application. Failover is automatic and handled via a DNS CNAME flip. The application connects to the same endpoint before and after failover. Key point: Multi-AZ = High Availability. It does not improve read performance. Use read replicas for read scaling.</aside>
             </section>
 
             <!-- Slide 11: Read Replicas -->
@@ -412,9 +407,9 @@
                 <aside class="notes">Modern architectures often use multiple purpose-built databases in a single application. For example, a relational database for transactions, a cache for sessions, and a document database for a product catalog.</aside>
             </section>
 
-            <!-- Slide 18: AWS Database Portfolio -->
+            <!-- Slide 18a: AWS Database Portfolio — Core Databases -->
             <section>
-                <h2>AWS Database Portfolio</h2>
+                <h2>AWS Database Portfolio &mdash; Core Databases</h2>
                 <table>
                     <thead>
                         <tr>
@@ -444,6 +439,23 @@
                             <td>In-memory (Redis, Memcached)</td>
                             <td>Caching, session stores, leaderboards</td>
                         </tr>
+                    </tbody>
+                </table>
+                <aside class="notes">This is not an exhaustive list, but it covers the major purpose-built databases in the AWS portfolio. Each is optimized for a specific data model and access pattern.</aside>
+            </section>
+
+            <!-- Slide 18b: AWS Database Portfolio — Specialized Databases -->
+            <section>
+                <h2>AWS Database Portfolio &mdash; Specialized Databases</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Type</th>
+                            <th>Use Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         <tr>
                             <td><strong>Neptune</strong></td>
                             <td>Graph</td>
@@ -466,10 +478,10 @@
                         </tr>
                     </tbody>
                 </table>
-                <aside class="notes">This is not an exhaustive list, but it covers the major purpose-built databases in the AWS portfolio. Each is optimized for a specific data model and access pattern.</aside>
+                <aside class="notes">These specialized databases address specific data models beyond relational and key-value. Each is fully managed by AWS and optimized for its particular use case.</aside>
             </section>
 
-            <!-- Slide 19: Purpose-Built Databases Detail -->
+            <!-- Slide 19a: Purpose-Built Databases — DocumentDB, Neptune, ElastiCache -->
             <section>
                 <h2>Purpose-Built Databases &mdash; Highlights</h2>
                 <div class="three-columns">
@@ -486,7 +498,13 @@
                         <p style="font-size:0.85em;">In-memory data store supporting Redis and Memcached. Microsecond latency for caching, session management, and real-time analytics.</p>
                     </div>
                 </div>
-                <div class="three-columns" style="margin-top:15px;">
+                <aside class="notes">Each of these services is fully managed. The key takeaway is to match the service to the workload rather than forcing all data into a single relational database.</aside>
+            </section>
+
+            <!-- Slide 19b: Purpose-Built Databases — QLDB, Keyspaces, Timestream -->
+            <section>
+                <h2>Purpose-Built Databases &mdash; Highlights (cont.)</h2>
+                <div class="three-columns">
                     <div class="card">
                         <h4>&#128209; QLDB</h4>
                         <p style="font-size:0.85em;">Ledger database with an immutable, transparent, and cryptographically verifiable transaction log.</p>
@@ -610,7 +628,7 @@
                 <aside class="notes">Provisioned mode is more cost-effective for steady workloads. On-Demand is simpler and better for spiky or unknown traffic patterns. You can switch between modes, but only once every 24 hours.</aside>
             </section>
 
-            <!-- Slide 25: DynamoDB Features -->
+            <!-- Slide 25a: DynamoDB Features — Security, Global Tables, Streams -->
             <section>
                 <h2>DynamoDB Features</h2>
                 <div class="three-columns">
@@ -639,7 +657,13 @@
                         </ul>
                     </div>
                 </div>
-                <div class="two-columns" style="margin-top:15px;">
+                <aside class="notes">These features make DynamoDB enterprise-ready. Global tables enable multi-region active-active architectures. Streams enable event-driven architectures.</aside>
+            </section>
+
+            <!-- Slide 25b: DynamoDB Features — TTL and DAX -->
+            <section>
+                <h2>DynamoDB Features (cont.)</h2>
+                <div class="two-columns">
                     <div class="card">
                         <h4>&#9201; TTL (Time to Live)</h4>
                         <p style="font-size:0.85em;">Automatically delete expired items at no extra cost. Ideal for session data, temporary records, and logs.</p>
@@ -649,7 +673,7 @@
                         <p style="font-size:0.85em;">In-memory cache for DynamoDB. Reduces read latency from milliseconds to <strong>microseconds</strong>. API-compatible &mdash; no application code changes.</p>
                     </div>
                 </div>
-                <aside class="notes">These features make DynamoDB enterprise-ready. Global tables enable multi-region active-active architectures. Streams enable event-driven architectures. DAX provides microsecond read latency without code changes.</aside>
+                <aside class="notes">TTL is useful for automatically cleaning up session data and temporary records. DAX provides microsecond read latency without code changes, making it ideal for read-heavy workloads.</aside>
             </section>
 
             <!-- Slide 26: DynamoDB Use Cases -->
@@ -673,10 +697,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="highlight-box success fragment fade-up">
-                    <strong>Scale fact:</strong> DynamoDB handles more than 10 trillion requests per day and can support peaks of more than 20 million requests per second.
-                </div>
-                <aside class="notes">DynamoDB is used by some of the largest applications in the world, including Amazon.com itself. Its single-digit millisecond performance and limitless scaling make it ideal for high-throughput, low-latency workloads.</aside>
+                <aside class="notes">DynamoDB is used by some of the largest applications in the world, including Amazon.com itself. Its single-digit millisecond performance and limitless scaling make it ideal for high-throughput, low-latency workloads. Scale fact: DynamoDB handles more than 10 trillion requests per day and can support peaks of more than 20 million requests per second.</aside>
             </section>
 
             <!-- Slide 27: DynamoDB Pricing -->
@@ -809,10 +830,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="key-point fragment fade-up">
-                    <strong>Remember:</strong> It is not relational <em>or</em> NoSQL. Modern architectures commonly use both &mdash; each for the workload it handles best.
-                </div>
-                <aside class="notes">The answer is rarely either/or. A single application might use Aurora for order management, DynamoDB for session state, and ElastiCache for query caching. Design for the access pattern, not the engine you know best.</aside>
+                <aside class="notes">The answer is rarely either/or. A single application might use Aurora for order management, DynamoDB for session state, and ElastiCache for query caching. Design for the access pattern, not the engine you know best. Remember: It is not relational or NoSQL. Modern architectures commonly use both -- each for the workload it handles best.</aside>
             </section>
 
             <!-- Slide 32: Lab Callout -->

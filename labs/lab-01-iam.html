@@ -95,7 +95,7 @@
                     <div class="card">
                         <h4>&#128221; Lab Details</h4>
                         <ul>
-                            <li><strong>Duration:</strong> ~30 minutes</li>
+                            <li><strong>Duration:</strong> ~20 minutes</li>
                             <li><strong>Level:</strong> Introductory</li>
                             <li><strong>Services:</strong> IAM, S3, EC2</li>
                         </ul>
@@ -324,12 +324,23 @@
             </section>
 
             <section>
-                <h2>&#128221; Create an IAM User (1/3)</h2>
+                <h2>&#128221; Create an IAM User (1/4)</h2>
                 <ol>
                     <li class="fragment">In the left navigation, click <strong>Users</strong></li>
                     <li class="fragment">Click the <strong>Create user</strong> button</li>
                     <li class="fragment">For <strong>User name</strong>, enter: <code>lab-user</code></li>
                     <li class="fragment">Check the box: <strong>Provide user access to the AWS Management Console</strong></li>
+                </ol>
+                <aside class="notes">
+                    Have students use a simple but memorable password. They will need it for Step 8 when testing permissions.
+                    If the console shows the Identity Center option, make sure students select the IAM user option for this lab.
+                </aside>
+            </section>
+
+            <section>
+                <h2>&#128221; Create an IAM User (2/4)</h2>
+                <h3>Console Access Settings</h3>
+                <ol start="5">
                     <li class="fragment">Select <strong>I want to create an IAM user</strong> (if prompted to choose between Identity Center and IAM)</li>
                     <li class="fragment">Under Console password, select <strong>Custom password</strong> and enter a password you will remember (e.g., <code>Lab@User123!</code>)</li>
                     <li class="fragment"><strong>Uncheck</strong> the box: &ldquo;Users must create a new password at next sign-in&rdquo;</li>
@@ -342,7 +353,7 @@
             </section>
 
             <section>
-                <h2>&#128221; Create an IAM User (2/3)</h2>
+                <h2>&#128221; Create an IAM User (3/4)</h2>
                 <h3>Set Permissions</h3>
                 <ol>
                     <li class="fragment">On the <strong>Set permissions</strong> page, select <strong>Attach policies directly</strong></li>
@@ -362,7 +373,7 @@
             </section>
 
             <section>
-                <h2>&#128221; Create an IAM User (3/3)</h2>
+                <h2>&#128221; Create an IAM User (4/4)</h2>
                 <h3>Review and Create</h3>
                 <ol>
                     <li class="fragment">On the <strong>Review and create</strong> page, verify:
@@ -385,12 +396,10 @@
                     <strong>&#9989; Expected Result:</strong> A success banner appears confirming the user was created.
                     You should see a console sign-in URL, the user name, and the password. Save these for Step 8.
                 </div>
-                <div class="highlight-box danger fragment">
-                    <strong>&#128680; Save the credentials now!</strong> Copy the sign-in URL and password to a text file.
-                    You will not be able to view the password again after closing this page.
-                </div>
                 <aside class="notes">
                     Make absolutely sure students save the sign-in URL and credentials. They will need them in Step 8.
+                    IMPORTANT: Save the credentials now! Copy the sign-in URL and password to a text file.
+                    You will not be able to view the password again after closing this page.
                     If a student misses the password, they can reset it from the user's Security credentials tab.
                 </aside>
             </section>
@@ -420,12 +429,10 @@
             <section>
                 <h2>&#128101; Create an IAM Group</h2>
                 <ol>
-                    <li class="fragment">In the left navigation, click <strong>User groups</strong></li>
-                    <li class="fragment">Click <strong>Create group</strong></li>
+                    <li class="fragment">In the left navigation, click <strong>User groups</strong>, then click <strong>Create group</strong></li>
                     <li class="fragment">For <strong>User group name</strong>, enter: <code>EC2-Admins</code></li>
                     <li class="fragment">Under <strong>Add users to the group</strong>, check the box next to <strong>lab-user</strong></li>
-                    <li class="fragment">Under <strong>Attach permissions policies</strong>, search for: <code>AmazonEC2FullAccess</code></li>
-                    <li class="fragment">Check the box next to <strong>AmazonEC2FullAccess</strong></li>
+                    <li class="fragment">Under <strong>Attach permissions policies</strong>, search for <code>AmazonEC2FullAccess</code> and check the box next to it</li>
                     <li class="fragment">Click <strong>Create user group</strong></li>
                 </ol>
                 <aside class="notes">
@@ -488,9 +495,20 @@
                     <li class="fragment">In the left navigation, click <strong>Policies</strong></li>
                     <li class="fragment">Click <strong>Create policy</strong></li>
                     <li class="fragment">On the policy editor page, click the <strong>JSON</strong> tab to switch to the JSON editor</li>
-                    <li class="fragment">Delete any existing content in the editor and paste the following policy:</li>
+                    <li class="fragment">Delete any existing content in the editor and paste the JSON from the next slide</li>
                 </ol>
-                <pre class="fragment"><code class="json">{
+                <aside class="notes">
+                    Walk through each element: Version is always 2012-10-17, Effect is Allow or Deny,
+                    Action lists the specific API calls permitted, Resource specifies which AWS resources
+                    the policy applies to. Note the two Resource entries: one for the bucket itself (ListBucket)
+                    and one for objects within the bucket (GetObject).
+                </aside>
+            </section>
+
+            <section>
+                <h2>&#128220; Custom Policy JSON</h2>
+                <p>Paste this policy into the JSON editor:</p>
+                <pre><code class="json">{
     "Version": "2012-10-17",
     "Statement": [
         {
@@ -507,10 +525,8 @@
     ]
 }</code></pre>
                 <aside class="notes">
-                    Walk through each element: Version is always 2012-10-17, Effect is Allow or Deny,
-                    Action lists the specific API calls permitted, Resource specifies which AWS resources
-                    the policy applies to. Note the two Resource entries: one for the bucket itself (ListBucket)
-                    and one for objects within the bucket (GetObject).
+                    Two Resource ARNs are needed: one for the bucket itself (ListBucket operates on the bucket)
+                    and one for objects within the bucket (GetObject operates on objects with the /* wildcard).
                 </aside>
             </section>
 
@@ -718,7 +734,7 @@
             </section>
 
             <section>
-                <h2>&#128270; Test S3 Access (Read Only)</h2>
+                <h2>&#128270; Test Read Access</h2>
                 <ol>
                     <li class="fragment">In the <strong>lab-user</strong> session, navigate to <strong>S3</strong> using the search bar</li>
                     <li class="fragment">You should be able to see the list of S3 buckets</li>
@@ -728,8 +744,16 @@
                     <strong>&#9989; Expected Result:</strong> You can <strong>view</strong> S3 buckets and their contents.
                     The S3 console loads successfully and displays bucket listings.
                 </div>
-                <p class="fragment">Now try to <strong>create</strong> a new bucket:</p>
-                <ol start="4">
+                <aside class="notes">
+                    This demonstrates that the read-only policy allows List and Get operations.
+                    The S3 console should load successfully and display bucket listings.
+                </aside>
+            </section>
+
+            <section>
+                <h2>&#128270; Test Write Access Denied</h2>
+                <p>Now try to <strong>create</strong> a new bucket:</p>
+                <ol>
                     <li class="fragment">Click <strong>Create bucket</strong></li>
                     <li class="fragment">Enter any bucket name and click <strong>Create bucket</strong></li>
                 </ol>
@@ -812,14 +836,13 @@
             </section>
 
             <section>
-                <h2>&#128465; Clean Up &mdash; Delete Resources</h2>
+                <h2>&#128465; Clean Up &mdash; Policy and Group</h2>
                 <p>Delete resources in the following order:</p>
                 <ol>
                     <li class="fragment"><strong>Delete the custom policy:</strong>
                         <ul>
                             <li>Go to <strong>Policies</strong>, search for <code>EmployeeDirectoryS3ReadPolicy</code></li>
-                            <li>Select the policy, click <strong>Actions</strong> &rarr; <strong>Delete</strong></li>
-                            <li>Type the policy name to confirm and click <strong>Delete</strong></li>
+                            <li>Select the policy, click <strong>Actions</strong> &rarr; <strong>Delete</strong>, type the name to confirm</li>
                         </ul>
                     </li>
                     <li class="fragment"><strong>Remove lab-user from the group:</strong>
@@ -828,6 +851,16 @@
                             <li>On the <strong>Users</strong> tab, select <strong>lab-user</strong> and click <strong>Remove users</strong></li>
                         </ul>
                     </li>
+                </ol>
+                <aside class="notes">
+                    The order matters: delete the policy first (since it is not attached to anything, it can be deleted directly).
+                    Remove the user from the group before deleting the group.
+                </aside>
+            </section>
+
+            <section>
+                <h2>&#128465; Clean Up &mdash; Group and User</h2>
+                <ol start="3">
                     <li class="fragment"><strong>Delete the group:</strong>
                         <ul>
                             <li>Go to <strong>User groups</strong>, select <strong>EC2-Admins</strong></li>
@@ -842,9 +875,7 @@
                     </li>
                 </ol>
                 <aside class="notes">
-                    The order matters: delete the policy first (since it is not attached to anything, it can be deleted directly).
-                    Remove the user from the group before deleting the group. Finally delete the user.
-                    If the policy was attached to a user or group, it would need to be detached first.
+                    Finally delete the user. If the policy was attached to a user or group, it would need to be detached first.
                 </aside>
             </section>
 

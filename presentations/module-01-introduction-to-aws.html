@@ -271,9 +271,9 @@
                 <aside class="notes">Walk through the decision process in order. Compliance is typically non-negotiable and comes first. If you have no compliance constraints, proximity to users is usually the next priority. Then check that the services you need are available. Finally, compare costs. Remind participants they can use multiple Regions for different workloads.</aside>
             </section>
 
-            <!-- AWS Service Categories -->
+            <!-- AWS Service Categories (1/2) -->
             <section>
-                <h2>&#128230; AWS Service Categories</h2>
+                <h2>&#128230; AWS Service Categories (1/2)</h2>
                 <p>AWS offers 200+ fully featured services. Key categories include:</p>
                 <div class="three-columns">
                     <div class="card">
@@ -301,7 +301,13 @@
                         </ul>
                     </div>
                 </div>
-                <div class="three-columns" style="margin-top: 15px;">
+                <aside class="notes">This is just a sampling. We'll dive deeper into many of these services throughout the course. The key takeaway is that AWS provides building blocks across every layer of the stack. In this course, we'll focus on EC2, VPC, S3, DynamoDB, and IAM as core services. Mention that you don't need to memorize all services but understand the categories.</aside>
+            </section>
+
+            <!-- AWS Service Categories (2/2) -->
+            <section>
+                <h2>&#128230; AWS Service Categories (2/2)</h2>
+                <div class="three-columns">
                     <div class="card">
                         <h4>Networking</h4>
                         <ul>
@@ -363,10 +369,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="key-point" style="margin-top: 15px;">
-                    <strong>Key Insight:</strong> Everything in AWS is an API call. The Console, CLI, and SDKs are all just different interfaces to the same underlying REST APIs. This means anything you can do in the Console can be automated via CLI or SDK.
-                </div>
-                <aside class="notes">Stress that the API-first nature of AWS is fundamental. When you click a button in the Console, it's making an API call. The CLI wraps those same API calls in shell commands. SDKs wrap them in language-native code. This is what makes Infrastructure as Code possible. In practice, teams use the Console for exploration and debugging, CLI for scripting and quick operations, and SDKs for application-level integration.</aside>
+                <aside class="notes">Key Insight: Everything in AWS is an API call. The Console, CLI, and SDKs are all just different interfaces to the same underlying REST APIs. Anything you can do in the Console can be automated via CLI or SDK. Stress that the API-first nature of AWS is fundamental. When you click a button in the Console, it's making an API call. The CLI wraps those same API calls in shell commands. SDKs wrap them in language-native code. This is what makes Infrastructure as Code possible. In practice, teams use the Console for exploration and debugging, CLI for scripting and quick operations, and SDKs for application-level integration.</aside>
             </section>
 
             <!-- AWS CLI Example -->
@@ -379,17 +382,7 @@
 aws s3 ls
 
 # Describe EC2 instances
-aws ec2 describe-instances \
-  --region us-east-1
-
-# Create a DynamoDB table
-aws dynamodb create-table \
-  --table-name Employees \
-  --attribute-definitions \
-    AttributeName=id,AttributeType=S \
-  --key-schema \
-    AttributeName=id,KeyType=HASH \
-  --billing-mode PAY_PER_REQUEST
+aws ec2 describe-instances --region us-east-1
 
 # Get caller identity (who am I?)
 aws sts get-caller-identity</code></pre>
@@ -402,12 +395,9 @@ aws sts get-caller-identity</code></pre>
                         <div class="highlight-box success" style="margin-top: 15px;">
                             <strong>Pro Tip:</strong> Use <code>--output table</code> for human-readable output, <code>--output json</code> for scripting, and <code>--query</code> for JMESPath filtering.
                         </div>
-                        <div class="highlight-box warning" style="margin-top: 15px;">
-                            <strong>Authentication:</strong> The CLI uses credentials configured via <code>aws configure</code> or environment variables (<code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>).
-                        </div>
                     </div>
                 </div>
-                <aside class="notes">Walk through the CLI syntax. The pattern is always: aws, then the service name, then the action, then options. The sts get-caller-identity command is extremely useful for debugging authentication issues. It tells you exactly who AWS thinks you are. Mention that in the labs, they'll be using both the Console and CLI.</aside>
+                <aside class="notes">Authentication: The CLI uses credentials configured via aws configure or environment variables (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY). Walk through the CLI syntax. The pattern is always: aws, then the service name, then the action, then options. The sts get-caller-identity command is extremely useful for debugging authentication issues. It tells you exactly who AWS thinks you are. Mention that in the labs, they'll be using both the Console and CLI.</aside>
             </section>
 
             <!-- ============================================================ -->
@@ -423,18 +413,15 @@ aws sts get-caller-identity</code></pre>
             <section>
                 <h2>&#128737;&#65039; AWS Shared Responsibility Model</h2>
                 <div class="concept-box">
-                    <h4>Security OF the Cloud vs. Security IN the Cloud</h4>
-                    <p style="font-size: 0.85em;">AWS and the customer share security responsibilities. Understanding the boundary is critical for compliance and proper security posture.</p>
+                    <p style="font-size: 0.85em; margin: 0;"><strong>Security OF the Cloud vs. Security IN the Cloud</strong> &mdash; AWS and the customer share security responsibilities.</p>
                 </div>
                 <div class="two-columns" style="margin-top: 15px;">
                     <div class="card" style="border-top: 4px solid var(--accent-color);">
                         <h4>&#9989; AWS Responsibility (Security OF the Cloud)</h4>
                         <ul>
-                            <li class="fragment fade-up">Physical security of data centers</li>
-                            <li class="fragment fade-up">Hardware and infrastructure</li>
+                            <li class="fragment fade-up">Physical security and hardware infrastructure</li>
                             <li class="fragment fade-up">Managed services' underlying OS/patching</li>
-                            <li class="fragment fade-up">Network infrastructure</li>
-                            <li class="fragment fade-up">Hypervisor layer (Nitro)</li>
+                            <li class="fragment fade-up">Hypervisor and network infrastructure</li>
                             <li class="fragment fade-up">Global infrastructure (Regions, AZs, Edge)</li>
                         </ul>
                     </div>
@@ -443,10 +430,8 @@ aws sts get-caller-identity</code></pre>
                         <ul>
                             <li class="fragment fade-up">Data encryption (at rest and in transit)</li>
                             <li class="fragment fade-up">IAM &mdash; identity and access management</li>
-                            <li class="fragment fade-up">Operating system patching (EC2)</li>
-                            <li class="fragment fade-up">Network &amp; firewall configuration</li>
-                            <li class="fragment fade-up">Application-level security</li>
-                            <li class="fragment fade-up">Client-side data protection</li>
+                            <li class="fragment fade-up">OS patching, network &amp; firewall configuration</li>
+                            <li class="fragment fade-up">Application-level and client-side security</li>
                         </ul>
                     </div>
                 </div>
@@ -529,18 +514,14 @@ aws sts get-caller-identity</code></pre>
                         </ul>
                     </div>
                 </div>
-                <div class="highlight-box warning" style="margin-top: 15px;">
-                    <strong>Best Practice:</strong> Always assign permissions to groups, then add users to those groups. Avoid attaching policies directly to individual users &mdash; this does not scale and becomes unmanageable.
-                </div>
-                <aside class="notes">Emphasize the group-based approach. In a real organization, you might have groups like 'Developers', 'DBAdmins', 'ReadOnlyAuditors'. When a new developer joins, you add them to the Developers group and they immediately get the right permissions. When they leave, you remove them. This is much cleaner than managing per-user policies. Note the 10-group limit per user, which is rarely hit in practice.</aside>
+                <aside class="notes">Best Practice: Always assign permissions to groups, then add users to those groups. Avoid attaching policies directly to individual users — this does not scale and becomes unmanageable. Emphasize the group-based approach. In a real organization, you might have groups like 'Developers', 'DBAdmins', 'ReadOnlyAuditors'. When a new developer joins, you add them to the Developers group and they immediately get the right permissions. When they leave, you remove them. This is much cleaner than managing per-user policies. Note the 10-group limit per user, which is rarely hit in practice.</aside>
             </section>
 
             <!-- IAM Roles -->
             <section>
                 <h2>&#127917; IAM Roles</h2>
                 <div class="concept-box">
-                    <h4>Roles Provide Temporary Security Credentials</h4>
-                    <p style="font-size: 0.85em;">Unlike IAM users, roles do not have long-term credentials. Instead, when a role is assumed, AWS STS (Security Token Service) provides <strong>temporary credentials</strong> that expire automatically.</p>
+                    <p style="font-size: 0.85em; margin: 0;"><strong>Roles</strong> provide <strong>temporary security credentials</strong> via AWS STS that expire automatically &mdash; no long-term credentials.</p>
                 </div>
                 <div class="two-columns" style="margin-top: 15px;">
                     <div>
@@ -556,12 +537,9 @@ aws sts get-caller-identity</code></pre>
                         <div class="highlight-box success">
                             <strong>Best Practice:</strong> Use IAM roles instead of access keys whenever possible. Roles provide temporary credentials that rotate automatically.
                         </div>
-                        <div class="highlight-box" style="margin-top: 15px;">
-                            <strong>Trust Policy:</strong> Every role has a trust policy that defines <em>who</em> can assume the role (the principal).
-                        </div>
                     </div>
                 </div>
-                <aside class="notes">Roles are the preferred mechanism for granting permissions in modern AWS architectures. The key benefit is that temporary credentials expire, reducing the blast radius of a compromise. For the employee directory application we'll build, we'll attach an IAM role to our EC2 instance so the application code can access DynamoDB and S3 without hardcoded credentials. This is a critical best practice that many organizations get wrong early on.</aside>
+                <aside class="notes">Trust Policy: Every role has a trust policy that defines who can assume the role (the principal). Roles are the preferred mechanism for granting permissions in modern AWS architectures. The key benefit is that temporary credentials expire, reducing the blast radius of a compromise. For the employee directory application we'll build, we'll attach an IAM role to our EC2 instance so the application code can access DynamoDB and S3 without hardcoded credentials. This is a critical best practice that many organizations get wrong early on.</aside>
             </section>
 
             <!-- IAM Policy Structure -->
@@ -604,12 +582,9 @@ aws sts get-caller-identity</code></pre>
                                 </tbody>
                             </table>
                         </div>
-                        <div class="highlight-box danger" style="margin-top: 15px;">
-                            <strong>Default Deny:</strong> If a policy doesn't explicitly allow an action, it is denied. An explicit Deny always overrides any Allow.
-                        </div>
                     </div>
                 </div>
-                <aside class="notes">Walk through the JSON policy line by line. Version is always 2012-10-17 (this is the policy language version, not a date you set). Sid is optional but recommended for readability. Effect is either Allow or Deny. Action uses the format service:APIOperation. Resource uses ARNs to specify exactly which resources the policy applies to. Note the two resource ARNs in the example: one for the bucket itself (for ListBucket) and one with /* for objects inside the bucket (for GetObject). This is a common pattern. Stress that explicit Deny always wins.</aside>
+                <aside class="notes">Default Deny: If a policy doesn't explicitly allow an action, it is denied. An explicit Deny always overrides any Allow. Walk through the JSON policy line by line. Version is always 2012-10-17 (this is the policy language version, not a date you set). Sid is optional but recommended for readability. Effect is either Allow or Deny. Action uses the format service:APIOperation. Resource uses ARNs to specify exactly which resources the policy applies to. Note the two resource ARNs in the example: one for the bucket itself (for ListBucket) and one with /* for objects inside the bucket (for GetObject). This is a common pattern. Stress that explicit Deny always wins.</aside>
             </section>
 
             <!-- Policy Types -->
@@ -644,10 +619,7 @@ aws sts get-caller-identity</code></pre>
                         </ul>
                     </div>
                 </div>
-                <div class="key-point" style="margin-top: 15px;">
-                    <strong>Recommendation:</strong> Start with AWS managed policies for learning and prototyping. Transition to customer managed policies for production workloads with least-privilege scoping.
-                </div>
-                <aside class="notes">In practice, most organizations use a combination. AWS managed policies are convenient but tend to be overly permissive. For example, AmazonS3FullAccess grants access to ALL S3 buckets in the account. Customer managed policies let you scope down to specific buckets, prefixes, and operations. Inline policies are generally discouraged except for edge cases where a policy must be tightly coupled to a specific identity and should never be reused.</aside>
+                <aside class="notes">Recommendation: Start with AWS managed policies for learning and prototyping. Transition to customer managed policies for production workloads with least-privilege scoping. In practice, most organizations use a combination. AWS managed policies are convenient but tend to be overly permissive. For example, AmazonS3FullAccess grants access to ALL S3 buckets in the account. Customer managed policies let you scope down to specific buckets, prefixes, and operations. Inline policies are generally discouraged except for edge cases where a policy must be tightly coupled to a specific identity and should never be reused.</aside>
             </section>
 
             <!-- Root User vs IAM Users -->
@@ -673,8 +645,14 @@ aws sts get-caller-identity</code></pre>
                         </ul>
                     </div>
                 </div>
-                <div class="highlight-box danger" style="margin-top: 15px;">
-                    <strong>Root User Best Practices:</strong>
+                <aside class="notes">The root user is the most powerful identity in an AWS account and the most dangerous if compromised. There are very few tasks that require root access: closing the account, changing the support plan, enabling certain S3 configurations, and restoring IAM permissions if you've locked yourself out. Everything else should be done with IAM users or roles. This is not optional guidance &mdash; it's a fundamental security requirement.</aside>
+            </section>
+
+            <!-- Root User Best Practices -->
+            <section>
+                <h2>&#128272; Root User Best Practices</h2>
+                <div class="highlight-box danger">
+                    <strong>Critical Security Guidance:</strong>
                     <ul style="margin: 10px 0 0 20px; font-size: 0.85em;">
                         <li>Enable MFA on the root user immediately</li>
                         <li>Do NOT create access keys for the root user</li>
@@ -683,7 +661,7 @@ aws sts get-caller-identity</code></pre>
                         <li>Store root credentials in a secure vault</li>
                     </ul>
                 </div>
-                <aside class="notes">The root user is the most powerful identity in an AWS account and the most dangerous if compromised. There are very few tasks that require root access: closing the account, changing the support plan, enabling certain S3 configurations, and restoring IAM permissions if you've locked yourself out. Everything else should be done with IAM users or roles. This is not optional guidance &mdash; it's a fundamental security requirement.</aside>
+                <aside class="notes">The root user is the most powerful identity in an AWS account. Compromising it gives full, unrestricted access. These best practices are non-negotiable baseline security requirements for every AWS account.</aside>
             </section>
 
             <!-- Multi-Factor Authentication -->
@@ -707,10 +685,7 @@ aws sts get-caller-identity</code></pre>
                         <p style="font-size: 0.85em;">USB-based hardware key (e.g., YubiKey). Phishing-resistant and supports multiple accounts on one device.</p>
                     </div>
                 </div>
-                <div class="key-point" style="margin-top: 15px;">
-                    <strong>Requirement:</strong> At minimum, enable MFA on the root user and all IAM users with console access. You can also enforce MFA in IAM policies using the <code>aws:MultiFactorAuthPresent</code> condition key.
-                </div>
-                <aside class="notes">MFA is the single most impactful security control you can enable. AWS recommends FIDO2 security keys as the strongest option because they're phishing-resistant. Virtual MFA is the most common in practice due to convenience. You can also require MFA for specific API operations through IAM policy conditions. For example, you might allow users to list resources freely but require MFA to delete anything.</aside>
+                <aside class="notes">Requirement: At minimum, enable MFA on the root user and all IAM users with console access. You can also enforce MFA in IAM policies using the aws:MultiFactorAuthPresent condition key. MFA is the single most impactful security control you can enable. AWS recommends FIDO2 security keys as the strongest option because they're phishing-resistant. Virtual MFA is the most common in practice due to convenience. You can also require MFA for specific API operations through IAM policy conditions. For example, you might allow users to list resources freely but require MFA to delete anything.</aside>
             </section>
 
             <!-- Principle of Least Privilege -->
@@ -815,10 +790,7 @@ aws sts get-caller-identity</code></pre>
                         </ul>
                     </div>
                 </div>
-                <div class="highlight-box" style="margin-top: 15px;">
-                    <strong>Remember:</strong> IAM configuration errors are the #1 cause of AWS security incidents. Invest time in getting IAM right from the start.
-                </div>
-                <aside class="notes">This slide is a quick reference card. Emphasize that these aren't aspirational goals but baseline requirements. Organizations that skip these steps regularly end up in security incidents. The most common mistakes: using the root user for daily tasks, not enabling MFA, using overly permissive policies, and sharing IAM user credentials between team members. Each of these creates audit and security risks.</aside>
+                <aside class="notes">Remember: IAM configuration errors are the #1 cause of AWS security incidents. Invest time in getting IAM right from the start. This slide is a quick reference card. Emphasize that these aren't aspirational goals but baseline requirements. Organizations that skip these steps regularly end up in security incidents. The most common mistakes: using the root user for daily tasks, not enabling MFA, using overly permissive policies, and sharing IAM user credentials between team members. Each of these creates audit and security risks.</aside>
             </section>
 
             <!-- ============================================================ -->
@@ -852,10 +824,8 @@ aws sts get-caller-identity</code></pre>
                         <h4>What We'll Build, Module by Module</h4>
                         <ul>
                             <li class="fragment fade-up"><strong>Module 1:</strong> IAM foundations</li>
-                            <li class="fragment fade-up"><strong>Module 2:</strong> Compute (EC2)</li>
-                            <li class="fragment fade-up"><strong>Module 3:</strong> Networking (VPC)</li>
-                            <li class="fragment fade-up"><strong>Module 4:</strong> Storage (S3)</li>
-                            <li class="fragment fade-up"><strong>Module 5:</strong> Databases (DynamoDB)</li>
+                            <li class="fragment fade-up"><strong>Modules 2&ndash;3:</strong> Compute (EC2) &amp; Networking (VPC)</li>
+                            <li class="fragment fade-up"><strong>Modules 4&ndash;5:</strong> Storage (S3) &amp; Databases (DynamoDB)</li>
                             <li class="fragment fade-up"><strong>Module 6:</strong> Monitoring (CloudWatch)</li>
                             <li class="fragment fade-up"><strong>Module 7:</strong> Scaling &amp; Load Balancing</li>
                         </ul>
@@ -895,9 +865,9 @@ aws sts get-caller-identity</code></pre>
                 <aside class="notes">Sketch the architecture on the whiteboard if possible. Start from the user, through the load balancer, to EC2 instances, then to DynamoDB and S3 on the backend. VPC wraps the networking layer. IAM controls who and what can access each component. Note that the application uses an IAM role attached to EC2 to access DynamoDB and S3 &mdash; no access keys are stored in the application code. This is the pattern we established as a best practice earlier.</aside>
             </section>
 
-            <!-- Services Deep Dive Preview -->
+            <!-- Services Deep Dive Preview (1/2) -->
             <section>
-                <h2>&#128230; Core Services We'll Use</h2>
+                <h2>&#128230; Core Services We'll Use (1/2)</h2>
                 <table>
                     <thead>
                         <tr><th>Service</th><th>Purpose</th><th>Module</th></tr>
@@ -923,6 +893,19 @@ aws sts get-caller-identity</code></pre>
                             <td>Object storage for employee photos &mdash; 11 nines durability, lifecycle policies</td>
                             <td>Module 4</td>
                         </tr>
+                    </tbody>
+                </table>
+                <aside class="notes">This table maps the entire course. Each module builds on the previous one. By the end, participants will have hands-on experience with every service listed here.</aside>
+            </section>
+
+            <!-- Services Deep Dive Preview (2/2) -->
+            <section>
+                <h2>&#128230; Core Services We'll Use (2/2)</h2>
+                <table>
+                    <thead>
+                        <tr><th>Service</th><th>Purpose</th><th>Module</th></tr>
+                    </thead>
+                    <tbody>
                         <tr>
                             <td><strong>Amazon DynamoDB</strong></td>
                             <td>NoSQL database for employee records &mdash; key-value, single-digit ms response, serverless</td>
@@ -940,7 +923,7 @@ aws sts get-caller-identity</code></pre>
                         </tr>
                     </tbody>
                 </table>
-                <aside class="notes">This table maps the entire course. Each module builds on the previous one. By the end, participants will have hands-on experience with every service listed here. Mention that these services represent the core building blocks of most AWS architectures &mdash; the patterns they learn here apply far beyond this specific application.</aside>
+                <aside class="notes">These services represent the core building blocks of most AWS architectures &mdash; the patterns they learn here apply far beyond this specific application.</aside>
             </section>
 
             <!-- Why This Architecture? -->
@@ -950,10 +933,10 @@ aws sts get-caller-identity</code></pre>
                     <div class="card">
                         <h4>Architecture Decisions</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>EC2 over Lambda:</strong> Learn core compute concepts; easier to debug and understand initially</li>
-                            <li class="fragment fade-up"><strong>DynamoDB over RDS:</strong> Serverless, no infrastructure management, scales automatically</li>
-                            <li class="fragment fade-up"><strong>S3 for photos:</strong> Industry standard for object/blob storage; virtually unlimited capacity</li>
-                            <li class="fragment fade-up"><strong>VPC isolation:</strong> Real-world requirement &mdash; network controls are non-negotiable in production</li>
+                            <li class="fragment fade-up"><strong>EC2 over Lambda:</strong> Exposes core compute and OS concepts</li>
+                            <li class="fragment fade-up"><strong>DynamoDB over RDS:</strong> Serverless, auto-scaling NoSQL</li>
+                            <li class="fragment fade-up"><strong>S3 for photos:</strong> Unlimited object storage</li>
+                            <li class="fragment fade-up"><strong>VPC isolation:</strong> Network controls for production</li>
                         </ul>
                     </div>
                     <div>
@@ -963,12 +946,9 @@ aws sts get-caller-identity</code></pre>
                         <div class="highlight-box" style="margin-top: 15px;">
                             <strong>Cost Efficiency:</strong> With DynamoDB on-demand pricing and EC2 Auto Scaling, you pay proportional to actual usage.
                         </div>
-                        <div class="highlight-box warning" style="margin-top: 15px;">
-                            <strong>Production Note:</strong> A real-world deployment would also include CloudFront, WAF, multi-Region failover, and CI/CD pipelines.
-                        </div>
                     </div>
                 </div>
-                <aside class="notes">Address why we chose these services over alternatives. EC2 is more instructional than Lambda for this course because it exposes more of the infrastructure layers (OS, networking, security groups). DynamoDB is simpler to set up than RDS for a key-value use case like employee records. S3 is the natural choice for any file/object storage. Acknowledge that production architectures would include additional services.</aside>
+                <aside class="notes">Production Note: A real-world deployment would also include CloudFront, WAF, multi-Region failover, and CI/CD pipelines. Address why we chose these services over alternatives. EC2 is more instructional than Lambda for this course because it exposes more of the infrastructure layers (OS, networking, security groups). DynamoDB is simpler to set up than RDS for a key-value use case like employee records. S3 is the natural choice for any file/object storage.</aside>
             </section>
 
             <!-- Preparing for the Lab -->
@@ -1026,41 +1006,26 @@ aws sts get-caller-identity</code></pre>
                 <h2>&#128203; Module 1 Summary</h2>
                 <div class="two-columns">
                     <div>
-                        <div class="card" style="margin-bottom: 15px;">
-                            <h4>&#9729;&#65039; Cloud Computing</h4>
-                            <ul>
-                                <li>On-demand, pay-as-you-go IT resources</li>
-                                <li>Six advantages over traditional infrastructure</li>
-                                <li>AWS global infrastructure: Regions, AZs, Edge Locations</li>
-                                <li>Console, CLI, and SDKs as interaction methods</li>
-                            </ul>
-                        </div>
-                        <div class="card">
-                            <h4>&#128203; Employee Directory App</h4>
-                            <ul>
-                                <li>Course-long project using EC2, VPC, S3, DynamoDB</li>
-                                <li>Iterative architecture approach</li>
-                                <li>IAM roles for secure service-to-service access</li>
-                            </ul>
-                        </div>
+                        <h4>&#9729;&#65039; Cloud Computing</h4>
+                        <ul>
+                            <li>On-demand, pay-as-you-go IT resources</li>
+                            <li>Six advantages over traditional infrastructure</li>
+                            <li>Regions, AZs, and Edge Locations</li>
+                            <li>Console, CLI, and SDKs</li>
+                        </ul>
                     </div>
                     <div>
-                        <div class="card" style="margin-bottom: 15px;">
-                            <h4>&#128274; Security &amp; IAM</h4>
-                            <ul>
-                                <li>Shared responsibility model</li>
-                                <li>IAM: users, groups, roles, policies</li>
-                                <li>Policy structure: Effect, Action, Resource</li>
-                                <li>Root user best practices</li>
-                                <li>MFA and least privilege</li>
-                            </ul>
-                        </div>
-                        <div class="highlight-box success">
-                            <strong>Up Next &mdash; Module 2:</strong> AWS Compute &mdash; launching EC2 instances to host our employee directory application.
-                        </div>
+                        <h4>&#128274; Security &amp; IAM</h4>
+                        <ul>
+                            <li>Shared responsibility model</li>
+                            <li>IAM: users, groups, roles, policies</li>
+                            <li>Root user best practices and MFA</li>
+                            <li>Least privilege principle</li>
+                            <li>Employee directory app architecture</li>
+                        </ul>
                     </div>
                 </div>
-                <aside class="notes">Recap the three major sections. Cloud computing fundamentals give us the 'why' of AWS. Security and IAM give us the foundation for 'how' we do things securely. The employee directory application gives us the 'what' we're building. Make sure participants feel solid on IAM concepts before moving on &mdash; everything else builds on this foundation.</aside>
+                <aside class="notes">Up Next — Module 2: AWS Compute — launching EC2 instances to host our employee directory application. Recap the three major sections. Cloud computing fundamentals give us the 'why' of AWS. Security and IAM give us the foundation for 'how' we do things securely. The employee directory application gives us the 'what' we're building. Make sure participants feel solid on IAM concepts before moving on — everything else builds on this foundation.</aside>
             </section>
 
             <!-- Key Takeaways -->

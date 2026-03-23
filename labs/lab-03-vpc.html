@@ -76,7 +76,7 @@
                     <p><strong>Objective:</strong> Create a custom Amazon VPC with public and private subnets across two Availability Zones, then launch the Employee Directory application in the new VPC.</p>
                 </div>
                 <ul>
-                    <li class="fragment"><strong>Duration:</strong> ~45 minutes</li>
+                    <li class="fragment"><strong>Duration:</strong> ~30 minutes</li>
                     <li class="fragment"><strong>Services used:</strong> Amazon VPC, EC2, Internet Gateway, NAT Gateway</li>
                     <li class="fragment"><strong>Prerequisite:</strong> Lab 2 completed (IAM role and key pair created)</li>
                 </ul>
@@ -100,10 +100,7 @@
                         <li class="fragment">Appropriate route tables for each subnet type</li>
                     </ul>
                 </div>
-                <div class="key-point fragment">
-                    <strong>&#128161; Key Concept:</strong> Public subnets route to the Internet Gateway. Private subnets route to the NAT Gateway. This separation is the foundation of secure AWS architectures.
-                </div>
-                <aside class="notes">Walk through the architecture before students start building. Make sure they understand the difference between public and private subnets and the role of each gateway type.</aside>
+                <aside class="notes">Walk through the architecture before students start building. Make sure they understand the difference between public and private subnets and the role of each gateway type. Key Concept: Public subnets route to the Internet Gateway. Private subnets route to the NAT Gateway. This separation is the foundation of secure AWS architectures.</aside>
             </section>
 
             <!-- Step 1 Divider -->
@@ -191,23 +188,25 @@
                     <li class="fragment">In the VPC details, scroll down to find the <strong>Resource map</strong> section</li>
                     <li class="fragment">Observe the visual layout showing how subnets, route tables, and gateways connect</li>
                 </ol>
-                <div class="concept-box fragment">
-                    <h4>Resources Created</h4>
-                    <table>
-                        <thead>
-                            <tr><th>Resource</th><th>Count</th><th>Purpose</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>VPC</td><td>1</td><td>Isolated network (10.1.0.0/16)</td></tr>
-                            <tr><td>Public Subnets</td><td>2</td><td>Internet-accessible resources</td></tr>
-                            <tr><td>Private Subnets</td><td>2</td><td>Backend/internal resources</td></tr>
-                            <tr><td>Internet Gateway</td><td>1</td><td>Public internet access</td></tr>
-                            <tr><td>NAT Gateway</td><td>1</td><td>Outbound-only internet for private subnets</td></tr>
-                            <tr><td>Route Tables</td><td>3</td><td>Traffic routing rules</td></tr>
-                        </tbody>
-                    </table>
-                </div>
                 <aside class="notes">Walk through each resource type and its purpose. Emphasize that the resource map is a powerful visualization tool for understanding VPC architecture at a glance.</aside>
+            </section>
+
+            <section>
+                <h2>&#128506;&#65039; Resources Created</h2>
+                <table>
+                    <thead>
+                        <tr><th>Resource</th><th>Count</th><th>Purpose</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>VPC</td><td>1</td><td>Isolated network (10.1.0.0/16)</td></tr>
+                        <tr><td>Public Subnets</td><td>2</td><td>Internet-accessible resources</td></tr>
+                        <tr><td>Private Subnets</td><td>2</td><td>Backend/internal resources</td></tr>
+                        <tr><td>Internet Gateway</td><td>1</td><td>Public internet access</td></tr>
+                        <tr><td>NAT Gateway</td><td>1</td><td>Outbound-only internet for private subnets</td></tr>
+                        <tr><td>Route Tables</td><td>3</td><td>Traffic routing rules</td></tr>
+                    </tbody>
+                </table>
+                <aside class="notes">Review the table with students. The VPC wizard created all these resources in a single operation. In a manual setup, each would need to be created and associated individually.</aside>
             </section>
 
             <!-- Step 2: Examine Subnets -->
@@ -276,10 +275,7 @@
                         <p><small>Routes to NAT Gateway</small></p>
                     </div>
                 </div>
-                <div class="key-point fragment">
-                    <strong>&#128161; Key difference:</strong> The public route table sends internet-bound traffic (0.0.0.0/0) to the <strong>Internet Gateway</strong>. The private route table sends it to the <strong>NAT Gateway</strong>.
-                </div>
-                <aside class="notes">This is the most important concept in VPC networking. The route table determines whether a subnet is public or private. A subnet is public only if its route table has a route to an Internet Gateway. Emphasize this distinction clearly.</aside>
+                <aside class="notes">Key difference: The public route table sends internet-bound traffic (0.0.0.0/0) to the Internet Gateway. The private route table sends it to the NAT Gateway. This is the most important concept in VPC networking. The route table determines whether a subnet is public or private. A subnet is public only if its route table has a route to an Internet Gateway. Emphasize this distinction clearly.</aside>
             </section>
 
             <!-- Step 2: Verify Gateways -->
@@ -476,10 +472,7 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                     </div>
                 </div>
                 <div class="highlight-box success fragment">
-                    <p>Once the replacements are made, click <strong>"Launch instance"</strong>.</p>
-                </div>
-                <div class="highlight-box success fragment">
-                    <p>&#9989; <strong>Expected result:</strong> A success message: <em>"Successfully initiated launch of instance i-xxxxxxxx."</em></p>
+                    <p>Once the replacements are made, click <strong>"Launch instance"</strong>. &#9989; <strong>Expected result:</strong> A success message: <em>"Successfully initiated launch of instance i-xxxxxxxx."</em></p>
                 </div>
                 <aside class="notes">This is where students commonly make mistakes. Walk the room and verify that each student has correctly replaced both placeholders. If the region or bucket name is wrong, the app will launch but will not function properly.</aside>
             </section>
@@ -625,10 +618,7 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                         </ul>
                     </div>
                 </div>
-                <div class="key-point fragment">
-                    <strong>&#128161; Multi-AZ:</strong> Deploy across multiple Availability Zones for high availability. Our VPC is already set up with subnets in 2 AZs &mdash; ready for a highly available architecture.
-                </div>
-                <aside class="notes">This three-tier architecture is the standard pattern for AWS deployments. The public tier faces the internet, the application tier handles business logic, and the data tier stores persistent data. Each tier should be in its own subnet group with appropriate security groups.</aside>
+                <aside class="notes">Multi-AZ: Deploy across multiple Availability Zones for high availability. Our VPC is already set up with subnets in 2 AZs, ready for a highly available architecture. This three-tier architecture is the standard pattern for AWS deployments. The public tier faces the internet, the application tier handles business logic, and the data tier stores persistent data. Each tier should be in its own subnet group with appropriate security groups.</aside>
             </section>
 
             <!-- Step 8 Divider -->
@@ -662,11 +652,9 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                 <div class="concept-box">
                     <h4>What You Accomplished</h4>
                     <ul>
-                        <li class="fragment">&#9989; Created a custom VPC with CIDR 10.1.0.0/16</li>
+                        <li class="fragment">&#9989; Created a custom VPC with subnets, gateways, and route tables</li>
                         <li class="fragment">&#9989; Provisioned 2 public and 2 private subnets across 2 AZs</li>
-                        <li class="fragment">&#9989; Configured an Internet Gateway and NAT Gateway</li>
-                        <li class="fragment">&#9989; Created a security group with appropriate inbound rules</li>
-                        <li class="fragment">&#9989; Launched the Employee Directory app in the custom VPC</li>
+                        <li class="fragment">&#9989; Created a security group and launched the app in the custom VPC</li>
                         <li class="fragment">&#9989; Verified network isolation between VPCs</li>
                         <li class="fragment">&#9989; Understood public vs. private subnet behavior</li>
                         <li class="fragment">&#9989; Stopped the old instance from Lab 2</li>

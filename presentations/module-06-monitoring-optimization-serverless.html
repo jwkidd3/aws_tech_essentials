@@ -164,10 +164,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="highlight-box warning fragment fade-up">
-                    <strong>Important:</strong> EC2 does not natively report memory or disk utilization to CloudWatch. You must install the <strong>CloudWatch Agent</strong> to collect these metrics.
-                </div>
-                <aside class="notes">This is a common gotcha for people new to AWS. EC2 hypervisor-level metrics like CPU are free, but OS-level metrics like memory require the CloudWatch Agent. The agent can also collect logs simultaneously.</aside>
+                <aside class="notes">This is a common gotcha for people new to AWS. EC2 hypervisor-level metrics like CPU are free, but OS-level metrics like memory require the CloudWatch Agent. The agent can also collect logs simultaneously. Important: EC2 does not natively report memory or disk utilization to CloudWatch. You must install the CloudWatch Agent to collect these metrics.</aside>
             </section>
 
             <!-- Slide 7: CloudWatch Dashboards -->
@@ -205,15 +202,7 @@
                         <p>Not enough data to determine state</p>
                     </div>
                 </div>
-                <div class="highlight-box fragment fade-up">
-                    <strong>Alarm Actions:</strong>
-                    <ul>
-                        <li><strong>SNS notification</strong> &mdash; Email, SMS, HTTP endpoint, Lambda trigger</li>
-                        <li><strong>Auto Scaling action</strong> &mdash; Scale out or scale in</li>
-                        <li><strong>EC2 action</strong> &mdash; Stop, terminate, reboot, or recover an instance</li>
-                    </ul>
-                </div>
-                <aside class="notes">Walk through a concrete example: set a CPUUtilization alarm at 80% for 3 consecutive 5-minute periods. If breached, send an SNS notification to the ops team and trigger an Auto Scaling policy. Explain that INSUFFICIENT_DATA is the initial state for a new alarm, or occurs if metric reporting stops.</aside>
+                <aside class="notes">Walk through a concrete example: set a CPUUtilization alarm at 80% for 3 consecutive 5-minute periods. If breached, send an SNS notification to the ops team and trigger an Auto Scaling policy. Explain that INSUFFICIENT_DATA is the initial state for a new alarm, or occurs if metric reporting stops. Alarm Actions include: SNS notification (Email, SMS, HTTP endpoint, Lambda trigger), Auto Scaling action (Scale out or scale in), and EC2 action (Stop, terminate, reboot, or recover an instance).</aside>
             </section>
 
             <!-- Slide 9: CloudWatch Alarms — Configuration -->
@@ -309,10 +298,7 @@
                     <li class="fragment fade-up">Visualize results as time-series graphs or tables</li>
                     <li class="fragment fade-up">Query multiple log groups simultaneously</li>
                 </ul>
-                <div class="highlight-box success fragment fade-up">
-                    <strong>Cost-Effective:</strong> You only pay for the data scanned by the query &mdash; $0.005 per GB scanned.
-                </div>
-                <aside class="notes">Walk through the query syntax. This example counts ERROR messages in 5-minute bins. Logs Insights is significantly cheaper than running a full-time Elasticsearch cluster for log analysis. It is ideal for ad-hoc troubleshooting and investigation.</aside>
+                <aside class="notes">Walk through the query syntax. This example counts ERROR messages in 5-minute bins. Logs Insights is significantly cheaper than running a full-time Elasticsearch cluster for log analysis. It is ideal for ad-hoc troubleshooting and investigation. Cost-Effective: You only pay for the data scanned by the query -- $0.005 per GB scanned.</aside>
             </section>
 
             <!-- Slide 12: CloudWatch Events / EventBridge -->
@@ -402,10 +388,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="key-point fragment fade-up">
-                    <strong>They are complementary:</strong> Use CloudWatch to monitor operational health. Use CloudTrail to track who made changes. Use both together for full visibility.
-                </div>
-                <aside class="notes">Students often confuse these two services. The key distinction: CloudWatch is about performance and operational data; CloudTrail is about API-level audit logging. In practice, you want both enabled. CloudTrail events can be sent to CloudWatch Logs so you can create metric filters and alarms on specific API calls (e.g., alert when someone creates a new IAM user).</aside>
+                <aside class="notes">Students often confuse these two services. The key distinction: CloudWatch is about performance and operational data; CloudTrail is about API-level audit logging. In practice, you want both enabled. CloudTrail events can be sent to CloudWatch Logs so you can create metric filters and alarms on specific API calls (e.g., alert when someone creates a new IAM user). They are complementary: Use CloudWatch to monitor operational health. Use CloudTrail to track who made changes. Use both together for full visibility.</aside>
             </section>
 
             <!-- Slide 15: Monitoring Best Practices -->
@@ -413,13 +396,10 @@
                 <h2>&#9989; Monitoring Best Practices</h2>
                 <ul>
                     <li class="fragment fade-up"><strong>Monitor at every layer</strong> &mdash; Infrastructure, application, and business metrics</li>
-                    <li class="fragment fade-up"><strong>Set meaningful alarms</strong> &mdash; Avoid alarm fatigue by tuning thresholds carefully</li>
-                    <li class="fragment fade-up"><strong>Use composite alarms</strong> &mdash; Combine multiple conditions to reduce false positives</li>
-                    <li class="fragment fade-up"><strong>Centralize logs</strong> &mdash; Aggregate logs from all services into CloudWatch Logs</li>
-                    <li class="fragment fade-up"><strong>Enable CloudTrail</strong> &mdash; Multi-region trail with log file validation</li>
+                    <li class="fragment fade-up"><strong>Set meaningful alarms</strong> &mdash; Tune thresholds carefully and use composite alarms to reduce false positives</li>
+                    <li class="fragment fade-up"><strong>Centralize logs &amp; enable CloudTrail</strong> &mdash; Aggregate logs into CloudWatch; use a multi-region trail with log file validation</li>
                     <li class="fragment fade-up"><strong>Automate responses</strong> &mdash; Use EventBridge + Lambda for self-healing architectures</li>
-                    <li class="fragment fade-up"><strong>Establish baselines</strong> &mdash; Know normal behavior before defining abnormal</li>
-                    <li class="fragment fade-up"><strong>Review regularly</strong> &mdash; Dashboards and alarms need periodic tuning</li>
+                    <li class="fragment fade-up"><strong>Establish baselines and review regularly</strong> &mdash; Know normal behavior before defining abnormal; tune dashboards and alarms periodically</li>
                 </ul>
                 <aside class="notes">Summarize the monitoring section. The goal is not just to collect data but to turn data into actionable insights. Emphasize the concept of alarm fatigue — too many alarms and teams start ignoring them. Recommend starting with a small set of critical alarms and expanding thoughtfully.</aside>
             </section>
@@ -484,25 +464,19 @@
                     <div class="card" style="border-top: 4px solid var(--accent-color);">
                         <h4>&#128423;&#65039; Application Load Balancer</h4>
                         <ul>
-                            <li>Layer 7 (HTTP/HTTPS)</li>
-                            <li><strong>Path-based routing</strong>: /api/* &#10142; Service A, /images/* &#10142; Service B</li>
-                            <li><strong>Host-based routing</strong>: api.example.com vs web.example.com</li>
-                            <li>WebSocket support</li>
-                            <li>Native HTTP/2 support</li>
-                            <li>Redirect and fixed-response actions</li>
-                            <li>Can target Lambda functions</li>
+                            <li>Layer 7 (HTTP/HTTPS) with native HTTP/2 and WebSocket support</li>
+                            <li><strong>Content-based routing</strong>: path, host, header, and query string rules</li>
+                            <li>Redirect, fixed-response actions, and Lambda targets</li>
+                            <li>Best for web applications needing advanced routing</li>
                         </ul>
                     </div>
                     <div class="card" style="border-top: 4px solid var(--success-color);">
                         <h4>&#9889; Network Load Balancer</h4>
                         <ul>
-                            <li>Layer 4 (TCP/UDP/TLS)</li>
-                            <li><strong>Ultra-low latency</strong>: millions of requests/sec</li>
-                            <li><strong>Static IP addresses</strong> per AZ</li>
-                            <li>Elastic IP support</li>
-                            <li>Preserves source IP address</li>
-                            <li>Ideal for non-HTTP workloads</li>
-                            <li>Can front an ALB for static IP + L7 routing</li>
+                            <li>Layer 4 (TCP/UDP/TLS) with ultra-low latency</li>
+                            <li><strong>Static IP addresses</strong> per AZ with Elastic IP support</li>
+                            <li>Preserves source IP; handles millions of requests/sec</li>
+                            <li>Ideal for non-HTTP workloads or when static IPs are required</li>
                         </ul>
                     </div>
                 </div>
@@ -577,10 +551,7 @@
                     <li class="fragment fade-up"><strong>Unhealthy threshold</strong> &mdash; Consecutive failures to mark unhealthy (default: 2)</li>
                     <li class="fragment fade-up"><strong>Timeout</strong> &mdash; Time to wait for a response (default: 5 seconds)</li>
                 </ul>
-                <div class="highlight-box success fragment fade-up">
-                    <strong>Best Practice:</strong> Create a dedicated <code>/health</code> endpoint that checks database connectivity, disk space, and downstream dependencies &mdash; not just "200 OK."
-                </div>
-                <aside class="notes">Health checks are critical — they are the mechanism that makes ELB "smart." A shallow health check (just returning 200) may report healthy even when the app cannot connect to its database. A deep health check verifies actual application readiness. Discuss the tradeoffs: deep health checks are more accurate but can cause cascading failures if a downstream dependency is slow.</aside>
+                <aside class="notes">Health checks are critical — they are the mechanism that makes ELB "smart." A shallow health check (just returning 200) may report healthy even when the app cannot connect to its database. A deep health check verifies actual application readiness. Discuss the tradeoffs: deep health checks are more accurate but can cause cascading failures if a downstream dependency is slow. Best Practice: Create a dedicated /health endpoint that checks database connectivity, disk space, and downstream dependencies -- not just "200 OK."</aside>
             </section>
 
             <!-- Slide 22: EC2 Auto Scaling Overview -->
@@ -705,10 +676,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="highlight-box warning fragment fade-up">
-                    <strong>Watch Out:</strong> Scale-out is typically fast (minutes), but your application must handle the bootstrap time. Use AMI pre-baking or lifecycle hooks to ensure instances are ready before receiving traffic.
-                </div>
-                <aside class="notes">Discuss the default termination policy in detail — it first balances across AZs, then uses launch configuration age, then proximity to billing hour. You can customize this. Lifecycle hooks let you run scripts during launch (install software) or termination (drain connections, deregister from service discovery). Instance warm-up settings prevent newly launched instances from being considered for scale-in before they are fully operational.</aside>
+                <aside class="notes">Discuss the default termination policy in detail — it first balances across AZs, then uses launch configuration age, then proximity to billing hour. You can customize this. Lifecycle hooks let you run scripts during launch (install software) or termination (drain connections, deregister from service discovery). Instance warm-up settings prevent newly launched instances from being considered for scale-in before they are fully operational. Watch Out: Scale-out is typically fast (minutes), but your application must handle the bootstrap time. Use AMI pre-baking or lifecycle hooks to ensure instances are ready before receiving traffic.</aside>
             </section>
 
             <!-- Slide 26: ELB + Auto Scaling Architecture -->
@@ -729,28 +697,20 @@
                         <li>Failed instances are detected, terminated, and replaced</li>
                     </ol>
                 </div>
-                <div class="key-point fragment fade-up">
-                    <strong>This is the architecture you will build in the lab.</strong>
-                </div>
-                <aside class="notes">Tie everything together. This is the canonical AWS HA pattern. Draw the architecture mentally: Route 53 DNS pointing to an ALB spanning 2+ AZs, each AZ with EC2 instances managed by an Auto Scaling Group, backed by a Multi-AZ RDS database. Each layer has redundancy. This is exactly what the upcoming lab implements.</aside>
+                <aside class="notes">Tie everything together. This is the canonical AWS HA pattern. Draw the architecture mentally: Route 53 DNS pointing to an ALB spanning 2+ AZs, each AZ with EC2 instances managed by an Auto Scaling Group, backed by a Multi-AZ RDS database. Each layer has redundancy. This is exactly what the upcoming lab implements. This is the architecture you will build in the lab.</aside>
             </section>
 
             <!-- Slide 27: Cost Optimization Strategies -->
             <section>
                 <h2>&#128176; Cost Optimization Strategies</h2>
                 <ul>
-                    <li class="fragment fade-up"><strong>Right-sizing</strong> &mdash; Match instance types to actual workload requirements using CloudWatch data</li>
-                    <li class="fragment fade-up"><strong>Auto Scaling</strong> &mdash; Scale in during low demand to stop paying for idle capacity</li>
+                    <li class="fragment fade-up"><strong>Right-sizing &amp; Auto Scaling</strong> &mdash; Match instance types to actual workload requirements; scale in during low demand</li>
                     <li class="fragment fade-up"><strong>Reserved Instances / Savings Plans</strong> &mdash; Commit to 1- or 3-year usage for up to 72% savings</li>
                     <li class="fragment fade-up"><strong>Spot Instances</strong> &mdash; Up to 90% savings for fault-tolerant, flexible workloads</li>
-                    <li class="fragment fade-up"><strong>S3 storage classes</strong> &mdash; Lifecycle policies to move infrequently accessed data to cheaper tiers</li>
-                    <li class="fragment fade-up"><strong>Serverless</strong> &mdash; Pay only for actual invocations, no idle cost</li>
-                    <li class="fragment fade-up"><strong>AWS Cost Explorer &amp; Budgets</strong> &mdash; Visualize spending, set alerts on budget thresholds</li>
+                    <li class="fragment fade-up"><strong>Storage optimization &amp; serverless</strong> &mdash; S3 lifecycle policies for cheaper tiers; Lambda for pay-per-invocation compute</li>
+                    <li class="fragment fade-up"><strong>AWS Cost Explorer &amp; Budgets</strong> &mdash; Visualize spending, set alerts, identify underutilized resources</li>
                 </ul>
-                <div class="highlight-box success fragment fade-up">
-                    <strong>First step:</strong> Enable Cost Explorer and review your spending by service. Use CloudWatch to identify underutilized resources.
-                </div>
-                <aside class="notes">Cost optimization is an ongoing process, not a one-time activity. Emphasize that monitoring data (from CloudWatch) directly informs cost optimization decisions. Right-sizing is often the biggest quick win — many organizations over-provision instances because they do not have visibility into actual utilization. Savings Plans are generally recommended over Reserved Instances for flexibility.</aside>
+                <aside class="notes">Cost optimization is an ongoing process, not a one-time activity. Emphasize that monitoring data (from CloudWatch) directly informs cost optimization decisions. Right-sizing is often the biggest quick win — many organizations over-provision instances because they do not have visibility into actual utilization. Savings Plans are generally recommended over Reserved Instances for flexibility. First step: Enable Cost Explorer and review your spending by service. Use CloudWatch to identify underutilized resources.</aside>
             </section>
 
             <!-- Slide 28: Section Divider — Serverless -->
@@ -767,12 +727,10 @@
                     <div class="card">
                         <h4>&#127959;&#65039; Current Architecture (EC2-Based)</h4>
                         <ul>
-                            <li>EC2 instances running web application</li>
-                            <li>Application Load Balancer for traffic distribution</li>
-                            <li>Auto Scaling Group for elasticity</li>
-                            <li>Amazon DynamoDB for data storage</li>
-                            <li>S3 for image storage</li>
+                            <li>EC2 instances with ALB and Auto Scaling</li>
+                            <li>DynamoDB for data, S3 for images</li>
                             <li>IAM roles for access control</li>
+                            <li>CloudWatch for monitoring</li>
                         </ul>
                     </div>
                     <div class="card">
@@ -785,10 +743,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="key-point fragment fade-up">
-                    <strong>Question:</strong> What if we could eliminate server management entirely and only pay when the application is actually handling requests?
-                </div>
-                <aside class="notes">Remind students of the architecture built throughout the course. The EC2-based approach works well and is what they will implement in the lab. But for some workloads, serverless offers significant advantages. Set up the comparison — not as "serverless is always better" but as "serverless is a powerful alternative worth understanding."</aside>
+                <aside class="notes">Remind students of the architecture built throughout the course. The EC2-based approach works well and is what they will implement in the lab. But for some workloads, serverless offers significant advantages. Set up the comparison — not as "serverless is always better" but as "serverless is a powerful alternative worth understanding." Question: What if we could eliminate server management entirely and only pay when the application is actually handling requests?</aside>
             </section>
 
             <!-- Slide 30: Serverless on AWS — Core Concepts -->
@@ -868,10 +823,7 @@
                     <li class="fragment fade-up"><strong>Authentication</strong> &mdash; IAM, Cognito User Pools, Lambda authorizers</li>
                     <li class="fragment fade-up"><strong>Stages</strong> &mdash; Deploy to dev, staging, production with different configurations</li>
                 </ul>
-                <div class="highlight-box fragment fade-up">
-                    <strong>In our serverless architecture:</strong> API Gateway replaces the ALB as the entry point, routing HTTP requests to Lambda functions instead of EC2 instances.
-                </div>
-                <aside class="notes">API Gateway is the "front door" for serverless APIs. It handles concerns that would otherwise be in your application code: rate limiting, authentication, request validation, response transformation. HTTP APIs are up to 71% cheaper and 60% lower latency than REST APIs for simple proxy use cases. For the employee directory, HTTP APIs with Lambda proxy integration would be the recommended approach.</aside>
+                <aside class="notes">API Gateway is the "front door" for serverless APIs. It handles concerns that would otherwise be in your application code: rate limiting, authentication, request validation, response transformation. HTTP APIs are up to 71% cheaper and 60% lower latency than REST APIs for simple proxy use cases. For the employee directory, HTTP APIs with Lambda proxy integration would be the recommended approach. In our serverless architecture: API Gateway replaces the ALB as the entry point, routing HTTP requests to Lambda functions instead of EC2 instances.</aside>
             </section>
 
             <!-- Slide 33: S3 for Static Content -->
@@ -937,9 +889,6 @@
             <!-- Slide 35: Serverless Employee Directory Architecture -->
             <section>
                 <h2>&#127959;&#65039; Serverless Employee Directory</h2>
-                <div class="concept-box">
-                    <h4>Replacing EC2 with Serverless Components</h4>
-                </div>
                 <table>
                     <thead>
                         <tr>
@@ -991,30 +940,23 @@
                     <div class="card" style="border-top: 4px solid var(--accent-color);">
                         <h4>&#128187; EC2-Based</h4>
                         <ul>
-                            <li class="fragment fade-up">&#9989; Full control over runtime environment</li>
+                            <li class="fragment fade-up">&#9989; Full control over runtime and persistent connections</li>
                             <li class="fragment fade-up">&#9989; Long-running processes supported</li>
-                            <li class="fragment fade-up">&#9989; Persistent connections (WebSockets, SSH)</li>
-                            <li class="fragment fade-up">&#10060; Server management overhead</li>
-                            <li class="fragment fade-up">&#10060; Pay for idle capacity</li>
-                            <li class="fragment fade-up">&#10060; Slower scaling response</li>
+                            <li class="fragment fade-up">&#10060; Server management overhead and patching</li>
+                            <li class="fragment fade-up">&#10060; Pay for idle capacity; slower scaling</li>
                         </ul>
                     </div>
                     <div class="card" style="border-top: 4px solid #6b46c1;">
                         <h4>&#9889; Serverless</h4>
                         <ul>
-                            <li class="fragment fade-up">&#9989; Zero server management</li>
-                            <li class="fragment fade-up">&#9989; Automatic, granular scaling</li>
+                            <li class="fragment fade-up">&#9989; Zero server management with automatic scaling</li>
                             <li class="fragment fade-up">&#9989; Pay only when code runs</li>
-                            <li class="fragment fade-up">&#10060; Cold start latency</li>
-                            <li class="fragment fade-up">&#10060; 15-minute execution limit (Lambda)</li>
-                            <li class="fragment fade-up">&#10060; Vendor-specific patterns</li>
+                            <li class="fragment fade-up">&#10060; Cold start latency and 15-min execution limit</li>
+                            <li class="fragment fade-up">&#10060; Vendor-specific patterns and tooling</li>
                         </ul>
                     </div>
                 </div>
-                <div class="key-point fragment fade-up">
-                    <strong>Neither is universally better.</strong> Choose based on workload characteristics, team skills, and business requirements.
-                </div>
-                <aside class="notes">This is critical — avoid presenting serverless as always superior. EC2 is the right choice for long-running workloads, applications that need full OS access, or teams that already have strong server management practices. Serverless shines for event-driven workloads, variable traffic, and teams that want to focus on business logic rather than infrastructure. Many production architectures are hybrid — using both EC2 and serverless components.</aside>
+                <aside class="notes">This is critical — avoid presenting serverless as always superior. EC2 is the right choice for long-running workloads, applications that need full OS access, or teams that already have strong server management practices. Serverless shines for event-driven workloads, variable traffic, and teams that want to focus on business logic rather than infrastructure. Many production architectures are hybrid — using both EC2 and serverless components. Neither is universally better. Choose based on workload characteristics, team skills, and business requirements.</aside>
             </section>
 
             <!-- Slide 37: Serverless Architecture Patterns -->
@@ -1093,30 +1035,19 @@
                 <h2>&#128221; Module 6 Summary</h2>
                 <div class="two-columns">
                     <div>
-                        <h4>Monitoring</h4>
                         <ul>
-                            <li class="fragment fade-up">CloudWatch: metrics, alarms, logs, dashboards</li>
-                            <li class="fragment fade-up">CloudTrail: API audit logging</li>
-                            <li class="fragment fade-up">EventBridge: event-driven automation</li>
-                        </ul>
-                        <h4 style="margin-top: 20px;">Optimization</h4>
-                        <ul>
-                            <li class="fragment fade-up">ELB: ALB for HTTP, NLB for TCP</li>
-                            <li class="fragment fade-up">Auto Scaling: dynamic capacity management</li>
-                            <li class="fragment fade-up">ELB + ASG = highly available architecture</li>
+                            <li class="fragment fade-up"><strong>CloudWatch</strong> &mdash; metrics, alarms, logs, dashboards for operational visibility</li>
+                            <li class="fragment fade-up"><strong>CloudTrail</strong> &mdash; API audit logging for governance and compliance</li>
+                            <li class="fragment fade-up"><strong>ELB + Auto Scaling</strong> &mdash; highly available, elastic architecture</li>
+                            <li class="fragment fade-up"><strong>Cost optimization</strong> &mdash; right-sizing, Savings Plans, Spot, serverless</li>
                         </ul>
                     </div>
                     <div>
-                        <h4>Serverless</h4>
                         <ul>
-                            <li class="fragment fade-up">Lambda + API Gateway replace EC2 + ALB</li>
-                            <li class="fragment fade-up">S3 + CloudFront for static content</li>
-                            <li class="fragment fade-up">Step Functions for orchestration</li>
-                            <li class="fragment fade-up">No servers, automatic scaling, pay-per-use</li>
-                        </ul>
-                        <h4 style="margin-top: 20px;">Key Takeaway</h4>
-                        <ul>
-                            <li class="fragment fade-up">Monitor &#10142; Optimize &#10142; Consider serverless where appropriate</li>
+                            <li class="fragment fade-up"><strong>Lambda + API Gateway</strong> &mdash; serverless alternative to EC2 + ALB</li>
+                            <li class="fragment fade-up"><strong>S3 + CloudFront</strong> &mdash; static content hosting at global scale</li>
+                            <li class="fragment fade-up"><strong>Step Functions</strong> &mdash; orchestrate multi-step serverless workflows</li>
+                            <li class="fragment fade-up"><strong>Key takeaway:</strong> Monitor &#10142; Optimize &#10142; Consider serverless where appropriate</li>
                         </ul>
                     </div>
                 </div>
