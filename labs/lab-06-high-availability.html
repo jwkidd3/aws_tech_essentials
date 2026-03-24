@@ -142,7 +142,7 @@
                     <li class="fragment"><strong>EC2 Instance:</strong> employee-directory-app-v2 (running)</li>
                     <li class="fragment"><strong>Security Group:</strong> employee-directory-app-sg</li>
                     <li class="fragment"><strong>IAM Role:</strong> EmployeeDirectoryAppRole</li>
-                    <li class="fragment"><strong>S3 Bucket:</strong> employee-photo-bucket-&lt;unique-id&gt;</li>
+                    <li class="fragment"><strong>S3 Bucket:</strong> employee-directory-app-bucket-&lt;unique-id&gt;</li>
                     <li class="fragment"><strong>DynamoDB Table:</strong> Employees</li>
                 </ul>
                 <aside class="notes">
@@ -980,7 +980,7 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
 
             <!-- STEP 10a: Delete Launch Template -->
             <section>
-                <h2>&#128465;&#65039; Step 10a: Delete Launch Template</h2>
+                <h2>&#128465;&#65039; Step 10b: Delete Launch Template</h2>
                 <ol>
                     <li class="fragment">Navigate to <strong>EC2 &gt; Launch Templates</strong></li>
                     <li class="fragment">Select <strong>employee-directory-lt</strong> &#8594; <strong>Actions &gt; Delete template</strong></li>
@@ -993,7 +993,7 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
 
             <!-- STEP 10b: Delete Load Balancer -->
             <section>
-                <h2>&#128465;&#65039; Step 10b: Delete Load Balancer</h2>
+                <h2>&#128465;&#65039; Step 10c: Delete Load Balancer</h2>
                 <ol>
                     <li class="fragment">Navigate to <strong>EC2 &gt; Load Balancers</strong></li>
                     <li class="fragment">Select <strong>employee-directory-alb</strong></li>
@@ -1008,7 +1008,7 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
 
             <!-- STEP 10b: Delete Target Group and SG -->
             <section>
-                <h2>&#128465;&#65039; Step 10b: Delete Target Group and SG</h2>
+                <h2>&#128465;&#65039; Step 10d: Delete Target Group and SG</h2>
                 <h4>Delete the Target Group:</h4>
                 <ol>
                     <li class="fragment">Navigate to <strong>EC2 &gt; Target Groups</strong></li>
@@ -1028,7 +1028,7 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
 
             <!-- STEP 10c: Terminate Remaining Instances -->
             <section>
-                <h2>&#128465;&#65039; Step 10c: Terminate Remaining Instances</h2>
+                <h2>&#128465;&#65039; Step 10c-2: Terminate Remaining Instances</h2>
                 <ol>
                     <li class="fragment">Navigate to <strong>EC2 &gt; Instances</strong></li>
                     <li class="fragment">Select <strong>any remaining running instances</strong>
@@ -1048,7 +1048,7 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
 
             <!-- STEP 10d: Delete NAT Gateway -->
             <section>
-                <h2>&#128465;&#65039; Step 10d: Delete NAT Gateway</h2>
+                <h2>&#128465;&#65039; Step 10e: Delete NAT Gateway</h2>
                 <ol>
                     <li class="fragment">Navigate to <strong>VPC &gt; NAT Gateways</strong></li>
                     <li class="fragment">Select any NAT Gateway in the employee-directory-vpc</li>
@@ -1063,7 +1063,7 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
 
             <!-- STEP 10d: Release Elastic IPs -->
             <section>
-                <h2>&#128465;&#65039; Step 10d: Release Elastic IPs</h2>
+                <h2>&#128465;&#65039; Step 10f: Release Elastic IPs</h2>
                 <ol>
                     <li class="fragment">Navigate to <strong>VPC &gt; Elastic IPs</strong></li>
                     <li class="fragment">Select any allocated Elastic IPs</li>
@@ -1081,7 +1081,7 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
 
             <!-- STEP 10e: Delete VPC -->
             <section>
-                <h2>&#128465;&#65039; Step 10e: Delete the VPC</h2>
+                <h2>&#128465;&#65039; Step 10g: Delete the VPC</h2>
                 <ol>
                     <li class="fragment">Navigate to <strong>VPC &gt; Your VPCs</strong></li>
                     <li class="fragment">Select <strong>employee-directory-vpc</strong></li>
@@ -1100,10 +1100,10 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
 
             <!-- STEP 10f: Delete S3 Bucket -->
             <section>
-                <h2>&#128465;&#65039; Step 10f: Delete S3 Bucket</h2>
+                <h2>&#128465;&#65039; Step 10h: Delete S3 Bucket</h2>
                 <ol>
                     <li class="fragment">Navigate to <strong>S3</strong></li>
-                    <li class="fragment">Select your employee photo bucket</li>
+                    <li class="fragment">Select your employee directory app bucket</li>
                     <li class="fragment">Click <strong>&#8220;Empty&#8221;</strong> &#8594; Type <code>permanently delete</code> &#8594; Confirm</li>
                     <li class="fragment">Then click <strong>&#8220;Delete&#8221;</strong> &#8594; Type the bucket name &#8594; Confirm</li>
                 </ol>
@@ -1119,7 +1119,7 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
 
             <!-- STEP 10f: Delete DynamoDB Table -->
             <section>
-                <h2>&#128465;&#65039; Step 10f: Delete DynamoDB Table</h2>
+                <h2>&#128465;&#65039; Step 10i: Delete DynamoDB Table</h2>
                 <ol>
                     <li class="fragment">Navigate to <strong>DynamoDB &gt; Tables</strong></li>
                     <li class="fragment">Select the <strong>Employees</strong> table</li>
@@ -1130,9 +1130,26 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                 </aside>
             </section>
 
-            <!-- STEP 10g: Delete CloudWatch Dashboard -->
+            <!-- STEP 10j: Delete IAM Role and Key Pair -->
             <section>
-                <h2>&#128465;&#65039; Step 10g: Delete CloudWatch Dashboard</h2>
+                <h2>&#128465;&#65039; Step 10j: Delete IAM Role and Key Pair</h2>
+                <h4>Delete the IAM Role:</h4>
+                <ol>
+                    <li class="fragment">Navigate to <strong>IAM &gt; Roles</strong></li>
+                    <li class="fragment">Search for <strong>EmployeeDirectoryAppRole</strong></li>
+                    <li class="fragment">Select and click <strong>Delete</strong>, type the role name to confirm</li>
+                </ol>
+                <h4>Delete the Key Pair:</h4>
+                <ol>
+                    <li class="fragment">Navigate to <strong>EC2 &gt; Key Pairs</strong></li>
+                    <li class="fragment">Select <strong>employee-dir-key</strong> &gt; <strong>Actions &gt; Delete</strong></li>
+                </ol>
+                <aside class="notes">The IAM role was created in Lab 2. The key pair was also created in Lab 2. Both should be deleted to fully clean up all lab resources.</aside>
+            </section>
+
+            <!-- STEP 10k: Delete CloudWatch Dashboard -->
+            <section>
+                <h2>&#128465;&#65039; Step 10k: Delete CloudWatch Dashboard</h2>
                 <ol>
                     <li class="fragment">Navigate to <strong>CloudWatch &gt; Dashboards</strong></li>
                     <li class="fragment">Select <strong>employee-directory-dashboard</strong> &#8594; <strong>Delete</strong></li>
@@ -1155,8 +1172,10 @@ FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code
                     <tr><td>VPCs</td><td>Only the default VPC remains</td></tr>
                     <tr><td>NAT Gateways</td><td>None listed</td></tr>
                     <tr><td>Elastic IPs</td><td>None allocated</td></tr>
-                    <tr><td>S3 Buckets</td><td>No employee photo buckets</td></tr>
+                    <tr><td>S3 Buckets</td><td>No employee directory app buckets</td></tr>
                     <tr><td>DynamoDB Tables</td><td>No Employees table</td></tr>
+                    <tr><td>IAM Roles</td><td>No EmployeeDirectoryAppRole</td></tr>
+                    <tr><td>EC2 Key Pairs</td><td>No employee-dir-key</td></tr>
                 </table>
                 <aside class="notes">
                     Have students go through each service one final time to verify everything is cleaned up.
