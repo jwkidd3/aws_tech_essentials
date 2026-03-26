@@ -115,7 +115,7 @@
                 <h2>&#128421;&#65039; What Is Cloud Computing?</h2>
                 <div class="concept-box">
                     <h4>NIST Definition</h4>
-                    <p>The <strong>on-demand delivery</strong> of IT resources over the internet with <strong>pay-as-you-go</strong> pricing. Instead of buying, owning, and maintaining physical data centers and servers, you access technology services on an as-needed basis from a cloud provider.</p>
+                    <p><strong>On-demand delivery</strong> of IT resources over the internet with <strong>pay-as-you-go</strong> pricing &mdash; no physical data centers required.</p>
                 </div>
                 <div class="two-columns" style="margin-top: 15px;">
                     <div class="card">
@@ -140,47 +140,33 @@
                 <aside class="notes">Stress the shift from CapEx to OpEx. In traditional environments, you had to guess capacity needs 3-6 months in advance. Cloud computing flips this: you provision what you need, when you need it, and pay only for what you consume. This is a fundamental shift in how IT operates.</aside>
             </section>
 
-            <!-- Six Advantages - Part 1 -->
+            <!-- Six Advantages of Cloud Computing -->
             <section>
-                <h2>&#127919; Six Advantages of Cloud Computing (1/2)</h2>
-                <div class="card" style="margin-bottom: 15px;">
-                    <h4 class="fragment fade-up">1. Trade Capital Expense for Variable Expense</h4>
-                    <p class="fragment fade-up" style="font-size: 0.85em;">Instead of investing in data centers and servers before you know how you'll use them, pay only when you consume computing resources &mdash; and only for how much you consume.</p>
+                <h2>&#127919; Six Advantages of Cloud Computing</h2>
+                <div class="two-columns">
+                    <div>
+                        <ol>
+                            <li class="fragment fade-up"><strong>Trade CapEx for variable expense</strong> &mdash; pay only for what you consume</li>
+                            <li class="fragment fade-up"><strong>Massive economies of scale</strong> &mdash; lower prices from aggregated usage</li>
+                            <li class="fragment fade-up"><strong>Stop guessing capacity</strong> &mdash; scale up or down in minutes</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <ol start="4">
+                            <li class="fragment fade-up"><strong>Increase speed and agility</strong> &mdash; provision resources in minutes, not weeks</li>
+                            <li class="fragment fade-up"><strong>Stop running data centers</strong> &mdash; focus on your business, not infrastructure</li>
+                            <li class="fragment fade-up"><strong>Go global in minutes</strong> &mdash; deploy across Regions with a few clicks</li>
+                        </ol>
+                    </div>
                 </div>
-                <div class="card" style="margin-bottom: 15px;">
-                    <h4 class="fragment fade-up">2. Benefit from Massive Economies of Scale</h4>
-                    <p class="fragment fade-up" style="font-size: 0.85em;">AWS aggregates usage from hundreds of thousands of customers, achieving higher economies of scale. This translates into lower pay-as-you-go prices &mdash; AWS has reduced pricing over 130 times since 2006.</p>
-                </div>
-                <div class="card">
-                    <h4 class="fragment fade-up">3. Stop Guessing Capacity</h4>
-                    <p class="fragment fade-up" style="font-size: 0.85em;">Eliminate guessing on infrastructure capacity needs. Scale up in minutes when demand spikes, scale down when it recedes. Auto Scaling policies can handle this automatically.</p>
-                </div>
-                <aside class="notes">These first three advantages address the financial and operational pain points. Emphasize that AWS passes savings to customers through frequent price reductions. The capacity point resonates especially with anyone who has dealt with procurement lead times or unused hardware sitting in racks.</aside>
-            </section>
-
-            <!-- Six Advantages - Part 2 -->
-            <section>
-                <h2>&#127919; Six Advantages of Cloud Computing (2/2)</h2>
-                <div class="card" style="margin-bottom: 15px;">
-                    <h4 class="fragment fade-up">4. Increase Speed and Agility</h4>
-                    <p class="fragment fade-up" style="font-size: 0.85em;">New IT resources are a click or API call away. Reduce time to make resources available from weeks to minutes. This dramatically increases agility &mdash; the cost and time to experiment is significantly lower.</p>
-                </div>
-                <div class="card" style="margin-bottom: 15px;">
-                    <h4 class="fragment fade-up">5. Stop Spending Money Running Data Centers</h4>
-                    <p class="fragment fade-up" style="font-size: 0.85em;">Focus on projects that differentiate your business, not the infrastructure. Racking, stacking, power, cooling, and physical security are AWS's responsibility &mdash; not yours.</p>
-                </div>
-                <div class="card">
-                    <h4 class="fragment fade-up">6. Go Global in Minutes</h4>
-                    <p class="fragment fade-up" style="font-size: 0.85em;">Deploy your application in multiple AWS Regions around the world with a few clicks. Provide lower latency and a better experience for customers at minimal cost.</p>
-                </div>
-                <aside class="notes">Speed and agility is the biggest differentiator for many engineering teams. The ability to spin up a prototype in an afternoon rather than waiting weeks for hardware changes the culture of innovation. Going global matters for any organization serving international users.</aside>
+                <aside class="notes">Walk through each advantage. 1) CapEx to OpEx shift is fundamental. 2) AWS has reduced pricing 130+ times since 2006. 3) Eliminates procurement lead times and idle hardware. 4) Prototype in an afternoon vs. weeks of hardware setup. 5) AWS handles racking, stacking, power, cooling, physical security. 6) Deploy worldwide for lower latency and better user experience.</aside>
             </section>
 
             <!-- AWS Global Infrastructure Overview -->
             <section>
                 <h2>&#127758; AWS Global Infrastructure</h2>
                 <div class="key-point">
-                    <strong>Key Concept:</strong> AWS infrastructure is organized into <strong>Regions</strong>, <strong>Availability Zones (AZs)</strong>, and <strong>Edge Locations</strong>. Understanding this hierarchy is essential for designing resilient architectures.
+                    <strong>Key Concept:</strong> AWS infrastructure = <strong>Regions</strong> &gt; <strong>Availability Zones (AZs)</strong> &gt; <strong>Edge Locations</strong>
                 </div>
                 <div class="three-columns" style="margin-top: 15px;">
                     <div class="card">
@@ -188,15 +174,15 @@
                         <ul>
                             <li class="fragment fade-up">33+ geographic regions worldwide</li>
                             <li class="fragment fade-up">Physically isolated from each other</li>
-                            <li class="fragment fade-up">Data does not replicate across Regions unless you explicitly configure it</li>
+                            <li class="fragment fade-up">Data stays in-Region unless you replicate</li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>&#127975; Availability Zones</h4>
                         <ul>
                             <li class="fragment fade-up">105+ AZs globally</li>
-                            <li class="fragment fade-up">One or more discrete data centers per AZ</li>
-                            <li class="fragment fade-up">Connected via low-latency, high-throughput networking</li>
+                            <li class="fragment fade-up">One or more data centers per AZ</li>
+                            <li class="fragment fade-up">Low-latency links between AZs</li>
                         </ul>
                     </div>
                     <div class="card">
@@ -211,190 +197,83 @@
                 <aside class="notes">Draw the hierarchy: Region contains multiple AZs, each AZ contains one or more data centers. Regions are completely independent. AZs within a Region are connected by dedicated high-bandwidth, low-latency networking. Edge Locations are separate from Regions and serve cached content to reduce latency for end users. Emphasize that data sovereignty is Region-level: your data stays in the Region you put it in.</aside>
             </section>
 
-            <!-- Regions and Availability Zones Deep Dive -->
-            <section>
-                <h2>&#127975; Regions &amp; Availability Zones</h2>
-                <div class="two-columns">
-                    <div>
-                        <div class="concept-box">
-                            <h4>Region Structure</h4>
-                            <p style="font-size: 0.85em;">Each Region consists of a minimum of <strong>3 isolated Availability Zones</strong>. AZs are physically separated by a meaningful distance (many kilometers) but within 100 km of each other.</p>
-                        </div>
-                        <div class="highlight-box warning" style="margin-top: 15px;">
-                            <strong>Design Principle:</strong> Always deploy across multiple AZs for high availability. A single AZ failure should not bring down your application.
-                        </div>
-                    </div>
-                    <div>
-                        <table>
-                            <thead>
-                                <tr><th>Region Name</th><th>Code</th><th>AZs</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>US East (N. Virginia)</td><td>us-east-1</td><td>6</td></tr>
-                                <tr><td>US West (Oregon)</td><td>us-west-2</td><td>4</td></tr>
-                                <tr><td>EU (Ireland)</td><td>eu-west-1</td><td>3</td></tr>
-                                <tr><td>EU (Frankfurt)</td><td>eu-central-1</td><td>3</td></tr>
-                                <tr><td>Asia Pacific (Tokyo)</td><td>ap-northeast-1</td><td>4</td></tr>
-                                <tr><td>Asia Pacific (Sydney)</td><td>ap-southeast-2</td><td>3</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <aside class="notes">us-east-1 is the largest and oldest Region with 6 AZs. It's also where many global AWS services have their control planes. When you see 'global' services like IAM, their API endpoints typically route through us-east-1. Each AZ has independent power, cooling, and physical security. The fiber connections between AZs provide single-digit millisecond latency.</aside>
-            </section>
-
             <!-- Choosing a Region -->
             <section>
                 <h2>&#129518; Choosing an AWS Region</h2>
-                <p>Four key factors to evaluate when selecting a Region:</p>
                 <div class="two-columns">
                     <div class="card">
                         <h4>&#128220; 1. Compliance</h4>
-                        <p style="font-size: 0.85em;">Data governance and legal requirements may dictate where data must reside. GDPR, HIPAA, and local data residency laws can be the overriding factor.</p>
+                        <p style="font-size: 0.85em;">Data residency laws (GDPR, HIPAA) may dictate Region choice</p>
                     </div>
                     <div class="card">
                         <h4>&#9201;&#65039; 2. Latency</h4>
-                        <p style="font-size: 0.85em;">Choose Regions close to your user base. A 200ms round-trip vs 20ms has a measurable impact on user experience and application performance.</p>
+                        <p style="font-size: 0.85em;">Deploy close to users &mdash; 200ms vs 20ms matters</p>
                     </div>
                     <div class="card">
                         <h4>&#128295; 3. Service Availability</h4>
-                        <p style="font-size: 0.85em;">Not all AWS services are available in every Region. New services typically launch in us-east-1 first. Verify your required services are available in your target Region.</p>
+                        <p style="font-size: 0.85em;">Not all services in every Region; new services launch in us-east-1 first</p>
                     </div>
                     <div class="card">
                         <h4>&#128176; 4. Cost</h4>
-                        <p style="font-size: 0.85em;">Pricing varies by Region. US Regions are typically the least expensive. S&atilde;o Paulo (sa-east-1) can be 40-50% more expensive than us-east-1 for the same resources.</p>
+                        <p style="font-size: 0.85em;">Pricing varies by Region; US Regions typically least expensive</p>
                     </div>
                 </div>
                 <aside class="notes">Walk through the decision process in order. Compliance is typically non-negotiable and comes first. If you have no compliance constraints, proximity to users is usually the next priority. Then check that the services you need are available. Finally, compare costs. Remind participants they can use multiple Regions for different workloads.</aside>
             </section>
 
-            <!-- AWS Service Categories (1/2) -->
+            <!-- AWS Service Categories -->
             <section>
-                <h2>&#128230; AWS Service Categories (1/2)</h2>
-                <p>AWS offers 200+ fully featured services. Key categories include:</p>
-                <div class="three-columns">
-                    <div class="card">
-                        <h4>Compute</h4>
-                        <ul>
-                            <li class="fragment fade-up">EC2 (Virtual Servers)</li>
-                            <li class="fragment fade-up">Lambda (Serverless)</li>
-                            <li class="fragment fade-up">ECS / EKS (Containers)</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Storage</h4>
-                        <ul>
-                            <li class="fragment fade-up">S3 (Object Storage)</li>
-                            <li class="fragment fade-up">EBS (Block Storage)</li>
-                            <li class="fragment fade-up">EFS (File Storage)</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Database</h4>
-                        <ul>
-                            <li class="fragment fade-up">RDS (Relational)</li>
-                            <li class="fragment fade-up">DynamoDB (NoSQL)</li>
-                            <li class="fragment fade-up">ElastiCache (In-Memory)</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">This is just a sampling. We'll dive deeper into many of these services throughout the course. The key takeaway is that AWS provides building blocks across every layer of the stack. In this course, we'll focus on EC2, VPC, S3, DynamoDB, and IAM as core services. Mention that you don't need to memorize all services but understand the categories.</aside>
-            </section>
-
-            <!-- AWS Service Categories (2/2) -->
-            <section>
-                <h2>&#128230; AWS Service Categories (2/2)</h2>
-                <div class="three-columns">
-                    <div class="card">
-                        <h4>Networking</h4>
-                        <ul>
-                            <li class="fragment fade-up">VPC (Virtual Network)</li>
-                            <li class="fragment fade-up">Route 53 (DNS)</li>
-                            <li class="fragment fade-up">CloudFront (CDN)</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Security &amp; Identity</h4>
-                        <ul>
-                            <li class="fragment fade-up">IAM (Access Mgmt)</li>
-                            <li class="fragment fade-up">KMS (Encryption)</li>
-                            <li class="fragment fade-up">WAF (Firewall)</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Management</h4>
-                        <ul>
-                            <li class="fragment fade-up">CloudWatch (Monitoring)</li>
-                            <li class="fragment fade-up">CloudFormation (IaC)</li>
-                            <li class="fragment fade-up">CloudTrail (Audit)</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">This is just a sampling. We'll dive deeper into many of these services throughout the course. The key takeaway is that AWS provides building blocks across every layer of the stack. In this course, we'll focus on EC2, VPC, S3, DynamoDB, and IAM as core services. Mention that you don't need to memorize all services but understand the categories.</aside>
+                <h2>&#128230; AWS Service Categories</h2>
+                <p style="font-size: 0.85em;">AWS offers 200+ services. Key categories for this course:</p>
+                <table>
+                    <thead>
+                        <tr><th>Category</th><th>Key Services</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Compute</strong></td><td>EC2 (Virtual Servers), Lambda (Serverless), ECS/EKS (Containers)</td></tr>
+                        <tr><td><strong>Storage</strong></td><td>S3 (Object), EBS (Block), EFS (File)</td></tr>
+                        <tr><td><strong>Database</strong></td><td>RDS (Relational), DynamoDB (NoSQL), ElastiCache (In-Memory)</td></tr>
+                        <tr><td><strong>Networking</strong></td><td>VPC, Route 53 (DNS), CloudFront (CDN)</td></tr>
+                        <tr><td><strong>Security</strong></td><td>IAM, KMS (Encryption), WAF (Firewall)</td></tr>
+                    </tbody>
+                </table>
+                <aside class="notes">This is just a sampling. We'll dive deeper into many of these throughout the course. Focus areas: EC2, VPC, S3, DynamoDB, IAM, CloudWatch. Also mention management tools: CloudWatch (monitoring), CloudFormation (IaC), CloudTrail (audit logging). You don't need to memorize all services, just understand the categories.</aside>
             </section>
 
             <!-- Interacting with AWS -->
             <section>
                 <h2>&#128187; Interacting with AWS</h2>
-                <p>Three primary ways to interact with AWS services &mdash; all of them use the AWS API under the hood:</p>
+                <p style="font-size: 0.85em;">All three interfaces call the same underlying AWS APIs:</p>
                 <div class="three-columns">
                     <div class="card">
-                        <h4>&#127760; AWS Management Console</h4>
+                        <h4>&#127760; Management Console</h4>
                         <ul>
-                            <li class="fragment fade-up">Web-based GUI</li>
-                            <li class="fragment fade-up">Great for exploration and learning</li>
-                            <li class="fragment fade-up">Point-and-click interface</li>
-                            <li class="fragment fade-up">Not ideal for automation</li>
+                            <li>Web-based GUI</li>
+                            <li>Great for learning</li>
+                            <li>Used in our labs</li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>&#128433;&#65039; AWS CLI</h4>
                         <ul>
-                            <li class="fragment fade-up">Command-line interface</li>
-                            <li class="fragment fade-up">Scriptable and automatable</li>
-                            <li class="fragment fade-up">Available for Windows, macOS, Linux</li>
-                            <li class="fragment fade-up">Ideal for repeatable tasks</li>
+                            <li>Command-line interface</li>
+                            <li>Scriptable, automatable</li>
+                            <li>Ideal for repeatable tasks</li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>&#128736;&#65039; AWS SDKs</h4>
                         <ul>
-                            <li class="fragment fade-up">Language-specific APIs</li>
-                            <li class="fragment fade-up">Python (Boto3), JavaScript, Java, .NET, Go, etc.</li>
-                            <li class="fragment fade-up">Embed AWS calls in your applications</li>
-                            <li class="fragment fade-up">Used for application integration</li>
+                            <li>Language-specific APIs</li>
+                            <li>Python, JS, Java, .NET, Go</li>
+                            <li>Application integration</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Key Insight: Everything in AWS is an API call. The Console, CLI, and SDKs are all just different interfaces to the same underlying REST APIs. Anything you can do in the Console can be automated via CLI or SDK. Stress that the API-first nature of AWS is fundamental. When you click a button in the Console, it's making an API call. The CLI wraps those same API calls in shell commands. SDKs wrap them in language-native code. This is what makes Infrastructure as Code possible. In practice, teams use the Console for exploration and debugging, CLI for scripting and quick operations, and SDKs for application-level integration.</aside>
-            </section>
-
-            <!-- AWS CLI Example -->
-            <section>
-                <h2>&#128433;&#65039; AWS CLI in Action</h2>
-                <div class="two-columns">
-                    <div>
-                        <p>Common CLI patterns you'll use throughout this course:</p>
-                        <pre><code class="bash"># List S3 buckets
-aws s3 ls
-
-# Describe EC2 instances
-aws ec2 describe-instances --region us-east-1
-
-# Get caller identity (who am I?)
-aws sts get-caller-identity</code></pre>
-                    </div>
-                    <div>
-                        <div class="highlight-box">
-                            <strong>CLI Structure:</strong><br>
-                            <code>aws &lt;service&gt; &lt;action&gt; [options]</code>
-                        </div>
-                        <div class="highlight-box success" style="margin-top: 15px;">
-                            <strong>Pro Tip:</strong> Use <code>--output table</code> for human-readable output, <code>--output json</code> for scripting, and <code>--query</code> for JMESPath filtering.
-                        </div>
-                    </div>
+                <div class="key-point" style="margin-top: 15px;">
+                    <strong>Key Insight:</strong> Everything in AWS is an API call. Console clicks, CLI commands, and SDK methods all invoke the same REST APIs.
                 </div>
-                <aside class="notes">Authentication: The CLI uses credentials configured via aws configure or environment variables (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY). Walk through the CLI syntax. The pattern is always: aws, then the service name, then the action, then options. The sts get-caller-identity command is extremely useful for debugging authentication issues. It tells you exactly who AWS thinks you are. Mention that in the labs, they'll be using both the Console and CLI.</aside>
+                <aside class="notes">Stress the API-first nature of AWS. When you click a button in the Console, it makes an API call. The CLI wraps those same calls in shell commands. SDKs wrap them in language-native code. This is what makes Infrastructure as Code possible. In practice, teams use the Console for exploration, CLI for scripting, and SDKs for application-level integration.</aside>
             </section>
 
             <!-- ============================================================ -->
@@ -410,25 +289,25 @@ aws sts get-caller-identity</code></pre>
             <section>
                 <h2>&#128737;&#65039; AWS Shared Responsibility Model</h2>
                 <div class="concept-box">
-                    <p style="font-size: 0.85em; margin: 0;"><strong>Security OF the Cloud vs. Security IN the Cloud</strong> &mdash; AWS and the customer share security responsibilities.</p>
+                    <p style="font-size: 0.85em; margin: 0;"><strong>Security OF the Cloud</strong> (AWS) vs. <strong>Security IN the Cloud</strong> (Customer)</p>
                 </div>
                 <div class="two-columns" style="margin-top: 15px;">
                     <div class="card" style="border-top: 4px solid var(--accent-color);">
-                        <h4>&#9989; AWS Responsibility (Security OF the Cloud)</h4>
+                        <h4>&#9989; AWS Responsibility</h4>
                         <ul>
-                            <li class="fragment fade-up">Physical security and hardware infrastructure</li>
-                            <li class="fragment fade-up">Managed services' underlying OS/patching</li>
-                            <li class="fragment fade-up">Hypervisor and network infrastructure</li>
-                            <li class="fragment fade-up">Global infrastructure (Regions, AZs, Edge)</li>
+                            <li class="fragment fade-up">Physical security and hardware</li>
+                            <li class="fragment fade-up">Managed services OS/patching</li>
+                            <li class="fragment fade-up">Hypervisor and network layer</li>
+                            <li class="fragment fade-up">Global infrastructure</li>
                         </ul>
                     </div>
                     <div class="card" style="border-top: 4px solid var(--warning-color);">
-                        <h4>&#9888;&#65039; Customer Responsibility (Security IN the Cloud)</h4>
+                        <h4>&#9888;&#65039; Customer Responsibility</h4>
                         <ul>
-                            <li class="fragment fade-up">Data encryption (at rest and in transit)</li>
-                            <li class="fragment fade-up">IAM &mdash; identity and access management</li>
-                            <li class="fragment fade-up">OS patching, network &amp; firewall configuration</li>
-                            <li class="fragment fade-up">Application-level and client-side security</li>
+                            <li class="fragment fade-up">Data encryption (at rest + in transit)</li>
+                            <li class="fragment fade-up">IAM and access management</li>
+                            <li class="fragment fade-up">OS patching, firewall config</li>
+                            <li class="fragment fade-up">Application-level security</li>
                         </ul>
                     </div>
                 </div>
@@ -452,7 +331,7 @@ aws sts get-caller-identity</code></pre>
                     </tbody>
                 </table>
                 <div class="key-point" style="margin-top: 15px;">
-                    <strong>Takeaway:</strong> The more managed the service, the less operational responsibility you carry &mdash; but you <em>always</em> own IAM policies, data classification, and encryption decisions.
+                    <strong>Takeaway:</strong> More managed = less ops responsibility, but you <em>always</em> own IAM, data, and encryption.
                 </div>
                 <aside class="notes">Walk through the table column by column. With EC2, you own almost everything above the hypervisor. With RDS, AWS handles the database engine, patching, backups (if configured), and OS. With Lambda, AWS handles nearly everything except your code and IAM configuration. Notice that IAM and data encryption are ALWAYS the customer's responsibility regardless of service type. This is a critical point.</aside>
             </section>
@@ -461,25 +340,26 @@ aws sts get-caller-identity</code></pre>
             <section>
                 <h2>&#128100; AWS Identity and Access Management (IAM)</h2>
                 <div class="concept-box">
-                    <h4>What Is IAM?</h4>
-                    <p style="font-size: 0.85em;">IAM is a <strong>global service</strong> (not Region-specific) that controls <strong>authentication</strong> (who can sign in) and <strong>authorization</strong> (what permissions they have) for AWS resources.</p>
+                    <p style="font-size: 0.85em; margin: 0;"><strong>Global service</strong> controlling <strong>authentication</strong> (who signs in) and <strong>authorization</strong> (what they can do). Free to use &mdash; create once, works in all Regions.</p>
                 </div>
                 <div class="two-columns" style="margin-top: 15px;">
                     <div>
-                        <h4>Core IAM Components</h4>
+                        <h4>Core Components</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>Users</strong> &mdash; Individual identities with long-term credentials</li>
-                            <li class="fragment fade-up"><strong>Groups</strong> &mdash; Collections of users with shared permissions</li>
-                            <li class="fragment fade-up"><strong>Roles</strong> &mdash; Temporary credentials for services or federated users</li>
-                            <li class="fragment fade-up"><strong>Policies</strong> &mdash; JSON documents defining permissions</li>
+                            <li class="fragment fade-up"><strong>Users</strong> &mdash; individual identities</li>
+                            <li class="fragment fade-up"><strong>Groups</strong> &mdash; collections with shared permissions</li>
+                            <li class="fragment fade-up"><strong>Roles</strong> &mdash; temporary credentials for services</li>
+                            <li class="fragment fade-up"><strong>Policies</strong> &mdash; JSON permission documents</li>
                         </ul>
                     </div>
                     <div>
                         <div class="highlight-box">
-                            <strong>IAM is free.</strong> There is no charge for IAM users, groups, roles, or policies. You only pay for the AWS resources those identities access.
-                        </div>
-                        <div class="highlight-box success" style="margin-top: 15px;">
-                            <strong>Global Service:</strong> IAM users, groups, and roles are available across all Regions. You create them once and they work everywhere.
+                            <strong>Key Facts:</strong>
+                            <ul style="margin: 5px 0 0 15px; font-size: 0.85em;">
+                                <li>IAM is free &mdash; pay only for resources accessed</li>
+                                <li>Global &mdash; not Region-specific</li>
+                                <li>Underpins every AWS API call</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -494,20 +374,18 @@ aws sts get-caller-identity</code></pre>
                         <h4>IAM Users</h4>
                         <ul>
                             <li class="fragment fade-up">Represent a person or service</li>
-                            <li class="fragment fade-up"><strong>Console access:</strong> username + password</li>
-                            <li class="fragment fade-up"><strong>Programmatic access:</strong> access key ID + secret access key</li>
+                            <li class="fragment fade-up"><strong>Console:</strong> username + password</li>
+                            <li class="fragment fade-up"><strong>Programmatic:</strong> access key + secret</li>
                             <li class="fragment fade-up">Can belong to multiple groups</li>
-                            <li class="fragment fade-up">Can have policies attached directly (inline) or inherited from groups</li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>IAM Groups</h4>
                         <ul>
-                            <li class="fragment fade-up">Logical collection of IAM users</li>
-                            <li class="fragment fade-up">Attach policies to the group, not individual users</li>
-                            <li class="fragment fade-up">Users inherit all policies from their group(s)</li>
-                            <li class="fragment fade-up">Groups cannot be nested (no groups within groups)</li>
-                            <li class="fragment fade-up">A user can belong to up to 10 groups</li>
+                            <li class="fragment fade-up">Logical collection of users</li>
+                            <li class="fragment fade-up">Attach policies to groups, not users</li>
+                            <li class="fragment fade-up">Users inherit group policies</li>
+                            <li class="fragment fade-up">Cannot be nested</li>
                         </ul>
                     </div>
                 </div>
@@ -518,21 +396,21 @@ aws sts get-caller-identity</code></pre>
             <section>
                 <h2>&#127917; IAM Roles</h2>
                 <div class="concept-box">
-                    <p style="font-size: 0.85em; margin: 0;"><strong>Roles</strong> provide <strong>temporary security credentials</strong> via AWS STS that expire automatically &mdash; no long-term credentials.</p>
+                    <p style="font-size: 0.85em; margin: 0;"><strong>Roles</strong> provide <strong>temporary credentials</strong> via STS &mdash; no long-term keys needed.</p>
                 </div>
                 <div class="two-columns" style="margin-top: 15px;">
                     <div>
-                        <h4>Common Role Use Cases</h4>
+                        <h4>Common Use Cases</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>EC2 Instance Role:</strong> Grant your application on EC2 access to S3 or DynamoDB without embedding credentials</li>
-                            <li class="fragment fade-up"><strong>Cross-Account Access:</strong> Allow users from Account A to access resources in Account B</li>
-                            <li class="fragment fade-up"><strong>Federated Access:</strong> Allow corporate directory users to access AWS via SAML/OIDC</li>
-                            <li class="fragment fade-up"><strong>Service Roles:</strong> Allow Lambda, ECS, or other services to call AWS APIs on your behalf</li>
+                            <li class="fragment fade-up"><strong>EC2 Instance Role:</strong> access S3/DynamoDB without embedded keys</li>
+                            <li class="fragment fade-up"><strong>Cross-Account:</strong> access resources in another account</li>
+                            <li class="fragment fade-up"><strong>Federation:</strong> corporate directory via SAML/OIDC</li>
+                            <li class="fragment fade-up"><strong>Service Roles:</strong> Lambda, ECS call APIs on your behalf</li>
                         </ul>
                     </div>
                     <div>
                         <div class="highlight-box success">
-                            <strong>Best Practice:</strong> Use IAM roles instead of access keys whenever possible. Roles provide temporary credentials that rotate automatically.
+                            <strong>Best Practice:</strong> Use roles instead of access keys. Temporary credentials rotate automatically.
                         </div>
                     </div>
                 </div>
@@ -544,7 +422,7 @@ aws sts get-caller-identity</code></pre>
                 <h2>&#128220; IAM Policy Structure</h2>
                 <div class="two-columns">
                     <div>
-                        <p style="font-size: 0.85em;">IAM policies are JSON documents that define permissions. Every policy contains one or more <strong>statements</strong>:</p>
+                        <p style="font-size: 0.85em;">JSON documents with one or more <strong>statements</strong>:</p>
                         <pre><code class="json">{
   "Version": "2012-10-17",
   "Statement": [
@@ -584,41 +462,6 @@ aws sts get-caller-identity</code></pre>
                 <aside class="notes">Default Deny: If a policy doesn't explicitly allow an action, it is denied. An explicit Deny always overrides any Allow. Walk through the JSON policy line by line. Version is always 2012-10-17 (this is the policy language version, not a date you set). Sid is optional but recommended for readability. Effect is either Allow or Deny. Action uses the format service:APIOperation. Resource uses ARNs to specify exactly which resources the policy applies to. Note the two resource ARNs in the example: one for the bucket itself (for ListBucket) and one with /* for objects inside the bucket (for GetObject). This is a common pattern. Stress that explicit Deny always wins.</aside>
             </section>
 
-            <!-- Policy Types -->
-            <section>
-                <h2>&#128196; Types of IAM Policies</h2>
-                <div class="three-columns">
-                    <div class="card">
-                        <h4>AWS Managed Policies</h4>
-                        <ul>
-                            <li class="fragment fade-up">Created and maintained by AWS</li>
-                            <li class="fragment fade-up">Cover common use cases</li>
-                            <li class="fragment fade-up">Examples: <code>AmazonS3ReadOnlyAccess</code>, <code>AdministratorAccess</code></li>
-                            <li class="fragment fade-up">Good starting point but often too broad</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Customer Managed Policies</h4>
-                        <ul>
-                            <li class="fragment fade-up">Created by you in your account</li>
-                            <li class="fragment fade-up">Tailored to your specific needs</li>
-                            <li class="fragment fade-up">Reusable across multiple identities</li>
-                            <li class="fragment fade-up">Versioned (up to 5 versions)</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Inline Policies</h4>
-                        <ul>
-                            <li class="fragment fade-up">Embedded directly in a single user, group, or role</li>
-                            <li class="fragment fade-up">Not reusable</li>
-                            <li class="fragment fade-up">Deleted when the identity is deleted</li>
-                            <li class="fragment fade-up">Use sparingly &mdash; for strict 1:1 relationships</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Recommendation: Start with AWS managed policies for learning and prototyping. Transition to customer managed policies for production workloads with least-privilege scoping. In practice, most organizations use a combination. AWS managed policies are convenient but tend to be overly permissive. For example, AmazonS3FullAccess grants access to ALL S3 buckets in the account. Customer managed policies let you scope down to specific buckets, prefixes, and operations. Inline policies are generally discouraged except for edge cases where a policy must be tightly coupled to a specific identity and should never be reused.</aside>
-            </section>
-
             <!-- Root User vs IAM Users -->
             <section>
                 <h2>&#128272; Root User vs. IAM Users</h2>
@@ -626,60 +469,46 @@ aws sts get-caller-identity</code></pre>
                     <div class="card" style="border-top: 4px solid var(--danger-color);">
                         <h4>&#9888;&#65039; Root User</h4>
                         <ul>
-                            <li class="fragment fade-up">Created when the AWS account is first set up</li>
-                            <li class="fragment fade-up">Has <strong>unrestricted access</strong> to all resources</li>
-                            <li class="fragment fade-up">Cannot be limited by IAM policies</li>
-                            <li class="fragment fade-up">Required for: closing the account, changing support plan, restoring IAM permissions</li>
+                            <li class="fragment fade-up">Unrestricted access, cannot be limited</li>
+                            <li class="fragment fade-up">Only for: closing account, changing support plan</li>
+                            <li class="fragment fade-up">Enable MFA immediately</li>
+                            <li class="fragment fade-up">Never create access keys for root</li>
                         </ul>
                     </div>
                     <div class="card" style="border-top: 4px solid var(--success-color);">
                         <h4>&#9989; IAM Users</h4>
                         <ul>
-                            <li class="fragment fade-up">Created by administrators</li>
-                            <li class="fragment fade-up">Permissions defined by attached policies</li>
-                            <li class="fragment fade-up">Can be restricted, monitored, and audited</li>
+                            <li class="fragment fade-up">Permissions defined by policies</li>
+                            <li class="fragment fade-up">Can be restricted, monitored, audited</li>
                             <li class="fragment fade-up">Use for all day-to-day operations</li>
+                            <li class="fragment fade-up">Create an IAM admin user instead</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">The root user is the most powerful identity in an AWS account and the most dangerous if compromised. There are very few tasks that require root access: closing the account, changing the support plan, enabling certain S3 configurations, and restoring IAM permissions if you've locked yourself out. Everything else should be done with IAM users or roles. This is not optional guidance &mdash; it's a fundamental security requirement.</aside>
-            </section>
-
-            <!-- Root User Best Practices -->
-            <section>
-                <h2>&#128272; Root User Best Practices</h2>
-                <div class="highlight-box danger">
-                    <strong>Critical Security Guidance:</strong>
-                    <ul style="margin: 10px 0 0 20px; font-size: 0.85em;">
-                        <li>Enable MFA on the root user immediately</li>
-                        <li>Do NOT create access keys for the root user</li>
-                        <li>Do NOT use the root user for day-to-day tasks</li>
-                        <li>Create an IAM admin user for administrative work</li>
-                        <li>Store root credentials in a secure vault</li>
-                    </ul>
+                <div class="highlight-box danger" style="margin-top: 15px;">
+                    <strong>Rule:</strong> Lock root credentials in a secure vault. Never use root for daily tasks.
                 </div>
-                <aside class="notes">The root user is the most powerful identity in an AWS account. Compromising it gives full, unrestricted access. These best practices are non-negotiable baseline security requirements for every AWS account.</aside>
+                <aside class="notes">The root user is the most powerful and most dangerous identity. Very few tasks require it: closing the account, changing the support plan, restoring IAM permissions. Everything else should use IAM users or roles. Enable MFA on root immediately, do not create access keys for it, and store credentials in a secure vault. These are non-negotiable baseline security requirements.</aside>
             </section>
 
             <!-- Multi-Factor Authentication -->
             <section>
                 <h2>&#128272; Multi-Factor Authentication (MFA)</h2>
                 <div class="concept-box">
-                    <h4>Add a Second Layer of Security</h4>
-                    <p style="font-size: 0.85em;">MFA requires users to provide a <strong>one-time code</strong> from an authentication device in addition to their username and password. Even if credentials are compromised, the attacker cannot access the account without the MFA device.</p>
+                    <p style="font-size: 0.85em; margin: 0;">Requires a <strong>one-time code</strong> from a device + password. Compromised credentials alone cannot access the account.</p>
                 </div>
                 <div class="three-columns" style="margin-top: 15px;">
                     <div class="card">
                         <h4>Virtual MFA</h4>
-                        <p style="font-size: 0.85em;">Software-based authenticator app (Google Authenticator, Authy, Microsoft Authenticator). Free and most commonly used.</p>
+                        <p style="font-size: 0.85em;">Authenticator app (Google, Authy, Microsoft). Free, most common.</p>
                     </div>
                     <div class="card">
                         <h4>Hardware MFA</h4>
-                        <p style="font-size: 0.85em;">Physical key fob or display card (e.g., Gemalto token). Provides a dedicated device independent of a smartphone.</p>
+                        <p style="font-size: 0.85em;">Physical key fob (e.g., Gemalto). Independent of smartphone.</p>
                     </div>
                     <div class="card">
-                        <h4>FIDO2 Security Key</h4>
-                        <p style="font-size: 0.85em;">USB-based hardware key (e.g., YubiKey). Phishing-resistant and supports multiple accounts on one device.</p>
+                        <h4>FIDO2 Key</h4>
+                        <p style="font-size: 0.85em;">USB key (e.g., YubiKey). Phishing-resistant, multi-account.</p>
                     </div>
                 </div>
                 <aside class="notes">Requirement: At minimum, enable MFA on the root user and all IAM users with console access. You can also enforce MFA in IAM policies using the aws:MultiFactorAuthPresent condition key. MFA is the single most impactful security control you can enable. AWS recommends FIDO2 security keys as the strongest option because they're phishing-resistant. Virtual MFA is the most common in practice due to convenience. You can also require MFA for specific API operations through IAM policy conditions. For example, you might allow users to list resources freely but require MFA to delete anything.</aside>
@@ -689,8 +518,8 @@ aws sts get-caller-identity</code></pre>
             <section>
                 <h2>&#128274; Principle of Least Privilege</h2>
                 <div class="concept-box">
-                    <h4>Grant Only the Permissions Required to Perform a Task</h4>
-                    <p style="font-size: 0.85em;">Start with zero permissions and add only what is needed. It's easier to grant additional permissions later than to revoke excessive permissions that are already in use.</p>
+                    <h4>Grant Only What Is Needed</h4>
+                    <p style="font-size: 0.85em;">Start with zero permissions, add as required. Easier to grant more later than revoke excess.</p>
                 </div>
                 <div class="two-columns" style="margin-top: 15px;">
                     <div>
@@ -701,7 +530,7 @@ aws sts get-caller-identity</code></pre>
   "Resource": "*"
 }</code></pre>
                         <div class="highlight-box danger" style="margin-top: 10px;">
-                            This grants <strong>full admin access</strong> to every service and resource. Never use this in production.
+                            <strong>Full admin</strong> to everything. Never use in production.
                         </div>
                     </div>
                     <div>
@@ -718,41 +547,11 @@ aws sts get-caller-identity</code></pre>
      123456789012:table/Employees"
 }</code></pre>
                         <div class="highlight-box success" style="margin-top: 10px;">
-                            Scoped to <strong>specific actions</strong> on a <strong>specific table</strong>.
+                            Scoped to <strong>3 actions</strong> on <strong>1 table</strong>.
                         </div>
                     </div>
                 </div>
                 <aside class="notes">This is one of the most important security principles. Compare the two policies side by side. The wildcard policy is a ticking time bomb. If those credentials leak, the attacker has full access to everything. The scoped policy limits damage to three operations on a single DynamoDB table. AWS provides tools to help: IAM Access Analyzer can generate least-privilege policies based on observed usage. CloudTrail logs show which API calls an identity actually makes, helping you trim excess permissions.</aside>
-            </section>
-
-            <!-- Least Privilege Implementation Tools -->
-            <section>
-                <h2>&#128295; Implementing Least Privilege</h2>
-                <p>AWS provides several tools to help you right-size permissions:</p>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>&#128270; IAM Access Analyzer</h4>
-                        <ul>
-                            <li class="fragment fade-up">Analyzes resource policies for external access</li>
-                            <li class="fragment fade-up">Generates policies based on CloudTrail activity</li>
-                            <li class="fragment fade-up">Validates policies against best practices</li>
-                            <li class="fragment fade-up">Identifies unused permissions</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#128202; Credential Reports &amp; Access Advisors</h4>
-                        <ul>
-                            <li class="fragment fade-up"><strong>Credential Report:</strong> Account-level CSV of all users and credential status</li>
-                            <li class="fragment fade-up"><strong>Access Advisor:</strong> Shows service-level last-accessed data per identity</li>
-                            <li class="fragment fade-up">Identify and remove unused permissions</li>
-                            <li class="fragment fade-up">Audit access key age and rotation status</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="key-point" style="margin-top: 15px;">
-                    <strong>Workflow:</strong> Start broad (AWS managed policy) &#8594; Monitor with CloudTrail &#8594; Analyze with Access Advisor &#8594; Refine to customer managed policy with only the permissions actually used.
-                </div>
-                <aside class="notes">This is the practical workflow for achieving least privilege without blocking developers. You start permissive during development, observe actual usage patterns via CloudTrail, then use Access Analyzer to generate a tight policy. The credential report is useful for auditing: you can see which users have never logged in, which access keys haven't been rotated, and which users don't have MFA enabled.</aside>
             </section>
 
             <!-- IAM Best Practices Summary -->
@@ -762,28 +561,25 @@ aws sts get-caller-identity</code></pre>
                     <div class="card">
                         <h4>Identity</h4>
                         <ul>
-                            <li class="fragment fade-up">Lock away root user credentials</li>
+                            <li class="fragment fade-up">Lock away root credentials</li>
                             <li class="fragment fade-up">Enable MFA everywhere</li>
-                            <li class="fragment fade-up">Create individual IAM users (no sharing)</li>
-                            <li class="fragment fade-up">Use groups to assign permissions</li>
+                            <li class="fragment fade-up">No shared accounts</li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>Access</h4>
                         <ul>
-                            <li class="fragment fade-up">Grant least privilege</li>
-                            <li class="fragment fade-up">Use roles for applications &amp; services</li>
-                            <li class="fragment fade-up">Rotate credentials regularly</li>
-                            <li class="fragment fade-up">Remove unnecessary credentials</li>
+                            <li class="fragment fade-up">Least privilege always</li>
+                            <li class="fragment fade-up">Roles for apps/services</li>
+                            <li class="fragment fade-up">Rotate and remove unused keys</li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>Monitoring</h4>
                         <ul>
-                            <li class="fragment fade-up">Enable CloudTrail for API logging</li>
-                            <li class="fragment fade-up">Review Access Advisor data</li>
-                            <li class="fragment fade-up">Use IAM Access Analyzer</li>
-                            <li class="fragment fade-up">Set up billing alerts</li>
+                            <li class="fragment fade-up">CloudTrail for API logging</li>
+                            <li class="fragment fade-up">Access Advisor + Analyzer</li>
+                            <li class="fragment fade-up">Billing alerts</li>
                         </ul>
                     </div>
                 </div>
@@ -803,28 +599,25 @@ aws sts get-caller-identity</code></pre>
             <section>
                 <h2>&#127919; Course Scenario</h2>
                 <div class="concept-box">
-                    <h4>Building an Employee Directory Application</h4>
-                    <p style="font-size: 0.9em;">Throughout this course, you will design and build a cloud-native <strong>employee directory application</strong> on AWS. This application allows employees to view and manage their profile information including name, title, location, and photo.</p>
+                    <p style="font-size: 0.9em; margin: 0;">Build a cloud-native <strong>employee directory</strong> on AWS &mdash; view/manage profiles with name, title, location, and photo.</p>
                 </div>
                 <div class="two-columns" style="margin-top: 15px;">
                     <div class="card">
-                        <h4>Application Requirements</h4>
+                        <h4>Requirements</h4>
                         <ul>
-                            <li class="fragment fade-up">Web-based interface accessible via browser</li>
-                            <li class="fragment fade-up">Store employee data (name, title, location)</li>
-                            <li class="fragment fade-up">Upload and display employee photos</li>
+                            <li class="fragment fade-up">Web-based interface</li>
+                            <li class="fragment fade-up">Store employee data + photos</li>
                             <li class="fragment fade-up">Highly available and scalable</li>
                             <li class="fragment fade-up">Secure access control</li>
                         </ul>
                     </div>
                     <div class="card">
-                        <h4>What We'll Build, Module by Module</h4>
+                        <h4>Module Roadmap</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>Module 1:</strong> IAM foundations</li>
-                            <li class="fragment fade-up"><strong>Modules 2&ndash;3:</strong> Compute (EC2) &amp; Networking (VPC)</li>
-                            <li class="fragment fade-up"><strong>Modules 4&ndash;5:</strong> Storage (S3) &amp; Databases (DynamoDB)</li>
-                            <li class="fragment fade-up"><strong>Module 6:</strong> Monitoring (CloudWatch)</li>
-                            <li class="fragment fade-up"><strong>Module 7:</strong> Scaling &amp; Load Balancing</li>
+                            <li class="fragment fade-up"><strong>M1:</strong> IAM foundations</li>
+                            <li class="fragment fade-up"><strong>M2&ndash;3:</strong> Compute (EC2) &amp; Networking (VPC)</li>
+                            <li class="fragment fade-up"><strong>M4&ndash;5:</strong> Storage (S3) &amp; Database (DynamoDB)</li>
+                            <li class="fragment fade-up"><strong>M6&ndash;7:</strong> Monitoring &amp; Auto Scaling</li>
                         </ul>
                     </div>
                 </div>
@@ -834,150 +627,31 @@ aws sts get-caller-identity</code></pre>
             <!-- Architecture Overview -->
             <section>
                 <h2>&#127959;&#65039; Architecture Overview</h2>
-                <div class="card">
-                    <h4>Target Architecture</h4>
-                    <div class="highlight-box">
-                        <p style="font-size: 0.85em; margin: 0;">
-                            <strong>Users</strong> &#8594; <strong>Application Load Balancer</strong> &#8594; <strong>EC2 Instances (Auto Scaling Group)</strong> &#8594; <strong>DynamoDB</strong> (employee data) + <strong>S3</strong> (employee photos)
-                        </p>
-                    </div>
+                <div class="highlight-box">
+                    <p style="font-size: 0.85em; margin: 0;">
+                        <strong>Users</strong> &#8594; <strong>ALB</strong> &#8594; <strong>EC2 (Auto Scaling)</strong> &#8594; <strong>DynamoDB</strong> + <strong>S3</strong>
+                    </p>
                 </div>
                 <div class="three-columns" style="margin-top: 15px;">
                     <div class="card">
                         <h4>&#128187; Compute</h4>
-                        <p style="font-size: 0.85em;"><strong>Amazon EC2</strong> instances running the application code inside an Auto Scaling group for high availability.</p>
+                        <p style="font-size: 0.85em;">EC2 in Auto Scaling group</p>
                     </div>
                     <div class="card">
                         <h4>&#128190; Data</h4>
-                        <p style="font-size: 0.85em;"><strong>Amazon DynamoDB</strong> for employee records (NoSQL, serverless, single-digit ms latency). <strong>Amazon S3</strong> for employee photos (object storage).</p>
+                        <p style="font-size: 0.85em;">DynamoDB (records) + S3 (photos)</p>
                     </div>
                     <div class="card">
                         <h4>&#128274; Security</h4>
-                        <p style="font-size: 0.85em;"><strong>Amazon VPC</strong> for network isolation. <strong>IAM Roles</strong> for EC2 to access DynamoDB and S3 without hardcoded credentials.</p>
+                        <p style="font-size: 0.85em;">VPC isolation + IAM roles (no hardcoded keys)</p>
                     </div>
                 </div>
                 <div class="key-point" style="margin-top: 15px;">
-                    <strong>Principle:</strong> We'll build this iteratively, starting simple (single EC2 instance) and progressively adding networking, storage, database, monitoring, and auto scaling layers.
+                    <strong>Approach:</strong> Build iteratively &mdash; single EC2 first, then add networking, storage, database, monitoring, and scaling.
                 </div>
                 <aside class="notes">Sketch the architecture on the whiteboard if possible. Start from the user, through the load balancer, to EC2 instances, then to DynamoDB and S3 on the backend. VPC wraps the networking layer. IAM controls who and what can access each component. Note that the application uses an IAM role attached to EC2 to access DynamoDB and S3 &mdash; no access keys are stored in the application code. This is the pattern we established as a best practice earlier.</aside>
             </section>
 
-            <!-- Services Deep Dive Preview (1/2) -->
-            <section>
-                <h2>&#128230; Core Services We'll Use (1/2)</h2>
-                <table>
-                    <thead>
-                        <tr><th>Service</th><th>Purpose</th><th>Module</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>IAM</strong></td>
-                            <td>Access management &mdash; users, roles, policies for securing access to all other services</td>
-                            <td>Module 1</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Amazon EC2</strong></td>
-                            <td>Virtual servers hosting the application &mdash; configurable instance types, AMIs, key pairs</td>
-                            <td>Module 2</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Amazon VPC</strong></td>
-                            <td>Isolated virtual network &mdash; subnets, route tables, internet gateways, security groups</td>
-                            <td>Module 3</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Amazon S3</strong></td>
-                            <td>Object storage for employee photos &mdash; 11 nines durability, lifecycle policies</td>
-                            <td>Module 4</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <aside class="notes">This table maps the entire course. Each module builds on the previous one. By the end, participants will have hands-on experience with every service listed here.</aside>
-            </section>
-
-            <!-- Services Deep Dive Preview (2/2) -->
-            <section>
-                <h2>&#128230; Core Services We'll Use (2/2)</h2>
-                <table>
-                    <thead>
-                        <tr><th>Service</th><th>Purpose</th><th>Module</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Amazon DynamoDB</strong></td>
-                            <td>NoSQL database for employee records &mdash; key-value, single-digit ms response, serverless</td>
-                            <td>Module 5</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Amazon CloudWatch</strong></td>
-                            <td>Monitoring &amp; observability &mdash; metrics, alarms, logs, dashboards</td>
-                            <td>Module 6</td>
-                        </tr>
-                        <tr>
-                            <td><strong>ELB + Auto Scaling</strong></td>
-                            <td>Load balancing and automatic scaling &mdash; distribute traffic, maintain availability</td>
-                            <td>Module 7</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <aside class="notes">These services represent the core building blocks of most AWS architectures &mdash; the patterns they learn here apply far beyond this specific application.</aside>
-            </section>
-
-            <!-- Why This Architecture? -->
-            <section>
-                <h2>&#129300; Why This Architecture?</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>Architecture Decisions</h4>
-                        <ul>
-                            <li class="fragment fade-up"><strong>EC2 over Lambda:</strong> Exposes core compute and OS concepts</li>
-                            <li class="fragment fade-up"><strong>DynamoDB over RDS:</strong> Serverless, auto-scaling NoSQL</li>
-                            <li class="fragment fade-up"><strong>S3 for photos:</strong> Unlimited object storage</li>
-                            <li class="fragment fade-up"><strong>VPC isolation:</strong> Network controls for production</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <div class="highlight-box success">
-                            <strong>Scalability:</strong> This architecture handles anything from 10 employees to 100,000+ by adjusting Auto Scaling parameters and DynamoDB capacity.
-                        </div>
-                        <div class="highlight-box" style="margin-top: 15px;">
-                            <strong>Cost Efficiency:</strong> With DynamoDB on-demand pricing and EC2 Auto Scaling, you pay proportional to actual usage.
-                        </div>
-                    </div>
-                </div>
-                <aside class="notes">Production Note: A real-world deployment would also include CloudFront, WAF, multi-Region failover, and CI/CD pipelines. Address why we chose these services over alternatives. EC2 is more instructional than Lambda for this course because it exposes more of the infrastructure layers (OS, networking, security groups). DynamoDB is simpler to set up than RDS for a key-value use case like employee records. S3 is the natural choice for any file/object storage.</aside>
-            </section>
-
-            <!-- Preparing for the Lab -->
-            <section>
-                <h2>&#128736;&#65039; Preparing for the Lab</h2>
-                <div class="concept-box">
-                    <h4>What You'll Do in the IAM Lab</h4>
-                    <p style="font-size: 0.9em;">In the upcoming hands-on lab, you'll apply the IAM concepts we've covered by working directly in the AWS Management Console.</p>
-                </div>
-                <div class="two-columns" style="margin-top: 15px;">
-                    <div class="card">
-                        <h4>Lab Objectives</h4>
-                        <ul>
-                            <li class="fragment fade-up">Explore pre-created IAM users and groups</li>
-                            <li class="fragment fade-up">Review and interpret IAM policies</li>
-                            <li class="fragment fade-up">Test permissions by attempting various actions</li>
-                            <li class="fragment fade-up">Observe the effect of group membership on permissions</li>
-                            <li class="fragment fade-up">Understand how Allow and Deny interact</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Key Concepts to Apply</h4>
-                        <ul>
-                            <li class="fragment fade-up">Users inherit permissions from groups</li>
-                            <li class="fragment fade-up">Policies define what actions are allowed or denied</li>
-                            <li class="fragment fade-up">Explicit Deny overrides Allow</li>
-                            <li class="fragment fade-up">Permissions are evaluated on every API call</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Brief the participants on what to expect in the lab. They will NOT be creating users from scratch but will be exploring and testing a pre-configured environment. The goal is to build intuition for how IAM policies work in practice. Encourage them to try actions that should be denied &mdash; seeing 'Access Denied' errors is just as instructional as successful operations.</aside>
-            </section>
 
             <!-- ============================================================ -->
             <!-- LAB CALLOUT -->
@@ -985,56 +659,48 @@ aws sts get-caller-identity</code></pre>
             <section data-background-color="#1a365d" class="lab-callout">
                 <h2>&#128300; Hands-On Lab</h2>
                 <h3>Introduction to AWS Identity and Access Management (IAM)</h3>
-                <p>Apply what you've learned about IAM users, groups, policies, and permissions.</p>
+                <p>Apply IAM concepts hands-on in the AWS Console.</p>
                 <ul>
-                    <li>Explore IAM users, groups, and their attached policies</li>
-                    <li>Sign in as different IAM users to test permissions</li>
-                    <li>Observe how group-based policies control access</li>
-                    <li>Verify that explicit Deny overrides Allow</li>
+                    <li>Explore IAM users, groups, and policies</li>
+                    <li>Sign in as different users to test permissions</li>
+                    <li>Observe group-based access control</li>
+                    <li>Verify explicit Deny overrides Allow</li>
                 </ul>
                 <aside class="notes">Launch the lab. Circulate to answer questions. Common issues: students may try to use the root account instead of the IAM users provided, or may not realize they need to sign out and back in as a different user to test different permissions. Remind them that IAM policy changes take effect immediately but may require a browser refresh to see in the Console.</aside>
             </section>
 
-            <!-- Module Summary -->
+            <!-- Module Summary & Key Takeaways -->
             <section>
                 <h2>&#128203; Module 1 Summary</h2>
                 <div class="two-columns">
                     <div>
-                        <h4>&#9729;&#65039; Cloud Computing</h4>
+                        <h4>&#9729;&#65039; Cloud Fundamentals</h4>
                         <ul>
-                            <li>On-demand, pay-as-you-go IT resources</li>
-                            <li>Six advantages over traditional infrastructure</li>
-                            <li>Regions, AZs, and Edge Locations</li>
-                            <li>Console, CLI, and SDKs</li>
+                            <li>On-demand, pay-as-you-go resources</li>
+                            <li>Regions, AZs, Edge Locations</li>
+                            <li>Console, CLI, SDKs &mdash; all API-driven</li>
+                        </ul>
+                        <h4 style="margin-top: 15px;">&#128274; Security &amp; IAM</h4>
+                        <ul>
+                            <li>Shared responsibility model</li>
+                            <li>Users, groups, roles, policies</li>
+                            <li>MFA + least privilege everywhere</li>
                         </ul>
                     </div>
                     <div>
-                        <h4>&#128274; Security &amp; IAM</h4>
-                        <ul>
-                            <li>Shared responsibility model</li>
-                            <li>IAM: users, groups, roles, policies</li>
-                            <li>Root user best practices and MFA</li>
-                            <li>Least privilege principle</li>
-                            <li>Employee directory app architecture</li>
-                        </ul>
+                        <div class="concept-box">
+                            <h4>Key Takeaways</h4>
+                            <ol style="font-size: 0.85em;">
+                                <li><strong>Cloud = OpEx, speed, global reach</strong></li>
+                                <li><strong>Deploy across multiple AZs</strong></li>
+                                <li><strong>Security is shared</strong> &mdash; you own IAM, data, encryption</li>
+                                <li><strong>IAM is foundational</strong> &mdash; groups, roles, least privilege</li>
+                                <li><strong>Never use root</strong> for daily operations</li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
-                <aside class="notes">Up Next — Module 2: AWS Compute — launching EC2 instances to host our employee directory application. Recap the three major sections. Cloud computing fundamentals give us the 'why' of AWS. Security and IAM give us the foundation for 'how' we do things securely. The employee directory application gives us the 'what' we're building. Make sure participants feel solid on IAM concepts before moving on — everything else builds on this foundation.</aside>
-            </section>
-
-            <!-- Key Takeaways -->
-            <section>
-                <h2>&#127775; Key Takeaways</h2>
-                <div class="concept-box">
-                    <ol>
-                        <li class="fragment fade-up" style="margin-bottom: 12px;"><strong>Cloud computing</strong> replaces upfront capital investment with pay-as-you-go operational costs, enabling speed, agility, and global reach.</li>
-                        <li class="fragment fade-up" style="margin-bottom: 12px;"><strong>AWS global infrastructure</strong> is organized into Regions and Availability Zones. Always deploy across multiple AZs for high availability.</li>
-                        <li class="fragment fade-up" style="margin-bottom: 12px;"><strong>Security is a shared responsibility.</strong> AWS secures the cloud infrastructure; you secure your workloads, data, and access controls.</li>
-                        <li class="fragment fade-up" style="margin-bottom: 12px;"><strong>IAM is foundational.</strong> Use groups for permissions, roles for services, MFA for protection, and least privilege for everything.</li>
-                        <li class="fragment fade-up"><strong>Never use the root user</strong> for daily operations. Create IAM admin users and lock root credentials away with MFA enabled.</li>
-                    </ol>
-                </div>
-                <aside class="notes">These five points are the non-negotiable takeaways from this module. If participants remember nothing else, these five principles will serve them well. The IAM foundation we've laid here is critical &mdash; every lab and module going forward depends on understanding how permissions work.</aside>
+                <aside class="notes">Up Next — Module 2: AWS Compute — launching EC2 instances to host our employee directory application. These five takeaways are non-negotiable. Cloud fundamentals give us the 'why'. Security and IAM give us the 'how'. The employee directory app gives us the 'what'. Make sure participants feel solid on IAM before moving on.</aside>
             </section>
 
             <!-- ============================================================ -->

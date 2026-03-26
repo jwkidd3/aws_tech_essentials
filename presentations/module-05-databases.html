@@ -77,14 +77,13 @@
             <section>
                 <h2>&#127919; Module Objectives</h2>
                 <ul>
-                    <li class="fragment fade-up">Understand database types and the managed vs. unmanaged model</li>
-                    <li class="fragment fade-up">Describe Amazon RDS features, Multi-AZ, and read replicas</li>
-                    <li class="fragment fade-up">Identify purpose-built databases in the AWS portfolio</li>
-                    <li class="fragment fade-up">Explain Amazon DynamoDB architecture, keys, and capacity modes</li>
-                    <li class="fragment fade-up">Choose the right database service for a given workload</li>
-                    <li class="fragment fade-up">Implement and manage a DynamoDB table (hands-on lab)</li>
+                    <li class="fragment fade-up">Compare managed vs. unmanaged databases</li>
+                    <li class="fragment fade-up">Describe RDS features, Multi-AZ, and read replicas</li>
+                    <li class="fragment fade-up">Identify purpose-built AWS database services</li>
+                    <li class="fragment fade-up">Explain DynamoDB architecture and capacity modes</li>
+                    <li class="fragment fade-up">Choose the right database for a workload</li>
                 </ul>
-                <aside class="notes">These are the learning objectives for this module. By the end, students should be able to select and justify a database service choice for common workloads.</aside>
+                <aside class="notes">These are the learning objectives for this module. By the end, students should be able to select and justify a database service choice for common workloads. The hands-on lab covers DynamoDB table creation and management.</aside>
             </section>
 
             <!-- Slide 3: Section Divider - Databases in AWS -->
@@ -101,10 +100,10 @@
                     <div class="card">
                         <h4>&#128202; Relational (SQL)</h4>
                         <ul>
-                            <li class="fragment fade-up">Structured data in tables with rows and columns</li>
-                            <li class="fragment fade-up">Fixed schema, ACID transactions</li>
+                            <li class="fragment fade-up">Structured tables with fixed schema</li>
+                            <li class="fragment fade-up">ACID transactions</li>
                             <li class="fragment fade-up">SQL for queries and manipulation</li>
-                            <li class="fragment fade-up">Examples: MySQL, PostgreSQL, Oracle</li>
+                            <li class="fragment fade-up">MySQL, PostgreSQL, Oracle</li>
                         </ul>
                     </div>
                     <div class="card">
@@ -113,67 +112,53 @@
                             <li class="fragment fade-up">Flexible schemas, varied data models</li>
                             <li class="fragment fade-up">Key-value, document, graph, wide-column</li>
                             <li class="fragment fade-up">Optimized for specific access patterns</li>
-                            <li class="fragment fade-up">Examples: DynamoDB, MongoDB, Neo4j</li>
+                            <li class="fragment fade-up">DynamoDB, MongoDB, Neo4j</li>
                         </ul>
                     </div>
                 </div>
                 <aside class="notes">Relational databases have been the backbone of enterprise IT for decades. NoSQL databases emerged to address needs around flexible schemas, horizontal scaling, and specific data model requirements.</aside>
             </section>
 
-            <!-- Slide 5: Managed vs Unmanaged Databases -->
+            <!-- Slide 5: Managed vs Unmanaged + Benefits (consolidated) -->
             <section>
-                <h2>Managed vs. Unmanaged Databases</h2>
+                <h2>Managed vs. Self-Managed Databases</h2>
                 <div class="two-columns">
                     <div class="card">
                         <h4>&#9881;&#65039; Self-Managed on EC2</h4>
                         <ul>
-                            <li class="fragment fade-up">You install and configure the database engine</li>
-                            <li class="fragment fade-up">You manage patching, backups, replication</li>
-                            <li class="fragment fade-up">Full control over OS and engine settings</li>
+                            <li class="fragment fade-up">You install, patch, and back up</li>
+                            <li class="fragment fade-up">Full OS and engine control</li>
                             <li class="fragment fade-up">Higher operational burden</li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>&#9729;&#65039; AWS Managed Service</h4>
                         <ul>
-                            <li class="fragment fade-up">AWS handles provisioning, patching, backups</li>
-                            <li class="fragment fade-up">Built-in high availability and failover</li>
-                            <li class="fragment fade-up">Monitoring integrated with CloudWatch</li>
-                            <li class="fragment fade-up">Focus on application, not infrastructure</li>
+                            <li class="fragment fade-up">AWS handles patching and backups</li>
+                            <li class="fragment fade-up">Built-in HA and automatic failover</li>
+                            <li class="fragment fade-up">Encryption, VPC isolation, IAM</li>
+                            <li class="fragment fade-up">Scale compute and storage independently</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Running a database on EC2 gives maximum control but means you own every operational task. Managed services like RDS shift that responsibility to AWS, letting you focus on your application and data.</aside>
-            </section>
-
-            <!-- Slide 6: Benefits of Managed Database Services -->
-            <section>
-                <h2>Benefits of Managed Database Services</h2>
-                <div class="concept-box">
-                    <h4>Why let AWS manage your database?</h4>
-                    <ul>
-                        <li class="fragment fade-up"><strong>Reduced operational overhead</strong> &mdash; no patching, no backup scripts</li>
-                        <li class="fragment fade-up"><strong>High availability</strong> &mdash; Multi-AZ, automatic failover built in</li>
-                        <li class="fragment fade-up"><strong>Scalability</strong> &mdash; scale compute and storage independently</li>
-                        <li class="fragment fade-up"><strong>Security</strong> &mdash; encryption at rest and in transit, VPC isolation, IAM integration</li>
-                        <li class="fragment fade-up"><strong>Cost optimization</strong> &mdash; pay-as-you-go, Reserved Instances, Serverless options</li>
-                    </ul>
+                <div class="key-point fragment fade-up">
+                    <strong>Key benefit:</strong> Managed services let you focus on your application instead of database administration.
                 </div>
-                <aside class="notes">Managed services significantly reduce the undifferentiated heavy lifting associated with database administration. This lets teams iterate faster and spend time on features rather than maintenance.</aside>
+                <aside class="notes">Running a database on EC2 gives maximum control but means you own every operational task. Managed services like RDS shift that responsibility to AWS. Benefits include reduced overhead, built-in HA, scalability, security with encryption at rest/in transit, and cost optimization through pay-as-you-go and Reserved Instances.</aside>
             </section>
 
-            <!-- Slide 7: Section Divider - Amazon RDS -->
+            <!-- Slide 6: Section Divider - Amazon RDS -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
                 <h2>&#128736;&#65039; Amazon Relational Database Service</h2>
                 <h3>Managed relational databases in the cloud</h3>
                 <aside class="notes">Now we dive into Amazon RDS, the managed relational database service that supports six popular database engines.</aside>
             </section>
 
-            <!-- Slide 8: What is Amazon RDS? -->
+            <!-- Slide 7: What is Amazon RDS? -->
             <section>
                 <h2>What is Amazon RDS?</h2>
                 <div class="highlight-box">
-                    <strong>Amazon RDS</strong> is a managed service that makes it straightforward to set up, operate, and scale a relational database in the cloud. AWS handles routine database tasks such as provisioning, patching, backups, recovery, and failure detection.
+                    <strong>Amazon RDS</strong> &mdash; managed service to set up, operate, and scale relational databases. AWS handles provisioning, patching, backups, and failure detection.
                 </div>
                 <h3>Supported Engines</h3>
                 <div class="three-columns">
@@ -187,77 +172,20 @@
                 <aside class="notes">RDS supports six engines. You choose the engine, instance type, and storage, and AWS handles the rest. Aurora is the AWS-native engine with enhanced performance and availability.</aside>
             </section>
 
-            <!-- Slide 9: RDS Key Features -->
+            <!-- Slide 8: RDS Key Features (consolidated with Multi-AZ and Read Replicas) -->
             <section>
                 <h2>RDS Key Features</h2>
                 <ul>
-                    <li class="fragment fade-up"><strong>Automated backups &amp; snapshots</strong> &mdash; point-in-time recovery (up to 35 days) plus user-initiated snapshots in S3</li>
-                    <li class="fragment fade-up"><strong>Multi-AZ deployments</strong> &mdash; synchronous standby replica in a different AZ</li>
-                    <li class="fragment fade-up"><strong>Read replicas</strong> &mdash; asynchronous replicas for read-heavy workloads</li>
-                    <li class="fragment fade-up"><strong>Encryption</strong> &mdash; at rest (KMS) and in transit (SSL/TLS)</li>
-                    <li class="fragment fade-up"><strong>Monitoring &amp; maintenance</strong> &mdash; CloudWatch metrics, Enhanced Monitoring, Performance Insights, automatic minor version upgrades</li>
+                    <li class="fragment fade-up"><strong>Automated backups</strong> &mdash; point-in-time recovery up to 35 days</li>
+                    <li class="fragment fade-up"><strong>Multi-AZ</strong> &mdash; synchronous standby for automatic failover</li>
+                    <li class="fragment fade-up"><strong>Read replicas</strong> &mdash; asynchronous replicas for read scaling</li>
+                    <li class="fragment fade-up"><strong>Encryption</strong> &mdash; at rest (KMS) and in transit (TLS)</li>
+                    <li class="fragment fade-up"><strong>Monitoring</strong> &mdash; CloudWatch, Performance Insights</li>
                 </ul>
-                <aside class="notes">These features are available across all RDS engines. Automated backups and snapshots together provide robust data protection. Multi-AZ and read replicas address availability and scaling. Automatic minor version upgrades occur during maintenance windows.</aside>
+                <aside class="notes">These features are available across all RDS engines. Multi-AZ provides high availability with a synchronous standby in a different AZ; failover is automatic via DNS CNAME flip (60-120 seconds). The standby does NOT serve read traffic. Read replicas use asynchronous replication and each has its own endpoint. Up to 15 replicas for Aurora, 5 for other engines. Can be cross-AZ or cross-Region. Replicas can be promoted to standalone instances.</aside>
             </section>
 
-            <!-- Slide 10: Multi-AZ Deployments -->
-            <section>
-                <h2>Multi-AZ Deployments</h2>
-                <div class="two-columns">
-                    <div>
-                        <div class="concept-box">
-                            <h4>How It Works</h4>
-                            <ul>
-                                <li class="fragment fade-up">Primary DB instance in one AZ</li>
-                                <li class="fragment fade-up">Standby replica in a different AZ</li>
-                                <li class="fragment fade-up"><strong>Synchronous</strong> replication</li>
-                                <li class="fragment fade-up">Automatic failover (typically 60&ndash;120 seconds)</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="highlight-box warning">
-                            <strong>Key Points:</strong>
-                            <ul>
-                                <li>Standby is <em>not</em> used for read traffic</li>
-                                <li>DNS endpoint stays the same after failover</li>
-                                <li>Failover triggers: AZ outage, instance failure, manual reboot with failover</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <aside class="notes">Multi-AZ is about availability, not performance. The standby is invisible to your application. Failover is automatic and handled via a DNS CNAME flip. The application connects to the same endpoint before and after failover. Key point: Multi-AZ = High Availability. It does not improve read performance. Use read replicas for read scaling.</aside>
-            </section>
-
-            <!-- Slide 11: Read Replicas -->
-            <section>
-                <h2>Read Replicas</h2>
-                <div class="two-columns">
-                    <div>
-                        <h3>Characteristics</h3>
-                        <ul>
-                            <li class="fragment fade-up"><strong>Asynchronous</strong> replication from primary</li>
-                            <li class="fragment fade-up">Up to 15 read replicas (Aurora) or 5 (other engines)</li>
-                            <li class="fragment fade-up">Can be in same AZ, cross-AZ, or cross-Region</li>
-                            <li class="fragment fade-up">Each replica has its own DNS endpoint</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3>Use Cases</h3>
-                        <ul>
-                            <li class="fragment fade-up">Offload read-heavy queries (reports, analytics)</li>
-                            <li class="fragment fade-up">Reduce latency for geographically distributed users</li>
-                            <li class="fragment fade-up">Can be promoted to a standalone DB instance</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="highlight-box fragment fade-up">
-                    <strong>Read Replicas = Read Scaling.</strong> Application must direct read traffic to replica endpoints explicitly.
-                </div>
-                <aside class="notes">Read replicas use asynchronous replication, which means there can be slight replication lag. They are ideal for read-heavy workloads. Cross-Region replicas can also serve as a disaster recovery strategy.</aside>
-            </section>
-
-            <!-- Slide 12: Multi-AZ vs Read Replicas -->
+            <!-- Slide 9: Multi-AZ vs Read Replicas comparison -->
             <section>
                 <h2>Multi-AZ vs. Read Replicas</h2>
                 <table>
@@ -291,125 +219,83 @@
                         </tr>
                         <tr>
                             <td><strong>Cross-Region</strong></td>
-                            <td>No (same Region only)</td>
+                            <td>No</td>
                             <td>Yes</td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="key-point fragment fade-up">
-                    <strong>Pro tip:</strong> You can combine Multi-AZ <em>and</em> read replicas on the same RDS instance to get both high availability and read scaling.
+                    <strong>Pro tip:</strong> Combine Multi-AZ <em>and</em> read replicas for both HA and read scaling.
                 </div>
                 <aside class="notes">This is a common exam and interview topic. Multi-AZ and read replicas solve different problems and can be used together. Multi-AZ provides automatic failover; read replicas provide horizontal read scaling.</aside>
             </section>
 
-            <!-- Slide 13: Amazon Aurora -->
+            <!-- Slide 10: Amazon Aurora -->
             <section>
                 <h2>&#11088; Amazon Aurora</h2>
                 <div class="highlight-box success">
-                    <strong>Amazon Aurora</strong> is a MySQL- and PostgreSQL-compatible relational database built for the cloud. It combines the performance and availability of commercial databases with the simplicity and cost-effectiveness of open-source databases.
+                    <strong>Aurora</strong> &mdash; MySQL- and PostgreSQL-compatible, built for the cloud with commercial-grade performance at open-source cost.
                 </div>
                 <div class="two-columns">
                     <div>
                         <h4>Performance</h4>
                         <ul>
-                            <li class="fragment fade-up">Up to <strong>5x throughput</strong> of MySQL</li>
-                            <li class="fragment fade-up">Up to <strong>3x throughput</strong> of PostgreSQL</li>
-                            <li class="fragment fade-up">Distributed, SSD-backed storage layer</li>
+                            <li class="fragment fade-up"><strong>5x</strong> MySQL throughput</li>
+                            <li class="fragment fade-up"><strong>3x</strong> PostgreSQL throughput</li>
+                            <li class="fragment fade-up">Distributed, SSD-backed storage</li>
                         </ul>
                     </div>
                     <div>
                         <h4>Storage &amp; Availability</h4>
                         <ul>
-                            <li class="fragment fade-up">Auto-scales storage from 10 GB up to <strong>128 TB</strong></li>
-                            <li class="fragment fade-up">6 copies of data across 3 AZs</li>
+                            <li class="fragment fade-up">Auto-scales 10 GB to <strong>128 TB</strong></li>
+                            <li class="fragment fade-up">6 copies across 3 AZs</li>
                             <li class="fragment fade-up">Up to 15 low-latency read replicas</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Aurora decouples compute from storage. The storage layer is a distributed, fault-tolerant, self-healing system that replicates data six ways across three AZs. This architecture delivers both high performance and durability.</aside>
+                <div class="key-point fragment fade-up">
+                    <strong>Aurora Serverless v2:</strong> Auto-scales in 0.5 ACU increments for variable or unpredictable workloads.
+                </div>
+                <aside class="notes">Aurora decouples compute from storage. The storage layer is distributed, fault-tolerant, and self-healing across three AZs. Aurora Serverless v2 scales without disruption, supports the full Aurora feature set including Global Database and read replicas. You set min/max ACU and the service handles the rest. Ideal for dev/test, multi-tenant SaaS, and infrequently used applications.</aside>
             </section>
 
-            <!-- Slide 14: Aurora Serverless v2 -->
-            <section>
-                <h2>Aurora Serverless v2</h2>
-                <div class="concept-box">
-                    <h4>On-Demand, Auto-Scaling Database Capacity</h4>
-                    <ul>
-                        <li class="fragment fade-up">Instantly scales compute capacity up or down based on application demand</li>
-                        <li class="fragment fade-up">Scales in fine-grained increments (as small as 0.5 ACU)</li>
-                        <li class="fragment fade-up">Supports Multi-AZ for high availability</li>
-                        <li class="fragment fade-up">Compatible with Aurora features: Global Database, read replicas, backtrack</li>
-                    </ul>
-                </div>
-                <div class="highlight-box fragment fade-up">
-                    <strong>Ideal for:</strong> variable or unpredictable workloads, dev/test environments, multi-tenant SaaS applications, and infrequently used applications.
-                </div>
-                <aside class="notes">Aurora Serverless v2 is a significant improvement over v1. It scales without disruption and supports the full Aurora feature set. You set minimum and maximum ACU (Aurora Capacity Units) and the service handles the rest.</aside>
-            </section>
-
-            <!-- Slide 15: RDS Pricing Considerations -->
+            <!-- Slide 11: RDS Pricing Considerations -->
             <section>
                 <h2>RDS Pricing Considerations</h2>
                 <div class="two-columns">
                     <div>
                         <h4>Cost Components</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>Instance hours</strong> &mdash; based on instance class</li>
-                            <li class="fragment fade-up"><strong>Storage</strong> &mdash; provisioned (gp3, io1) or Aurora auto-scaling</li>
-                            <li class="fragment fade-up"><strong>I/O requests</strong> &mdash; Aurora charges per million I/Os</li>
-                            <li class="fragment fade-up"><strong>Backup storage</strong> &mdash; beyond free allocation</li>
-                            <li class="fragment fade-up"><strong>Data transfer</strong> &mdash; cross-AZ and outbound</li>
+                            <li class="fragment fade-up"><strong>Instance hours</strong> by instance class</li>
+                            <li class="fragment fade-up"><strong>Storage</strong> &mdash; gp3, io1, or Aurora auto</li>
+                            <li class="fragment fade-up"><strong>Backup storage</strong> beyond free tier</li>
+                            <li class="fragment fade-up"><strong>Data transfer</strong> &mdash; cross-AZ, outbound</li>
                         </ul>
                     </div>
                     <div>
                         <h4>Cost Optimization</h4>
                         <ul>
-                            <li class="fragment fade-up">Reserved Instances (1- or 3-year terms)</li>
-                            <li class="fragment fade-up">Aurora Serverless for variable workloads</li>
+                            <li class="fragment fade-up">Reserved Instances (1- or 3-year)</li>
+                            <li class="fragment fade-up">Aurora Serverless for variable loads</li>
                             <li class="fragment fade-up">Right-size instance types</li>
-                            <li class="fragment fade-up">Use gp3 storage for cost-efficient performance</li>
+                            <li class="fragment fade-up">Use gp3 for cost-efficient performance</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">RDS pricing is multi-dimensional. The largest cost drivers are typically instance hours and storage. Reserved Instances can save up to 60% compared to On-Demand pricing for steady-state workloads.</aside>
+                <aside class="notes">RDS pricing is multi-dimensional. The largest cost drivers are typically instance hours and storage. Reserved Instances can save up to 60% compared to On-Demand pricing for steady-state workloads. Aurora also charges per million I/Os.</aside>
             </section>
 
-            <!-- Slide 16: Section Divider - Purpose-Built Databases -->
+            <!-- Slide 12: Section Divider - Purpose-Built Databases -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
                 <h2>&#127919; Purpose-Built Databases</h2>
                 <h3>The right tool for each workload</h3>
                 <aside class="notes">AWS offers a broad portfolio of purpose-built databases. Instead of forcing every workload into one engine, you choose the best fit for each data model and access pattern.</aside>
             </section>
 
-            <!-- Slide 17: One-Size-Fits-All vs Purpose-Built -->
+            <!-- Slide 13: Purpose-Built Approach + Portfolio Table (consolidated) -->
             <section>
-                <h2>One-Size-Fits-All vs. Purpose-Built</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>&#9940; Traditional Approach</h4>
-                        <ul>
-                            <li class="fragment fade-up">Single relational database for everything</li>
-                            <li class="fragment fade-up">Complex schemas to accommodate all use cases</li>
-                            <li class="fragment fade-up">Scaling limitations under diverse workloads</li>
-                            <li class="fragment fade-up">Performance trade-offs inevitable</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#9989; Purpose-Built Approach</h4>
-                        <ul>
-                            <li class="fragment fade-up">Match the database to the data model</li>
-                            <li class="fragment fade-up">Optimize for specific access patterns</li>
-                            <li class="fragment fade-up">Scale each workload independently</li>
-                            <li class="fragment fade-up">Better performance, lower cost per workload</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Modern architectures often use multiple purpose-built databases in a single application. For example, a relational database for transactions, a cache for sessions, and a document database for a product catalog.</aside>
-            </section>
-
-            <!-- Slide 18a: AWS Database Portfolio — Core Databases -->
-            <section>
-                <h2>AWS Database Portfolio &mdash; Core Databases</h2>
+                <h2>AWS Purpose-Built Database Portfolio</h2>
                 <table>
                     <thead>
                         <tr>
@@ -420,9 +306,9 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>Amazon RDS / Aurora</strong></td>
+                            <td><strong>RDS / Aurora</strong></td>
                             <td>Relational</td>
-                            <td>Traditional apps, ERP, CRM, e-commerce</td>
+                            <td>ERP, CRM, e-commerce</td>
                         </tr>
                         <tr>
                             <td><strong>DynamoDB</strong></td>
@@ -430,46 +316,19 @@
                             <td>High-scale apps, gaming, IoT</td>
                         </tr>
                         <tr>
-                            <td><strong>DocumentDB</strong></td>
-                            <td>Document (MongoDB compatible)</td>
-                            <td>Content management, catalogs, profiles</td>
-                        </tr>
-                        <tr>
                             <td><strong>ElastiCache</strong></td>
                             <td>In-memory (Redis, Memcached)</td>
-                            <td>Caching, session stores, leaderboards</td>
+                            <td>Caching, session stores</td>
                         </tr>
-                    </tbody>
-                </table>
-                <aside class="notes">This is not an exhaustive list, but it covers the major purpose-built databases in the AWS portfolio. Each is optimized for a specific data model and access pattern.</aside>
-            </section>
-
-            <!-- Slide 18b: AWS Database Portfolio — Specialized Databases -->
-            <section>
-                <h2>AWS Database Portfolio &mdash; Specialized Databases</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Service</th>
-                            <th>Type</th>
-                            <th>Use Case</th>
-                        </tr>
-                    </thead>
-                    <tbody>
                         <tr>
                             <td><strong>Neptune</strong></td>
                             <td>Graph</td>
-                            <td>Social networks, fraud detection, knowledge graphs</td>
-                        </tr>
-                        <tr>
-                            <td><strong>QLDB</strong></td>
-                            <td>Ledger</td>
-                            <td>Immutable audit logs, supply chain</td>
+                            <td>Social networks, fraud detection</td>
                         </tr>
                         <tr>
                             <td><strong>Keyspaces</strong></td>
-                            <td>Wide-column (Cassandra compatible)</td>
-                            <td>Equipment maintenance, fleet management</td>
+                            <td>Wide-column (Cassandra)</td>
+                            <td>Fleet management, maintenance</td>
                         </tr>
                         <tr>
                             <td><strong>Timestream</strong></td>
@@ -478,84 +337,47 @@
                         </tr>
                     </tbody>
                 </table>
-                <aside class="notes">These specialized databases address specific data models beyond relational and key-value. Each is fully managed by AWS and optimized for its particular use case.</aside>
-            </section>
-
-            <!-- Slide 19a: Purpose-Built Databases — DocumentDB, Neptune, ElastiCache -->
-            <section>
-                <h2>Purpose-Built Databases &mdash; Highlights</h2>
-                <div class="three-columns">
-                    <div class="card">
-                        <h4>&#128196; DocumentDB</h4>
-                        <p style="font-size:0.85em;">MongoDB-compatible document database. Supports JSON workloads with the scalability and durability of a managed service.</p>
-                    </div>
-                    <div class="card">
-                        <h4>&#128279; Neptune</h4>
-                        <p style="font-size:0.85em;">Fully managed graph database. Supports Property Graph (Gremlin) and RDF (SPARQL) models for highly connected datasets.</p>
-                    </div>
-                    <div class="card">
-                        <h4>&#9889; ElastiCache</h4>
-                        <p style="font-size:0.85em;">In-memory data store supporting Redis and Memcached. Microsecond latency for caching, session management, and real-time analytics.</p>
-                    </div>
+                <div class="key-point fragment fade-up">
+                    <strong>Match the engine to the workload</strong> &mdash; optimize cost, performance, and scale independently.
                 </div>
-                <aside class="notes">Each of these services is fully managed. The key takeaway is to match the service to the workload rather than forcing all data into a single relational database.</aside>
+                <aside class="notes">Modern architectures often use multiple purpose-built databases. For example, a relational database for transactions, a cache for sessions, and a document database for a product catalog. Additional services include DocumentDB (MongoDB-compatible) and QLDB (immutable ledger). The key principle: instead of forcing all data into one relational engine, choose the best fit for each data model and access pattern.</aside>
             </section>
 
-            <!-- Slide 19b: Purpose-Built Databases — QLDB, Keyspaces, Timestream -->
-            <section>
-                <h2>Purpose-Built Databases &mdash; Highlights (cont.)</h2>
-                <div class="three-columns">
-                    <div class="card">
-                        <h4>&#128209; QLDB</h4>
-                        <p style="font-size:0.85em;">Ledger database with an immutable, transparent, and cryptographically verifiable transaction log.</p>
-                    </div>
-                    <div class="card">
-                        <h4>&#128203; Keyspaces</h4>
-                        <p style="font-size:0.85em;">Managed Apache Cassandra-compatible service. Serverless, pay-per-use, with single-digit-ms latency.</p>
-                    </div>
-                    <div class="card">
-                        <h4>&#9200; Timestream</h4>
-                        <p style="font-size:0.85em;">Purpose-built for time series data. Automatic tiered storage (memory &#8594; magnetic) and built-in analytics functions.</p>
-                    </div>
-                </div>
-                <aside class="notes">Each of these services is fully managed. The key takeaway is to match the service to the workload rather than forcing all data into a single relational database.</aside>
-            </section>
-
-            <!-- Slide 20: Section Divider - DynamoDB -->
+            <!-- Slide 14: Section Divider - DynamoDB -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
                 <h2>&#9889; Introduction to Amazon DynamoDB</h2>
                 <h3>Fully managed NoSQL at any scale</h3>
                 <aside class="notes">DynamoDB is one of the most important services in the AWS portfolio. It provides single-digit millisecond performance at virtually any scale.</aside>
             </section>
 
-            <!-- Slide 21: What is DynamoDB? -->
+            <!-- Slide 15: What is DynamoDB? -->
             <section>
                 <h2>What is Amazon DynamoDB?</h2>
                 <div class="highlight-box">
-                    <strong>Amazon DynamoDB</strong> is a fully managed, serverless NoSQL database service that provides single-digit millisecond performance at any scale. It supports both <strong>key-value</strong> and <strong>document</strong> data models.
+                    <strong>Amazon DynamoDB</strong> &mdash; fully managed, serverless NoSQL database with single-digit millisecond performance at any scale. Supports key-value and document models.
                 </div>
                 <ul>
-                    <li class="fragment fade-up">No servers to provision, patch, or manage</li>
-                    <li class="fragment fade-up">Automatic scaling of throughput and storage</li>
+                    <li class="fragment fade-up">No servers to provision or manage</li>
+                    <li class="fragment fade-up">Automatic throughput and storage scaling</li>
                     <li class="fragment fade-up">Built-in security, backup, and recovery</li>
-                    <li class="fragment fade-up">Multi-Region, multi-active replication with global tables</li>
-                    <li class="fragment fade-up">Event-driven programming with DynamoDB Streams</li>
+                    <li class="fragment fade-up">Global tables for multi-Region replication</li>
+                    <li class="fragment fade-up">Event-driven programming via Streams</li>
                 </ul>
                 <aside class="notes">DynamoDB is truly serverless. You create a table, define your keys, and start writing data. There are no instances to size and no storage to provision. It handles replication, patching, and scaling transparently.</aside>
             </section>
 
-            <!-- Slide 22: DynamoDB Core Concepts -->
+            <!-- Slide 16: DynamoDB Core Concepts -->
             <section>
                 <h2>DynamoDB Core Concepts</h2>
                 <div class="two-columns">
                     <div>
                         <div class="concept-box">
-                            <h4>Tables, Items, and Attributes</h4>
+                            <h4>Tables, Items, Attributes</h4>
                             <ul>
-                                <li class="fragment fade-up"><strong>Table</strong> &mdash; collection of items (similar to a SQL table)</li>
-                                <li class="fragment fade-up"><strong>Item</strong> &mdash; a single record (similar to a row)</li>
-                                <li class="fragment fade-up"><strong>Attribute</strong> &mdash; a data element (similar to a column)</li>
-                                <li class="fragment fade-up">Items can have different attributes (flexible schema)</li>
+                                <li class="fragment fade-up"><strong>Table</strong> &mdash; collection of items</li>
+                                <li class="fragment fade-up"><strong>Item</strong> &mdash; single record</li>
+                                <li class="fragment fade-up"><strong>Attribute</strong> &mdash; data element</li>
+                                <li class="fragment fade-up">Items can differ (flexible schema)</li>
                             </ul>
                         </div>
                     </div>
@@ -563,195 +385,192 @@
                         <div class="concept-box">
                             <h4>Data Types</h4>
                             <ul>
-                                <li class="fragment fade-up"><strong>Scalar</strong> &mdash; String, Number, Binary, Boolean, Null</li>
+                                <li class="fragment fade-up"><strong>Scalar</strong> &mdash; String, Number, Boolean</li>
                                 <li class="fragment fade-up"><strong>Document</strong> &mdash; List, Map</li>
-                                <li class="fragment fade-up"><strong>Set</strong> &mdash; String Set, Number Set, Binary Set</li>
+                                <li class="fragment fade-up"><strong>Set</strong> &mdash; String, Number, Binary</li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <aside class="notes">DynamoDB is schemaless beyond the primary key. Each item can have its own set of attributes. This flexibility is a core advantage for rapidly evolving applications.</aside>
+                <aside class="notes">DynamoDB is schemaless beyond the primary key. Each item can have its own set of attributes. This flexibility is a core advantage for rapidly evolving applications. Scalar types also include Binary and Null.</aside>
             </section>
 
-            <!-- Slide 23: DynamoDB Primary Keys -->
+            <!-- Slide 17: DynamoDB Primary Keys -->
             <section>
                 <h2>DynamoDB Primary Keys</h2>
                 <div class="two-columns">
                     <div class="card">
                         <h4>&#128273; Partition Key (Simple)</h4>
                         <ul>
-                            <li class="fragment fade-up">Single attribute uniquely identifies each item</li>
-                            <li class="fragment fade-up">DynamoDB hashes the partition key to determine storage partition</li>
+                            <li class="fragment fade-up">Single attribute identifies each item</li>
+                            <li class="fragment fade-up">Hashed to determine storage partition</li>
                             <li class="fragment fade-up">Example: <code>UserID</code></li>
                         </ul>
                     </div>
                     <div class="card">
-                        <h4>&#128273; Composite Key (Partition + Sort)</h4>
+                        <h4>&#128273; Composite Key</h4>
                         <ul>
-                            <li class="fragment fade-up">Two attributes together form the primary key</li>
-                            <li class="fragment fade-up">Partition key determines partition; sort key orders items within it</li>
-                            <li class="fragment fade-up">Example: <code>UserID</code> (partition) + <code>Timestamp</code> (sort)</li>
+                            <li class="fragment fade-up">Partition key + sort key together</li>
+                            <li class="fragment fade-up">Sort key orders items within partition</li>
+                            <li class="fragment fade-up">Example: <code>UserID</code> + <code>Timestamp</code></li>
                         </ul>
                     </div>
                 </div>
                 <div class="key-point fragment fade-up">
-                    <strong>Key design is critical.</strong> A well-chosen partition key distributes data evenly across partitions, avoiding hot partitions and ensuring consistent performance.
+                    <strong>Key design is critical.</strong> Choose high-cardinality partition keys to distribute data evenly and avoid hot partitions.
                 </div>
                 <aside class="notes">Primary key design is the single most important decision in DynamoDB. A poor partition key leads to hot partitions and throttled requests. Choose a high-cardinality attribute that distributes access evenly.</aside>
             </section>
 
-            <!-- Slide 24: Read/Write Capacity Modes -->
+            <!-- Slide 18: Read/Write Capacity Modes -->
             <section>
                 <h2>Read/Write Capacity Modes</h2>
                 <div class="two-columns">
                     <div class="card">
                         <h4>&#128203; Provisioned Mode</h4>
                         <ul>
-                            <li class="fragment fade-up">You specify Read Capacity Units (RCUs) and Write Capacity Units (WCUs)</li>
-                            <li class="fragment fade-up">1 RCU = 1 strongly consistent read/sec (up to 4 KB)</li>
-                            <li class="fragment fade-up">1 WCU = 1 write/sec (up to 1 KB)</li>
-                            <li class="fragment fade-up">Auto Scaling adjusts within set min/max</li>
-                            <li class="fragment fade-up">Best for predictable traffic patterns</li>
+                            <li class="fragment fade-up">Set RCUs and WCUs explicitly</li>
+                            <li class="fragment fade-up">1 RCU = 1 read/sec (4 KB)</li>
+                            <li class="fragment fade-up">1 WCU = 1 write/sec (1 KB)</li>
+                            <li class="fragment fade-up">Auto Scaling adjusts within limits</li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>&#9889; On-Demand Mode</h4>
                         <ul>
-                            <li class="fragment fade-up">No capacity planning required</li>
-                            <li class="fragment fade-up">Pay per request (reads and writes)</li>
-                            <li class="fragment fade-up">Instantly accommodates traffic spikes</li>
-                            <li class="fragment fade-up">Best for unpredictable or new workloads</li>
-                            <li class="fragment fade-up">Can switch between modes once per 24 hours</li>
+                            <li class="fragment fade-up">No capacity planning needed</li>
+                            <li class="fragment fade-up">Pay per request</li>
+                            <li class="fragment fade-up">Instantly handles traffic spikes</li>
+                            <li class="fragment fade-up">Switch modes once per 24 hours</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Provisioned mode is more cost-effective for steady workloads. On-Demand is simpler and better for spiky or unknown traffic patterns. You can switch between modes, but only once every 24 hours.</aside>
+                <aside class="notes">Provisioned mode is more cost-effective for steady workloads. On-Demand is simpler and better for spiky or unknown traffic patterns. Provisioned is best for predictable traffic; on-demand for new or unpredictable workloads.</aside>
             </section>
 
-            <!-- Slide 25a: DynamoDB Features — Security, Global Tables, Streams -->
+            <!-- Slide 19: DynamoDB Features (consolidated) -->
             <section>
                 <h2>DynamoDB Features</h2>
                 <div class="three-columns">
                     <div class="card">
                         <h4>&#128274; Security</h4>
                         <ul>
-                            <li>Encryption at rest (AWS-owned, customer-managed KMS)</li>
-                            <li>Fine-grained access control via IAM</li>
+                            <li>Encryption at rest (KMS)</li>
+                            <li>Fine-grained IAM access</li>
                             <li>VPC endpoints</li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>&#127760; Global Tables</h4>
                         <ul>
-                            <li>Multi-Region, multi-active replication</li>
+                            <li>Multi-Region, multi-active</li>
                             <li>99.999% availability SLA</li>
-                            <li>Local read/write in each Region</li>
+                            <li>Local read/write per Region</li>
                         </ul>
                     </div>
                     <div class="card">
-                        <h4>&#128260; Streams</h4>
+                        <h4>&#128260; Streams &amp; More</h4>
                         <ul>
-                            <li>Ordered flow of item-level changes</li>
+                            <li>Ordered item-level changes</li>
                             <li>Trigger Lambda functions</li>
-                            <li>Cross-Region replication, analytics</li>
+                            <li>TTL auto-deletes expired items</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">These features make DynamoDB enterprise-ready. Global tables enable multi-region active-active architectures. Streams enable event-driven architectures.</aside>
-            </section>
-
-            <!-- Slide 25b: DynamoDB Features — TTL and DAX -->
-            <section>
-                <h2>DynamoDB Features (cont.)</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>&#9201; TTL (Time to Live)</h4>
-                        <p style="font-size:0.85em;">Automatically delete expired items at no extra cost. Ideal for session data, temporary records, and logs.</p>
-                    </div>
-                    <div class="card">
-                        <h4>&#128640; DAX (DynamoDB Accelerator)</h4>
-                        <p style="font-size:0.85em;">In-memory cache for DynamoDB. Reduces read latency from milliseconds to <strong>microseconds</strong>. API-compatible &mdash; no application code changes.</p>
-                    </div>
+                <div class="key-point fragment fade-up">
+                    <strong>DAX (DynamoDB Accelerator):</strong> In-memory cache &mdash; microsecond reads, API-compatible, no code changes.
                 </div>
-                <aside class="notes">TTL is useful for automatically cleaning up session data and temporary records. DAX provides microsecond read latency without code changes, making it ideal for read-heavy workloads.</aside>
+                <aside class="notes">These features make DynamoDB enterprise-ready. Global tables enable multi-region active-active architectures. Streams enable event-driven architectures. TTL is useful for automatically cleaning up session data and temporary records. DAX provides microsecond read latency without code changes.</aside>
             </section>
 
-            <!-- Slide 26: DynamoDB Use Cases -->
+            <!-- Slide 20: DynamoDB Use Cases -->
             <section>
                 <h2>DynamoDB Use Cases</h2>
                 <div class="two-columns">
                     <div>
                         <ul>
-                            <li class="fragment fade-up"><strong>&#127918; Gaming</strong> &mdash; player state, leaderboards, session history</li>
-                            <li class="fragment fade-up"><strong>&#128225; IoT</strong> &mdash; device telemetry, time series data ingestion</li>
-                            <li class="fragment fade-up"><strong>&#128241; Mobile backends</strong> &mdash; user profiles, app preferences</li>
-                            <li class="fragment fade-up"><strong>&#128274; Session management</strong> &mdash; web session data with TTL</li>
+                            <li class="fragment fade-up"><strong>&#127918; Gaming</strong> &mdash; leaderboards, player state</li>
+                            <li class="fragment fade-up"><strong>&#128225; IoT</strong> &mdash; device telemetry ingestion</li>
+                            <li class="fragment fade-up"><strong>&#128241; Mobile</strong> &mdash; user profiles, preferences</li>
+                            <li class="fragment fade-up"><strong>&#128274; Sessions</strong> &mdash; web session data with TTL</li>
                         </ul>
                     </div>
                     <div>
                         <ul>
-                            <li class="fragment fade-up"><strong>&#128722; E-commerce</strong> &mdash; shopping carts, product catalogs</li>
-                            <li class="fragment fade-up"><strong>&#128200; Ad tech</strong> &mdash; real-time bidding, click-stream analytics</li>
-                            <li class="fragment fade-up"><strong>&#128176; Financial</strong> &mdash; transaction processing, fraud detection</li>
-                            <li class="fragment fade-up"><strong>&#128101; Social media</strong> &mdash; news feeds, activity timelines</li>
+                            <li class="fragment fade-up"><strong>&#128722; E-commerce</strong> &mdash; carts, catalogs</li>
+                            <li class="fragment fade-up"><strong>&#128200; Ad tech</strong> &mdash; real-time bidding</li>
+                            <li class="fragment fade-up"><strong>&#128176; Financial</strong> &mdash; transaction processing</li>
+                            <li class="fragment fade-up"><strong>&#128101; Social</strong> &mdash; feeds, activity timelines</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">DynamoDB is used by some of the largest applications in the world, including Amazon.com itself. Its single-digit millisecond performance and limitless scaling make it ideal for high-throughput, low-latency workloads. Scale fact: DynamoDB handles more than 10 trillion requests per day and can support peaks of more than 20 million requests per second.</aside>
+                <aside class="notes">DynamoDB is used by some of the largest applications in the world, including Amazon.com itself. Its single-digit millisecond performance and limitless scaling make it ideal for high-throughput, low-latency workloads. It handles more than 10 trillion requests per day.</aside>
             </section>
 
-            <!-- Slide 27: DynamoDB Pricing -->
+            <!-- Slide 21: DynamoDB Pricing -->
             <section>
                 <h2>DynamoDB Pricing Model</h2>
                 <div class="two-columns">
                     <div>
                         <h4>Provisioned Mode</h4>
                         <ul>
-                            <li class="fragment fade-up">Pay per provisioned RCU and WCU per hour</li>
-                            <li class="fragment fade-up">Reserved Capacity available (1- or 3-year)</li>
-                            <li class="fragment fade-up">Free tier: 25 RCU + 25 WCU + 25 GB storage</li>
+                            <li class="fragment fade-up">Pay per RCU/WCU per hour</li>
+                            <li class="fragment fade-up">Reserved Capacity (1- or 3-year)</li>
+                            <li class="fragment fade-up">Free tier: 25 RCU + 25 WCU + 25 GB</li>
                         </ul>
                     </div>
                     <div>
                         <h4>On-Demand Mode</h4>
                         <ul>
-                            <li class="fragment fade-up">Pay per read and write request unit</li>
-                            <li class="fragment fade-up">No minimum capacity or commitment</li>
-                            <li class="fragment fade-up">Typically 5&ndash;7x more expensive per request than provisioned</li>
+                            <li class="fragment fade-up">Pay per read/write request</li>
+                            <li class="fragment fade-up">No minimum commitment</li>
+                            <li class="fragment fade-up">5&ndash;7x more per request vs. provisioned</li>
                         </ul>
                     </div>
                 </div>
                 <div class="highlight-box warning fragment fade-up">
-                    <strong>Additional costs:</strong> storage ($0.25/GB-month), streams, global table replicated writes, backups, and data transfer.
+                    <strong>Additional costs:</strong> storage ($0.25/GB-month), streams, global table writes, backups, data transfer.
                 </div>
                 <aside class="notes">Start with on-demand for new workloads to understand traffic patterns, then switch to provisioned with auto-scaling once patterns stabilize. This is a common cost-optimization strategy.</aside>
             </section>
 
-            <!-- Slide 28: Section Divider - Choosing the Right Database -->
+            <!-- Slide 22: Section Divider - Choosing the Right Database -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
                 <h2>&#129300; Choose the Right AWS Database</h2>
                 <h3>Decision criteria and comparisons</h3>
                 <aside class="notes">With so many database options, how do you choose? We will look at the key decision criteria and compare the most commonly used services.</aside>
             </section>
 
-            <!-- Slide 29: Decision Criteria -->
+            <!-- Slide 23: Choosing the Right Database (consolidated criteria + relational vs NoSQL) -->
             <section>
                 <h2>Choosing the Right Database</h2>
-                <div class="concept-box">
-                    <h4>Key Decision Criteria</h4>
-                    <ul>
-                        <li class="fragment fade-up"><strong>Data model</strong> &mdash; relational, key-value, document, graph, time series?</li>
-                        <li class="fragment fade-up"><strong>Access patterns</strong> &mdash; complex queries (SQL) vs. simple key lookups?</li>
-                        <li class="fragment fade-up"><strong>Scalability</strong> &mdash; vertical (RDS) vs. horizontal (DynamoDB)?</li>
-                        <li class="fragment fade-up"><strong>Consistency</strong> &mdash; strong ACID transactions vs. eventual consistency?</li>
-                        <li class="fragment fade-up"><strong>Latency requirements</strong> &mdash; milliseconds vs. microseconds?</li>
-                        <li class="fragment fade-up"><strong>Operational model</strong> &mdash; serverless vs. instance-based?</li>
-                    </ul>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>&#128202; Choose Relational (RDS/Aurora)</h4>
+                        <ul>
+                            <li class="fragment fade-up">Complex queries with JOINs</li>
+                            <li class="fragment fade-up">Strict schema enforcement</li>
+                            <li class="fragment fade-up">Multi-table ACID transactions</li>
+                            <li class="fragment fade-up">Reporting and BI workloads</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>&#9889; Choose NoSQL (DynamoDB)</h4>
+                        <ul>
+                            <li class="fragment fade-up">Simple key-based access patterns</li>
+                            <li class="fragment fade-up">Massive read/write throughput</li>
+                            <li class="fragment fade-up">Flexible or evolving schema</li>
+                            <li class="fragment fade-up">Serverless, horizontal scale</li>
+                        </ul>
+                    </div>
                 </div>
-                <aside class="notes">No single database is best for every workload. Walk through these criteria for each component of your application and the right choice usually becomes clear.</aside>
+                <div class="key-point fragment fade-up">
+                    <strong>Consider:</strong> data model, access patterns, scalability needs, consistency, and latency requirements.
+                </div>
+                <aside class="notes">No single database is best for every workload. Walk through criteria for each component: data model (relational, key-value, graph, time series), access patterns (SQL joins vs key lookups), scalability (vertical vs horizontal), consistency (ACID vs eventual), latency, and operational model (serverless vs instance). Modern architectures commonly use both relational and NoSQL, each for the workload it handles best.</aside>
             </section>
 
-            <!-- Slide 30: Comparison Table -->
+            <!-- Slide 24: Service Comparison Table -->
             <section>
                 <h2>Service Comparison</h2>
                 <table>
@@ -805,45 +624,16 @@
                 <aside class="notes">This table helps frame the most common decision: RDS for complex relational queries, DynamoDB for high-throughput simple access patterns, and ElastiCache for microsecond caching. Many applications use a combination of these.</aside>
             </section>
 
-            <!-- Slide 31: When to Use Relational vs NoSQL -->
-            <section>
-                <h2>When to Use Relational vs. NoSQL</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>&#128202; Choose Relational (RDS/Aurora)</h4>
-                        <ul>
-                            <li class="fragment fade-up">Complex queries with JOINs</li>
-                            <li class="fragment fade-up">Strict schema enforcement needed</li>
-                            <li class="fragment fade-up">Multi-table ACID transactions</li>
-                            <li class="fragment fade-up">Existing SQL-based applications</li>
-                            <li class="fragment fade-up">Reporting and business intelligence</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#9889; Choose NoSQL (DynamoDB)</h4>
-                        <ul>
-                            <li class="fragment fade-up">Simple key-based access patterns</li>
-                            <li class="fragment fade-up">Massive read/write throughput</li>
-                            <li class="fragment fade-up">Flexible or evolving schema</li>
-                            <li class="fragment fade-up">Horizontal scale with low latency</li>
-                            <li class="fragment fade-up">Serverless architecture fit</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">The answer is rarely either/or. A single application might use Aurora for order management, DynamoDB for session state, and ElastiCache for query caching. Design for the access pattern, not the engine you know best. Remember: It is not relational or NoSQL. Modern architectures commonly use both -- each for the workload it handles best.</aside>
-            </section>
-
-            <!-- Slide 32: Lab Callout -->
+            <!-- Slide 25: Lab Callout -->
             <section data-background-color="#1a365d" class="lab-callout">
                 <h2>&#129489;&#8205;&#128187; Hands-On Lab</h2>
                 <h3>Implement and Manage Amazon DynamoDB</h3>
                 <p>In this lab you will:</p>
                 <ul>
-                    <li class="fragment fade-up">Create a DynamoDB table with a composite primary key</li>
-                    <li class="fragment fade-up">Add, query, and scan items using the AWS Console and CLI</li>
-                    <li class="fragment fade-up">Configure read/write capacity mode (provisioned vs. on-demand)</li>
-                    <li class="fragment fade-up">Enable TTL on a table attribute</li>
-                    <li class="fragment fade-up">Explore DynamoDB monitoring in CloudWatch</li>
+                    <li class="fragment fade-up">Create a DynamoDB table with a composite key</li>
+                    <li class="fragment fade-up">Add, query, and scan items (Console and CLI)</li>
+                    <li class="fragment fade-up">Configure capacity mode (provisioned vs. on-demand)</li>
+                    <li class="fragment fade-up">Enable TTL and explore CloudWatch monitoring</li>
                 </ul>
                 <div class="highlight-box" style="margin-top:20px;">
                     Apply what you have learned about DynamoDB table design, primary keys, capacity modes, and operational features.
@@ -851,21 +641,20 @@
                 <aside class="notes">This lab gives hands-on experience with DynamoDB. Students will create tables, insert items, query data, and explore capacity settings. Encourage them to experiment with different key designs.</aside>
             </section>
 
-            <!-- Slide 33: Module Summary -->
+            <!-- Slide 26: Module Summary -->
             <section>
                 <h2>&#128221; Module 5 Summary</h2>
                 <ul>
-                    <li class="fragment fade-up"><strong>Managed databases</strong> reduce operational overhead; AWS handles patching, backups, and HA</li>
-                    <li class="fragment fade-up"><strong>Amazon RDS</strong> supports six engines; use Multi-AZ for HA and read replicas for scaling</li>
-                    <li class="fragment fade-up"><strong>Amazon Aurora</strong> delivers up to 5x MySQL performance with auto-scaling storage to 128 TB</li>
-                    <li class="fragment fade-up"><strong>Purpose-built databases</strong> match the engine to the workload for optimal cost and performance</li>
-                    <li class="fragment fade-up"><strong>DynamoDB</strong> provides single-digit ms NoSQL performance at any scale, fully serverless</li>
-                    <li class="fragment fade-up"><strong>Choose wisely</strong> &mdash; data model, access patterns, scalability, and consistency drive the decision</li>
+                    <li class="fragment fade-up"><strong>Managed databases</strong> &mdash; AWS handles patching, backups, HA</li>
+                    <li class="fragment fade-up"><strong>Amazon RDS</strong> &mdash; six engines; Multi-AZ for HA, replicas for scaling</li>
+                    <li class="fragment fade-up"><strong>Aurora</strong> &mdash; up to 5x MySQL performance, auto-scaling to 128 TB</li>
+                    <li class="fragment fade-up"><strong>Purpose-built databases</strong> &mdash; match engine to workload</li>
+                    <li class="fragment fade-up"><strong>DynamoDB</strong> &mdash; serverless NoSQL, single-digit ms at any scale</li>
                 </ul>
                 <aside class="notes">Summarize the key points: managed vs unmanaged, RDS features, Aurora advantages, purpose-built approach, DynamoDB fundamentals, and the decision framework for choosing the right database.</aside>
             </section>
 
-            <!-- Slide 34: Questions -->
+            <!-- Slide 27: Questions -->
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 60%, #3182ce 100%)" class="questions-slide" style="text-align: center;">
                 <h2>&#10067; Questions?</h2>
                 <p>Module 5 of 7 &mdash; Databases</p>

@@ -81,160 +81,87 @@
                 <aside class="notes">Let's walk through each module and recall the key concepts from today.</aside>
             </section>
 
-            <!-- Module 1 Recap -->
+            <!-- Modules 1 & 2 Recap -->
             <section>
-                <h2>&#9729;&#65039; Module 1: AWS Cloud Fundamentals</h2>
+                <h2>Modules 1 &#38; 2: Foundations &#38; Compute</h2>
                 <div class="two-columns">
                     <div class="card">
-                        <h4>Cloud Concepts</h4>
+                        <h4>&#9729;&#65039; Cloud Fundamentals</h4>
                         <ul>
-                            <li class="fragment fade-up">What is cloud computing and why AWS</li>
-                            <li class="fragment fade-up">AWS Global Infrastructure &mdash; Regions, Availability Zones, Edge Locations</li>
-                            <li class="fragment fade-up">Interacting with AWS: Console, CLI, SDKs</li>
+                            <li>Regions, AZs, Edge Locations</li>
+                            <li>Console, CLI, SDK access</li>
+                            <li>IAM users, roles, policies</li>
+                            <li>Shared Responsibility Model</li>
                         </ul>
                     </div>
                     <div class="card">
-                        <h4>Security Foundations</h4>
+                        <h4>&#128187; Compute Services</h4>
                         <ul>
-                            <li class="fragment fade-up">AWS Identity and Access Management (IAM)</li>
-                            <li class="fragment fade-up">Users, groups, roles, and policies</li>
-                            <li class="fragment fade-up">Shared Responsibility Model &mdash; security <em>of</em> vs. <em>in</em> the cloud</li>
+                            <li>EC2 instances and AMIs</li>
+                            <li>ECS / EKS for containers</li>
+                            <li>Lambda for serverless</li>
+                            <li>Choosing the right model</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Module 1 established the foundation. We learned about the global infrastructure that makes AWS resilient and the IAM service that secures everything we build.</aside>
+                <aside class="notes">Module 1 established the foundation with global infrastructure and IAM. Module 2 covered the full compute spectrum from VMs to serverless, and how to choose the right model for your workload.</aside>
             </section>
 
-            <!-- Module 2 Recap -->
+            <!-- Modules 3 & 4 Recap -->
             <section>
-                <h2>&#128187; Module 2: Compute Services</h2>
+                <h2>Modules 3 &#38; 4: Networking &#38; Storage</h2>
                 <div class="two-columns">
                     <div class="card">
-                        <h4>Compute Options</h4>
+                        <h4>&#128274; Networking</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>Amazon EC2</strong> &mdash; Virtual servers with full control</li>
-                            <li class="fragment fade-up"><strong>Containers</strong> &mdash; ECS and EKS for containerized workloads</li>
-                            <li class="fragment fade-up"><strong>AWS Lambda</strong> &mdash; Serverless, event-driven functions</li>
+                            <li>VPC with public/private subnets</li>
+                            <li>Internet Gateways, route tables</li>
+                            <li>Security Groups (stateful)</li>
+                            <li>NACLs (stateless)</li>
                         </ul>
                     </div>
                     <div class="card">
-                        <h4>Key Decisions</h4>
+                        <h4>&#128451; Storage</h4>
                         <ul>
-                            <li class="fragment fade-up">Instance types and sizing</li>
-                            <li class="fragment fade-up">AMIs and user data for bootstrapping</li>
-                            <li class="fragment fade-up">Choosing the right compute model for your workload</li>
+                            <li>EBS block storage for EC2</li>
+                            <li>S3 object storage (11 9s)</li>
+                            <li>Storage classes and lifecycle</li>
+                            <li>Block vs. object vs. file</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Module 2 covered the full spectrum of compute, from traditional VMs to fully serverless. The right choice depends on your workload requirements.</aside>
+                <aside class="notes">Module 3 covered secure isolated networks with layered security. Module 4 introduced EBS for block storage and S3 for scalable object storage with various storage classes for cost optimization.</aside>
             </section>
 
-            <!-- Module 3 Recap -->
+            <!-- Modules 5 & 6 Recap -->
             <section>
-                <h2>&#128274; Module 3: Networking</h2>
+                <h2>Modules 5 &#38; 6: Databases &#38; Optimization</h2>
                 <div class="two-columns">
                     <div class="card">
-                        <h4>VPC Architecture</h4>
+                        <h4>&#128450; Databases</h4>
                         <ul>
-                            <li class="fragment fade-up">Amazon VPC &mdash; your isolated network in the cloud</li>
-                            <li class="fragment fade-up">Public and private subnets across AZs</li>
-                            <li class="fragment fade-up">Internet Gateways and route tables</li>
+                            <li>RDS managed relational DBs</li>
+                            <li>Aurora cloud-native relational</li>
+                            <li>DynamoDB serverless NoSQL</li>
+                            <li>Purpose-built DB approach</li>
                         </ul>
                     </div>
                     <div class="card">
-                        <h4>Network Security</h4>
+                        <h4>&#128200; Monitoring &#38; Scaling</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>Security Groups</strong> &mdash; stateful, instance-level firewall</li>
-                            <li class="fragment fade-up"><strong>NACLs</strong> &mdash; stateless, subnet-level firewall</li>
-                            <li class="fragment fade-up">Defense in depth with layered security</li>
+                            <li>CloudWatch metrics and alarms</li>
+                            <li>ELB traffic distribution</li>
+                            <li>Auto Scaling groups</li>
+                            <li>Serverless architecture pattern</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Module 3 taught us how to build secure, isolated networks. Security groups and NACLs work together for defense in depth.</aside>
-            </section>
-
-            <!-- Module 4 Recap -->
-            <section>
-                <h2>&#128451; Module 4: Storage</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>Storage Services</h4>
-                        <ul>
-                            <li class="fragment fade-up"><strong>Amazon EBS</strong> &mdash; block storage for EC2 instances</li>
-                            <li class="fragment fade-up"><strong>Amazon S3</strong> &mdash; object storage with 11 9s durability</li>
-                            <li class="fragment fade-up">S3 storage classes for cost optimization</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Choosing Storage</h4>
-                        <ul>
-                            <li class="fragment fade-up">Block vs. object vs. file storage</li>
-                            <li class="fragment fade-up">Access patterns and performance needs</li>
-                            <li class="fragment fade-up">Lifecycle policies and intelligent tiering</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Module 4 covered the two primary storage services. EBS for block-level attached storage and S3 for scalable object storage with various storage classes.</aside>
-            </section>
-
-            <!-- Module 5 Recap -->
-            <section>
-                <h2>&#128450; Module 5: Databases</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>Database Services</h4>
-                        <ul>
-                            <li class="fragment fade-up"><strong>Amazon RDS</strong> &mdash; managed relational databases</li>
-                            <li class="fragment fade-up"><strong>Amazon Aurora</strong> &mdash; cloud-native relational DB</li>
-                            <li class="fragment fade-up"><strong>Amazon DynamoDB</strong> &mdash; serverless NoSQL</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Purpose-Built Approach</h4>
-                        <ul>
-                            <li class="fragment fade-up">Choose the right database for the job</li>
-                            <li class="fragment fade-up">Relational vs. non-relational use cases</li>
-                            <li class="fragment fade-up">Managed services reduce operational burden</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Module 5 introduced the purpose-built database philosophy. AWS provides specialized databases so you can choose the best fit rather than forcing everything into one engine.</aside>
-            </section>
-
-            <!-- Module 6 Recap -->
-            <section>
-                <h2>&#128200; Module 6: Monitoring, Optimization &#38; Serverless</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>Monitoring &#38; Scaling</h4>
-                        <ul>
-                            <li class="fragment fade-up"><strong>CloudWatch</strong> &mdash; metrics, alarms, logs, dashboards</li>
-                            <li class="fragment fade-up"><strong>ELB</strong> &mdash; distribute traffic across targets</li>
-                            <li class="fragment fade-up"><strong>Auto Scaling</strong> &mdash; dynamic capacity management</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Serverless Architecture</h4>
-                        <ul>
-                            <li class="fragment fade-up">Lambda + API Gateway + DynamoDB</li>
-                            <li class="fragment fade-up">Event-driven, pay-per-use model</li>
-                            <li class="fragment fade-up">Reduced operational overhead</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Module 6 brought it all together with monitoring, high availability patterns, and an alternative serverless architecture for our application.</aside>
-            </section>
-
-            <!-- Section Divider: Application Journey -->
-            <section data-background="linear-gradient(135deg, #2f855a 0%, #2b6cb0 100%)" class="section-divider">
-                <h2>&#128736;&#65039; Employee Directory App Journey</h2>
-                <h3>How Our Application Evolved</h3>
-                <aside class="notes">Let's trace how our Employee Directory application grew throughout the day, incorporating each new service we learned about.</aside>
+                <aside class="notes">Module 5 introduced the purpose-built database philosophy. Module 6 brought it all together with monitoring, high availability, and an alternative serverless architecture.</aside>
             </section>
 
             <!-- Application Evolution -->
             <section>
-                <h2>&#128736;&#65039; Application Evolution</h2>
+                <h2>&#128736;&#65039; Employee Directory App Journey</h2>
                 <table>
                     <thead>
                         <tr>
@@ -246,22 +173,22 @@
                     <tbody>
                         <tr class="fragment fade-up">
                             <td><strong>1 &mdash; Foundations</strong></td>
-                            <td>Identity and access setup</td>
+                            <td>Identity and access</td>
                             <td>IAM roles, policies</td>
                         </tr>
                         <tr class="fragment fade-up">
                             <td><strong>2 &mdash; Compute</strong></td>
-                            <td>Deployed application on a server</td>
+                            <td>Application server</td>
                             <td>Amazon EC2</td>
                         </tr>
                         <tr class="fragment fade-up">
                             <td><strong>3 &mdash; Networking</strong></td>
-                            <td>Isolated network with security controls</td>
-                            <td>VPC, subnets, security groups</td>
+                            <td>Isolated network</td>
+                            <td>VPC, security groups</td>
                         </tr>
                         <tr class="fragment fade-up">
                             <td><strong>4 &mdash; Storage</strong></td>
-                            <td>Photo storage for employee profiles</td>
+                            <td>Profile photo storage</td>
                             <td>Amazon S3</td>
                         </tr>
                         <tr class="fragment fade-up">
@@ -271,38 +198,38 @@
                         </tr>
                         <tr class="fragment fade-up">
                             <td><strong>6 &mdash; Optimization</strong></td>
-                            <td>HA, monitoring, serverless alternative</td>
-                            <td>ELB, Auto Scaling, CloudWatch, Lambda</td>
+                            <td>HA, monitoring, serverless</td>
+                            <td>ELB, Auto Scaling, Lambda</td>
                         </tr>
                     </tbody>
                 </table>
-                <aside class="notes">Each module added a new layer to the application. By the end, we had a fully architected, highly available, and monitored application. We also explored what it looks like as a serverless architecture.</aside>
+                <aside class="notes">Each module added a new layer to the application. By the end, we had a fully architected, highly available, and monitored application with a serverless alternative.</aside>
             </section>
 
-            <!-- Application Architecture Final State -->
+            <!-- From Simple to Production-Ready -->
             <section>
                 <h2>&#127959;&#65039; From Simple to Production-Ready</h2>
                 <div class="two-columns">
                     <div class="concept-box">
                         <h4>&#9654;&#65039; Where We Started</h4>
                         <ul>
-                            <li class="fragment fade-up">Single EC2 instance</li>
-                            <li class="fragment fade-up">No load balancing</li>
-                            <li class="fragment fade-up">Local storage</li>
-                            <li class="fragment fade-up">No monitoring</li>
+                            <li>Single EC2 instance</li>
+                            <li>No load balancing</li>
+                            <li>Local storage only</li>
+                            <li>No monitoring</li>
                         </ul>
                     </div>
                     <div class="concept-box">
                         <h4>&#9989; Where We Ended</h4>
                         <ul>
-                            <li class="fragment fade-up">Multi-AZ with Auto Scaling</li>
-                            <li class="fragment fade-up">ELB distributing traffic</li>
-                            <li class="fragment fade-up">S3 + DynamoDB for data</li>
-                            <li class="fragment fade-up">CloudWatch monitoring &#38; alarms</li>
+                            <li>Multi-AZ with Auto Scaling</li>
+                            <li>ELB distributing traffic</li>
+                            <li>S3 + DynamoDB for data</li>
+                            <li>CloudWatch alarms active</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">The transformation from a single server to a resilient, scalable architecture demonstrates how AWS services work together. Each layer added reliability, security, or performance. Key Insight: Production-ready architectures are built incrementally -- one service layer at a time.</aside>
+                <aside class="notes">The transformation from a single server to a resilient, scalable architecture demonstrates how AWS services work together. Production-ready architectures are built incrementally, one service layer at a time.</aside>
             </section>
 
             <!-- Section Divider: Key Takeaways -->
@@ -318,15 +245,15 @@
                 <div class="three-columns">
                     <div class="card">
                         <h4>&#128736;&#65039; Operational Excellence</h4>
-                        <p style="font-size: 0.8em;">Run and monitor systems to deliver business value and continuously improve</p>
+                        <p style="font-size: 0.8em;">Run, monitor, and continuously improve systems</p>
                     </div>
                     <div class="card">
                         <h4>&#128274; Security</h4>
-                        <p style="font-size: 0.8em;">Protect information, systems, and assets through risk assessment and mitigation</p>
+                        <p style="font-size: 0.8em;">Protect information through risk assessment</p>
                     </div>
                     <div class="card">
                         <h4>&#9889; Reliability</h4>
-                        <p style="font-size: 0.8em;">Recover from failures and meet demand with minimal disruption</p>
+                        <p style="font-size: 0.8em;">Recover from failures, meet demand</p>
                     </div>
                 </div>
                 <aside class="notes">The Well-Architected Framework has six pillars. Every architecture decision should be evaluated against these pillars. AWS provides the Well-Architected Tool to help you review your workloads.</aside>
@@ -338,46 +265,46 @@
                 <div class="three-columns">
                     <div class="card">
                         <h4>&#128640; Performance Efficiency</h4>
-                        <p style="font-size: 0.8em;">Use resources efficiently as demand changes and technologies evolve</p>
+                        <p style="font-size: 0.8em;">Use resources efficiently as demand changes</p>
                     </div>
                     <div class="card">
                         <h4>&#128176; Cost Optimization</h4>
-                        <p style="font-size: 0.8em;">Avoid unnecessary costs and understand spending to run at the lowest price point</p>
+                        <p style="font-size: 0.8em;">Eliminate waste, optimize spending</p>
                     </div>
                     <div class="card">
                         <h4>&#127793; Sustainability</h4>
-                        <p style="font-size: 0.8em;">Minimize environmental impact of running cloud workloads</p>
+                        <p style="font-size: 0.8em;">Minimize environmental impact</p>
                     </div>
                 </div>
-                <aside class="notes">The Well-Architected Framework has six pillars. Every architecture decision should be evaluated against these pillars. AWS provides the Well-Architected Tool to help you review your workloads.</aside>
+                <aside class="notes">Performance Efficiency, Cost Optimization, and Sustainability round out the six pillars. AWS provides the Well-Architected Tool to help you review your workloads against all six pillars.</aside>
             </section>
 
             <!-- Design Principles -->
             <section>
-                <h2>&#128161; Design Principles to Live By</h2>
+                <h2>&#128161; Design Principles</h2>
                 <div class="two-columns">
                     <div>
                         <div class="highlight-box danger">
                             <h4 style="margin-top: 0; color: var(--danger-color);">&#128165; Design for Failure</h4>
-                            <p style="font-size: 0.85em; margin: 0;">"Everything fails all the time." &mdash; Werner Vogels, CTO of Amazon</p>
+                            <p style="font-size: 0.85em; margin: 0;">"Everything fails all the time." &mdash; Werner Vogels</p>
                         </div>
                         <div class="highlight-box success fragment fade-up">
                             <h4 style="margin-top: 0; color: var(--success-color);">&#9989; Use Managed Services</h4>
-                            <p style="font-size: 0.85em; margin: 0;">Let AWS handle the undifferentiated heavy lifting so you can focus on your business logic.</p>
+                            <p style="font-size: 0.85em; margin: 0;">Offload undifferentiated heavy lifting</p>
                         </div>
                     </div>
                     <div>
                         <div class="highlight-box warning fragment fade-up">
-                            <h4 style="margin-top: 0; color: var(--warning-color);">&#128176; Right-Size Your Resources</h4>
-                            <p style="font-size: 0.85em; margin: 0;">Start small, measure, and scale. Don't over-provision &mdash; use Auto Scaling and monitoring.</p>
+                            <h4 style="margin-top: 0; color: var(--warning-color);">&#128176; Right-Size Resources</h4>
+                            <p style="font-size: 0.85em; margin: 0;">Start small, measure, scale with Auto Scaling</p>
                         </div>
                         <div class="highlight-box fragment fade-up">
                             <h4 style="margin-top: 0; color: var(--accent-color);">&#128274; Security Is Job Zero</h4>
-                            <p style="font-size: 0.85em; margin: 0;">Apply least privilege, encrypt everything, and automate security controls from day one.</p>
+                            <p style="font-size: 0.85em; margin: 0;">Least privilege, encrypt, automate controls</p>
                         </div>
                     </div>
                 </div>
-                <aside class="notes">These four principles are foundational to building well on AWS. Design for failure means assuming components will fail and building resilience into the architecture from the start.</aside>
+                <aside class="notes">These four principles are foundational to building well on AWS. Design for failure means assuming components will fail and building resilience from the start. Use managed services to focus on business logic. Right-size to avoid over-provisioning. Apply least privilege and encrypt everything from day one.</aside>
             </section>
 
             <!-- Section Divider: Next Steps -->
@@ -387,73 +314,36 @@
                 <aside class="notes">Now that you have the essentials, here's how to keep building your AWS knowledge and skills.</aside>
             </section>
 
-            <!-- Certification Paths -->
+            <!-- Next Steps: Certifications, Resources, Practice -->
             <section>
-                <h2>&#127891; AWS Certification Paths</h2>
-                <div class="two-columns">
+                <h2>&#127891; Your AWS Learning Path</h2>
+                <div class="three-columns">
                     <div class="card">
-                        <h4>Recommended Next Certifications</h4>
+                        <h4>Certifications</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>AWS Cloud Practitioner</strong> &mdash; Foundational; validates overall AWS understanding</li>
-                            <li class="fragment fade-up"><strong>Solutions Architect Associate</strong> &mdash; Design resilient, performant architectures</li>
-                            <li class="fragment fade-up"><strong>SysOps Administrator Associate</strong> &mdash; Operations and deployment on AWS</li>
-                            <li class="fragment fade-up"><strong>Developer Associate</strong> &mdash; Developing and maintaining applications on AWS</li>
+                            <li><strong>Cloud Practitioner</strong> (foundational)</li>
+                            <li><strong>Solutions Architect</strong> Associate</li>
+                            <li><strong>Developer / SysOps</strong> Associate</li>
                         </ul>
                     </div>
                     <div class="card">
-                        <h4>Certification Tips</h4>
+                        <h4>Learning Resources</h4>
                         <ul>
-                            <li class="fragment fade-up">Start with Cloud Practitioner if new to AWS</li>
-                            <li class="fragment fade-up">Use official exam guides and sample questions</li>
-                            <li class="fragment fade-up">Hands-on practice is essential</li>
-                            <li class="fragment fade-up">AWS Skill Builder offers exam prep courses</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Cloud Practitioner is a great next step for a foundational certification. Solutions Architect Associate is the most popular and broadly applicable certification.</aside>
-            </section>
-
-            <!-- Hands-On Practice -->
-            <section>
-                <h2>&#128170; Hands-On Practice Resources</h2>
-                <div class="card">
-                    <h4>&#9889; AWS Free Tier</h4>
-                    <ul>
-                        <li class="fragment fade-up"><strong>Always Free</strong> &mdash; Lambda (1M requests/month), DynamoDB (25 GB), and more</li>
-                        <li class="fragment fade-up"><strong>12-Month Free</strong> &mdash; EC2 (750 hrs/month t2.micro), S3 (5 GB), RDS (750 hrs/month)</li>
-                        <li class="fragment fade-up"><strong>Short-Term Trials</strong> &mdash; Various services with limited-time free usage</li>
-                    </ul>
-                </div>
-                <div class="highlight-box warning fragment fade-up" style="margin-top: 20px;">
-                    <strong>&#9888;&#65039; Pro Tip:</strong> Set up billing alerts in CloudWatch before experimenting. Use AWS Budgets to prevent unexpected charges.
-                </div>
-                <aside class="notes">The Free Tier is the best way to get hands-on experience. Strongly recommend setting up billing alerts so there are no surprises. Many of the services we covered today have free tier options.</aside>
-            </section>
-
-            <!-- Learning Resources -->
-            <section>
-                <h2>&#128218; Learning Resources</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>AWS Training &#38; Documentation</h4>
-                        <ul>
-                            <li class="fragment fade-up"><strong>AWS Skill Builder</strong> &mdash; Free and paid digital courses</li>
-                            <li class="fragment fade-up"><strong>AWS Documentation</strong> &mdash; Comprehensive service guides</li>
-                            <li class="fragment fade-up"><strong>AWS Well-Architected Labs</strong> &mdash; Hands-on best practices</li>
-                            <li class="fragment fade-up"><strong>AWS Workshops</strong> &mdash; Self-paced guided tutorials</li>
+                            <li>AWS Skill Builder courses</li>
+                            <li>Well-Architected Labs</li>
+                            <li>AWS Workshops (self-paced)</li>
                         </ul>
                     </div>
                     <div class="card">
-                        <h4>Community &#38; Events</h4>
+                        <h4>Hands-On Practice</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>AWS re:Invent</strong> &mdash; Annual conference in Las Vegas</li>
-                            <li class="fragment fade-up"><strong>AWS Summits</strong> &mdash; Free regional events worldwide</li>
-                            <li class="fragment fade-up"><strong>AWS User Groups</strong> &mdash; Local community meetups</li>
-                            <li class="fragment fade-up"><strong>AWS Blog &#38; YouTube</strong> &mdash; Announcements and tutorials</li>
+                            <li>AWS Free Tier (12-month)</li>
+                            <li>Always-Free services</li>
+                            <li>Set billing alerts first!</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">AWS Skill Builder is the official learning platform. The Well-Architected Labs are particularly valuable for applying the principles we discussed. re:Invent sessions are also available for free on YouTube.</aside>
+                <aside class="notes">Cloud Practitioner is a great first certification. Solutions Architect Associate is the most popular. AWS Skill Builder is the official learning platform. The Free Tier lets you experiment -- but always set up billing alerts in CloudWatch and AWS Budgets first to prevent surprises. re:Invent sessions are available free on YouTube. AWS Summits and local User Groups are great community resources.</aside>
             </section>
 
             <!-- Questions Slide -->
@@ -468,7 +358,7 @@
                 <h1 style="color: #ffffff; font-size: 2.4em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">&#127881; Thank You!</h1>
                 <p style="color: #e2e8f0; font-size: 1.2em; margin-top: 1em;">Thank you for participating in<br><strong style="color: #ffffff;">AWS Technical Essentials</strong></p>
                 <div style="margin-top: 2em;">
-                    <p style="color: #a0aec0; font-size: 0.9em;">Please complete your course evaluation<br>Your feedback helps us improve!</p>
+                    <p style="color: #a0aec0; font-size: 0.9em;">Please complete your course evaluation</p>
                 </div>
                 <div class="module-progress" style="margin-top: 2em;">
                     <div class="step completed"></div>

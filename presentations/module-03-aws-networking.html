@@ -77,11 +77,11 @@
             <section>
                 <h2>&#127919; Module Objectives</h2>
                 <ul>
-                    <li class="fragment fade-up">Understand core networking concepts as they apply to AWS</li>
-                    <li class="fragment fade-up">Create and configure an Amazon Virtual Private Cloud (VPC)</li>
-                    <li class="fragment fade-up">Configure route tables to control traffic flow</li>
-                    <li class="fragment fade-up">Implement security groups and network ACLs for defense in depth</li>
-                    <li class="fragment fade-up">Design a multi-AZ VPC with public and private subnets</li>
+                    <li class="fragment fade-up">Understand core AWS networking concepts</li>
+                    <li class="fragment fade-up">Create and configure an Amazon VPC</li>
+                    <li class="fragment fade-up">Configure route tables for traffic control</li>
+                    <li class="fragment fade-up">Implement security groups and NACLs</li>
+                    <li class="fragment fade-up">Design a multi-AZ VPC architecture</li>
                 </ul>
                 <aside class="notes">By the end of this module, students will understand how to build a secure, well-architected network in AWS. These concepts underpin every other AWS service.</aside>
             </section>
@@ -102,12 +102,12 @@
                         <ul>
                             <li class="fragment fade-up"><strong>IPv4:</strong> 32-bit, e.g. <code>10.0.1.5</code></li>
                             <li class="fragment fade-up"><strong>IPv6:</strong> 128-bit, e.g. <code>2001:db8::1</code></li>
-                            <li class="fragment fade-up"><strong>Public:</strong> routable on the internet</li>
-                            <li class="fragment fade-up"><strong>Private:</strong> internal use only (RFC 1918)</li>
+                            <li class="fragment fade-up"><strong>Public:</strong> internet-routable</li>
+                            <li class="fragment fade-up"><strong>Private:</strong> internal only (RFC 1918)</li>
                         </ul>
                     </div>
                     <div class="card">
-                        <h4>&#128218; Private IP Ranges (RFC 1918)</h4>
+                        <h4>&#128218; Private Ranges (RFC 1918)</h4>
                         <ul>
                             <li class="fragment fade-up"><code>10.0.0.0/8</code> &mdash; 16.7M addresses</li>
                             <li class="fragment fade-up"><code>172.16.0.0/12</code> &mdash; 1M addresses</li>
@@ -121,10 +121,9 @@
             <!-- Slide 5: CIDR Notation -->
             <section>
                 <h2>CIDR Notation</h2>
-                <p>Classless Inter-Domain Routing defines IP address ranges using a prefix length.</p>
                 <table>
                     <thead>
-                        <tr><th>CIDR Block</th><th>Subnet Mask</th><th>Available IPs</th><th>Use Case</th></tr>
+                        <tr><th>CIDR Block</th><th>Subnet Mask</th><th>IPs</th><th>Use Case</th></tr>
                     </thead>
                     <tbody>
                         <tr class="fragment fade-up"><td><code>10.0.0.0/16</code></td><td>255.255.0.0</td><td>65,536</td><td>Typical VPC</td></tr>
@@ -134,7 +133,7 @@
                     </tbody>
                 </table>
                 <div class="highlight-box warning fragment fade-up">
-                    <strong>&#9888;&#65039; AWS reserves 5 IPs per subnet:</strong> network address, VPC router (.1), DNS server (.2), future use (.3), and broadcast address.
+                    <strong>&#9888;&#65039; AWS reserves 5 IPs per subnet:</strong> network, router (.1), DNS (.2), future (.3), broadcast
                 </div>
                 <aside class="notes">CIDR notation is essential for VPC design. The /16 gives you 65,536 addresses for the entire VPC. Each subnet carves out a portion. Remember AWS reserves 5 IPs in every subnet, so a /24 gives you 251 usable addresses, not 256.</aside>
             </section>
@@ -150,34 +149,31 @@
                             <li class="fragment fade-up">Hardware firewalls</li>
                             <li class="fragment fade-up">Manual VLAN configuration</li>
                             <li class="fragment fade-up">Weeks to provision</li>
-                            <li class="fragment fade-up">Fixed capacity</li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>&#9729;&#65039; AWS Cloud</h4>
                         <ul>
-                            <li class="fragment fade-up">Software-defined networking (SDN)</li>
+                            <li class="fragment fade-up">Software-defined networking</li>
                             <li class="fragment fade-up">Virtual firewalls (SGs, NACLs)</li>
                             <li class="fragment fade-up">API-driven configuration</li>
                             <li class="fragment fade-up">Minutes to provision</li>
-                            <li class="fragment fade-up">Elastic and scalable</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">AWS networking is entirely software-defined. No physical hardware to manage. Everything is API-driven and can be automated with CloudFormation or Terraform. This is a paradigm shift from traditional networking.</aside>
+                <aside class="notes">AWS networking is entirely software-defined. No physical hardware to manage. Everything is API-driven and can be automated with CloudFormation or Terraform. This is a paradigm shift from traditional networking. Fixed capacity vs elastic scalability is another major differentiator.</aside>
             </section>
 
             <!-- Slide 7: AWS Networking Services Overview -->
             <section>
-                <h2>AWS Networking Services Overview</h2>
+                <h2>AWS Networking Services</h2>
                 <div class="three-columns">
                     <div class="card fragment fade-up">
                         <h4>&#128205; Core</h4>
                         <ul>
                             <li>Amazon VPC</li>
                             <li>Subnets &amp; Route Tables</li>
-                            <li>Internet Gateway</li>
-                            <li>NAT Gateway</li>
+                            <li>Internet / NAT Gateway</li>
                         </ul>
                     </div>
                     <div class="card fragment fade-up">
@@ -193,12 +189,11 @@
                         <ul>
                             <li>VPC Peering</li>
                             <li>Transit Gateway</li>
-                            <li>AWS VPN / Direct Connect</li>
-                            <li>Elastic Load Balancing</li>
+                            <li>VPN / Direct Connect</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">This module focuses on the core and security categories. Connectivity services like Transit Gateway and Direct Connect are used in more advanced architectures. Additional security services include AWS Firewall Manager for centralized management. For this course, we'll ensure a solid foundation with VPC, subnets, routing, and security.</aside>
+                <aside class="notes">This module focuses on the core and security categories. Connectivity services like Transit Gateway and Direct Connect are used in more advanced architectures. Elastic Load Balancing is covered in a later module.</aside>
             </section>
 
             <!-- Slide 8: Section Divider - Amazon VPC -->
@@ -213,15 +208,18 @@
                 <h2>What Is Amazon VPC?</h2>
                 <div class="concept-box">
                     <h4>&#128161; Definition</h4>
-                    <p>A <strong>Virtual Private Cloud (VPC)</strong> is a logically isolated section of the AWS Cloud where you launch AWS resources in a virtual network that you define.</p>
+                    <p>A logically isolated virtual network where you launch AWS resources with full control over IP ranges, subnets, routing, and gateways.</p>
                 </div>
                 <ul>
-                    <li class="fragment fade-up">You have <strong>complete control</strong> over your virtual networking environment</li>
-                    <li class="fragment fade-up">Select your own IP address range, create subnets, configure route tables and gateways</li>
-                    <li class="fragment fade-up">A VPC spans <strong>all Availability Zones</strong> within a Region</li>
-                    <li class="fragment fade-up">Resources in a VPC are isolated from other VPCs by default</li>
+                    <li class="fragment fade-up">Spans <strong>all AZs</strong> within a Region</li>
+                    <li class="fragment fade-up">Isolated from other VPCs by default</li>
+                    <li class="fragment fade-up">Primary CIDR: /16 to /28 (plan for /16)</li>
+                    <li class="fragment fade-up">Optional secondary CIDRs and IPv6</li>
                 </ul>
-                <aside class="notes">Think of a VPC as your own private data center inside AWS. You define the network topology, control access, and decide what connects to the internet. A VPC is Region-scoped but spans all AZs in that Region.</aside>
+                <div class="key-point fragment fade-up">
+                    <strong>Plan carefully:</strong> Primary CIDR cannot change after creation. Avoid overlaps for peering/VPN.
+                </div>
+                <aside class="notes">Think of a VPC as your own private data center inside AWS. You define the network topology, control access, and decide what connects to the internet. A VPC is Region-scoped but spans all AZs. Common CIDR choices: 10.0.0.0/16, 10.1.0.0/16, 172.16.0.0/16. You can add up to 4 secondary CIDR blocks. AWS can assign a /56 IPv6 block from Amazon's pool.</aside>
             </section>
 
             <!-- Slide 10: Default VPC vs Custom VPC -->
@@ -231,122 +229,84 @@
                     <div class="card">
                         <h4>&#128230; Default VPC</h4>
                         <ul>
-                            <li class="fragment fade-up">Created automatically in each Region</li>
+                            <li class="fragment fade-up">Auto-created per Region</li>
                             <li class="fragment fade-up">CIDR: <code>172.31.0.0/16</code></li>
-                            <li class="fragment fade-up">One public subnet per AZ</li>
-                            <li class="fragment fade-up">Internet Gateway attached</li>
-                            <li class="fragment fade-up">Instances get public IPs by default</li>
+                            <li class="fragment fade-up">Public subnet per AZ, IGW attached</li>
+                            <li class="fragment fade-up">Instances get public IPs</li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>&#128295; Custom VPC</h4>
                         <ul>
-                            <li class="fragment fade-up">You create and configure it</li>
+                            <li class="fragment fade-up">You create and configure</li>
                             <li class="fragment fade-up">Choose your own CIDR block</li>
                             <li class="fragment fade-up">Public and private subnets</li>
-                            <li class="fragment fade-up">Gateways added as needed</li>
                             <li class="fragment fade-up">No public IPs by default</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Best practice: Use custom VPCs for production workloads. The default VPC is convenient for learning and testing but lacks the isolation and control needed for production. Every AWS account gets a default VPC in each Region. It's designed for easy onboarding. For real workloads, always create a custom VPC with intentional CIDR ranges, proper subnet design, and controlled internet access.</aside>
+                <aside class="notes">Best practice: Use custom VPCs for production workloads. The default VPC is convenient for learning and testing but lacks the isolation and control needed for production. Every AWS account gets a default VPC in each Region. For real workloads, always create a custom VPC with intentional CIDR ranges, proper subnet design, and controlled internet access.</aside>
             </section>
 
-            <!-- Slide 11: VPC CIDR Blocks -->
-            <section>
-                <h2>VPC CIDR Blocks</h2>
-                <ul>
-                    <li class="fragment fade-up"><strong>Primary CIDR:</strong> Required when creating a VPC (/16 to /28)</li>
-                    <li class="fragment fade-up"><strong>Secondary CIDRs:</strong> Up to 4 additional blocks can be associated</li>
-                    <li class="fragment fade-up"><strong>IPv6:</strong> Optional &mdash; AWS assigns a /56 block from Amazon's pool</li>
-                </ul>
-                <div class="key-point fragment fade-up">
-                    <strong>Recommended CIDR range:</strong> Use a <code>/16</code> block (65,536 addresses) for flexibility. Common choices: <code>10.0.0.0/16</code>, <code>10.1.0.0/16</code>, <code>172.16.0.0/16</code>
-                </div>
-                <aside class="notes">Plan carefully: You cannot change the primary CIDR block after VPC creation. Avoid overlapping CIDRs if you plan to use VPC peering or VPN connections. CIDR planning is one of the most important early decisions. Overlapping CIDRs between VPCs or with on-premises networks will prevent peering and VPN connectivity. A /16 gives you room for many subnets. Think ahead.</aside>
-            </section>
-
-            <!-- Slide 12: Subnets -->
+            <!-- Slide 11: Subnets (merged Public/Private + AZ layout) -->
             <section>
                 <h2>Subnets: Public vs. Private</h2>
                 <div class="two-columns">
                     <div class="card">
                         <h4>&#127758; Public Subnet</h4>
                         <ul>
-                            <li class="fragment fade-up">Route table has a route to an Internet Gateway</li>
-                            <li class="fragment fade-up">Resources <em>can</em> have public IPs</li>
-                            <li class="fragment fade-up">Directly reachable from the internet</li>
-                            <li class="fragment fade-up"><strong>Use for:</strong> Load balancers, bastion hosts, NAT Gateways</li>
+                            <li class="fragment fade-up">Route to Internet Gateway</li>
+                            <li class="fragment fade-up">Resources can have public IPs</li>
+                            <li class="fragment fade-up"><strong>For:</strong> ALBs, bastion hosts, NAT GWs</li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>&#128274; Private Subnet</h4>
                         <ul>
-                            <li class="fragment fade-up">No route to an Internet Gateway</li>
-                            <li class="fragment fade-up">Resources only have private IPs</li>
-                            <li class="fragment fade-up">Not directly reachable from the internet</li>
-                            <li class="fragment fade-up"><strong>Use for:</strong> Application servers, databases, internal services</li>
+                            <li class="fragment fade-up">No route to Internet Gateway</li>
+                            <li class="fragment fade-up">Private IPs only</li>
+                            <li class="fragment fade-up"><strong>For:</strong> App servers, databases</li>
                         </ul>
                     </div>
                 </div>
-                <div class="highlight-box fragment fade-up">
-                    <strong>Key insight:</strong> A subnet is public or private based on its <em>route table</em>, not a setting on the subnet itself.
-                </div>
-                <aside class="notes">This distinction is critically important. A subnet becomes public only because its route table has a 0.0.0.0/0 route pointing to an Internet Gateway. There is no "public" checkbox on the subnet. It's all about routing.</aside>
-            </section>
-
-            <!-- Slide 13: Subnets and Availability Zones -->
-            <section>
-                <h2>Subnets and Availability Zones</h2>
-                <div class="highlight-box fragment fade-up" style="font-family: monospace; font-size: 0.8em;">
-                    <strong>Example: VPC 10.0.0.0/16 in us-east-1</strong><br><br>
+                <div class="highlight-box fragment fade-up" style="font-family: monospace; font-size: 0.75em; line-height: 1.6;">
+                    <strong>Multi-AZ Layout (10.0.0.0/16):</strong><br>
                     us-east-1a: Public 10.0.1.0/24 | Private 10.0.10.0/24<br>
-                    us-east-1b: Public 10.0.2.0/24 | Private 10.0.20.0/24<br>
-                    us-east-1c: Public 10.0.3.0/24 | Private 10.0.30.0/24
+                    us-east-1b: Public 10.0.2.0/24 | Private 10.0.20.0/24
                 </div>
-                <div class="key-point fragment fade-up">
-                    <strong>Best practice:</strong> Deploy subnets across at least 2 AZs for high availability. Use a consistent IP addressing scheme for readability.
-                </div>
-                <aside class="notes">Key rule: Each subnet resides entirely within one Availability Zone and cannot span AZs. A VPC spans all AZs in the Region. This is the standard multi-AZ pattern. By placing subnets in multiple AZs, your application can survive the failure of an entire AZ. The naming convention shown here (1/2/3 for public, 10/20/30 for private) makes it easy to identify subnet purpose at a glance.</aside>
+                <aside class="notes">A subnet is public or private based on its route table, not a setting on the subnet itself. Each subnet resides in one AZ and cannot span AZs. Deploy across at least 2 AZs for high availability. Use a consistent IP scheme for readability (1/2/3 for public, 10/20/30 for private).</aside>
             </section>
 
-            <!-- Slide 14: Internet Gateway -->
+            <!-- Slide 12: Internet Gateway & NAT Gateway (merged) -->
             <section>
-                <h2>Internet Gateway (IGW)</h2>
-                <div class="concept-box">
-                    <p>A highly available VPC component that enables communication between your VPC and the internet.</p>
+                <h2>Internet Gateway &amp; NAT Gateway</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>&#127758; Internet Gateway (IGW)</h4>
+                        <ul>
+                            <li class="fragment fade-up">VPC-to-internet connectivity</li>
+                            <li class="fragment fade-up">One per VPC, highly available</li>
+                            <li class="fragment fade-up">No bandwidth constraints</li>
+                            <li class="fragment fade-up">Route: <code>0.0.0.0/0 &#8594; igw-xxx</code></li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>&#128274; NAT Gateway</h4>
+                        <ul>
+                            <li class="fragment fade-up">Outbound-only for private subnets</li>
+                            <li class="fragment fade-up">Lives in public subnet + Elastic IP</li>
+                            <li class="fragment fade-up">AZ-specific; one per AZ for HA</li>
+                            <li class="fragment fade-up">Route: <code>0.0.0.0/0 &#8594; nat-xxx</code></li>
+                        </ul>
+                    </div>
                 </div>
-                <ul>
-                    <li class="fragment fade-up"><strong>One IGW per VPC</strong> &mdash; attached at the VPC level</li>
-                    <li class="fragment fade-up">Performs <strong>NAT</strong> for instances with public IPv4 addresses</li>
-                    <li class="fragment fade-up">No bandwidth constraints or availability risks</li>
-                    <li class="fragment fade-up">Must be referenced in a route table to be useful</li>
-                </ul>
-                <div class="highlight-box success fragment fade-up">
-                    <strong>Two steps to enable internet access:</strong> (1) Attach an IGW to the VPC. (2) Add a route in the subnet's route table: <code>0.0.0.0/0 &#8594; igw-xxxxxxxx</code>
-                </div>
-                <aside class="notes">The IGW is fully managed by AWS. It doesn't impose bandwidth limits and is inherently highly available. But simply attaching it isn't enough. You must also update the route table and ensure the instance has a public IP or Elastic IP.</aside>
-            </section>
-
-            <!-- Slide 15: NAT Gateway -->
-            <section>
-                <h2>NAT Gateway</h2>
-                <div class="concept-box">
-                    <p>Enables <strong>private subnet</strong> instances to reach the internet while blocking unsolicited inbound connections.</p>
-                </div>
-                <ul>
-                    <li class="fragment fade-up">Deployed in a <strong>public subnet</strong> with an Elastic IP</li>
-                    <li class="fragment fade-up">Private subnet route table points <code>0.0.0.0/0 &#8594; nat-xxxxxxxx</code></li>
-                    <li class="fragment fade-up">Managed service &mdash; scales automatically up to 100 Gbps</li>
-                    <li class="fragment fade-up">AZ-specific &mdash; deploy one per AZ for high availability</li>
-                </ul>
                 <div class="highlight-box warning fragment fade-up">
-                    <strong>Cost note:</strong> NAT Gateway charges per hour (~$0.045/hr) plus per GB processed (~$0.045/GB). For cost-sensitive workloads, consider NAT instances or VPC endpoints.
+                    <strong>&#9888;&#65039; NAT GW cost:</strong> ~$0.045/hr + ~$0.045/GB processed. Consider VPC endpoints for AWS service traffic.
                 </div>
-                <aside class="notes">NAT Gateway is the recommended way to give private instances outbound internet access (e.g., for software updates). It sits in the public subnet and forwards traffic from the private subnet to the IGW. Remember: it's per-AZ, so for HA you need one in each AZ.</aside>
+                <aside class="notes">The IGW is fully managed by AWS and inherently highly available. Simply attaching it isn't enough; you must also update the route table and ensure the instance has a public IP. NAT Gateway is the recommended way to give private instances outbound internet access (e.g., software updates). It sits in the public subnet and forwards traffic to the IGW.</aside>
             </section>
 
-            <!-- Slide 16: VPC Architecture Diagram -->
+            <!-- Slide 13: VPC Architecture Diagram -->
             <section>
                 <h2>VPC Architecture: Putting It Together</h2>
                 <div class="highlight-box" style="font-family: monospace; font-size: 0.72em; line-height: 1.8;">
@@ -364,212 +324,178 @@
                 <aside class="notes">This is the canonical VPC architecture. Public subnets hold load balancers and NAT Gateways. Private subnets hold application servers and databases. The Internet Gateway sits at the VPC boundary. Each AZ has its own NAT Gateway for resilience.</aside>
             </section>
 
-            <!-- Slide 17: VPC Design Best Practices -->
+            <!-- Slide 14: VPC Design Best Practices -->
             <section>
                 <h2>VPC Design Best Practices</h2>
                 <ul>
-                    <li class="fragment fade-up"><strong>Multi-AZ deployment:</strong> Place subnets in at least 2 AZs for fault tolerance</li>
-                    <li class="fragment fade-up"><strong>Public/private separation:</strong> Keep workloads in private subnets; expose only what is necessary</li>
-                    <li class="fragment fade-up"><strong>CIDR planning:</strong> Use a /16 VPC CIDR, allocate subnets systematically, and avoid overlaps for peering</li>
-                    <li class="fragment fade-up"><strong>Use VPC endpoints:</strong> Access AWS services (S3, DynamoDB) without traversing the internet</li>
-                    <li class="fragment fade-up"><strong>Enable VPC Flow Logs:</strong> Capture IP traffic information for troubleshooting and auditing</li>
+                    <li class="fragment fade-up"><strong>Multi-AZ:</strong> Subnets in 2+ AZs for fault tolerance</li>
+                    <li class="fragment fade-up"><strong>Public/private separation:</strong> Expose only what is necessary</li>
+                    <li class="fragment fade-up"><strong>CIDR planning:</strong> Use /16, avoid overlaps for peering</li>
+                    <li class="fragment fade-up"><strong>VPC endpoints:</strong> Access S3, DynamoDB without internet</li>
+                    <li class="fragment fade-up"><strong>Flow Logs:</strong> Capture traffic for troubleshooting and audit</li>
                 </ul>
                 <aside class="notes">These best practices come directly from the AWS Well-Architected Framework. CIDR planning is especially important in enterprise environments where dozens or hundreds of VPCs may need to communicate. VPC Flow Logs are invaluable for security investigations.</aside>
             </section>
 
-            <!-- Slide 18: Section Divider - VPC Routing -->
+            <!-- Slide 15: Section Divider - VPC Routing -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%)" class="section-divider">
                 <h2>&#128739;&#65039; Amazon VPC Routing</h2>
                 <h3>Controlling traffic flow within and beyond your VPC</h3>
                 <aside class="notes">Route tables are the mechanism that controls where network traffic is directed. Every subnet must be associated with a route table. Understanding routing is essential for VPC troubleshooting.</aside>
             </section>
 
-            <!-- Slide 19: Route Tables -->
+            <!-- Slide 16: Route Tables & Entries (merged) -->
             <section>
                 <h2>Route Tables</h2>
-                <div class="concept-box">
-                    <h4>&#128161; Definition</h4>
-                    <p>A <strong>route table</strong> contains a set of rules (routes) that determine where network traffic from your subnets or gateway is directed.</p>
-                </div>
                 <ul>
-                    <li class="fragment fade-up"><strong>Main route table:</strong> Automatically created with the VPC; used by default for all subnets</li>
-                    <li class="fragment fade-up"><strong>Custom route tables:</strong> You create and explicitly associate them with subnets</li>
-                    <li class="fragment fade-up">A subnet can only be associated with <strong>one route table</strong> at a time</li>
-                    <li class="fragment fade-up">Multiple subnets can share the same route table</li>
+                    <li class="fragment fade-up"><strong>Main route table:</strong> auto-created, default for all subnets</li>
+                    <li class="fragment fade-up"><strong>Custom route tables:</strong> explicitly associated with subnets</li>
+                    <li class="fragment fade-up">Most specific route wins (longest prefix match)</li>
                 </ul>
-                <aside class="notes">Best practice: Do not add internet routes to the main route table. Create custom route tables for public subnets instead. This ensures new subnets default to private. The main route table is a safety net. If you don't explicitly associate a subnet with a custom route table, it uses the main route table. By keeping the main route table private, any new subnet you create is private by default.</aside>
-            </section>
-
-            <!-- Slide 20: Route Table Entries -->
-            <section>
-                <h2>Route Table Entries</h2>
-                <p>Each route specifies a <strong>destination</strong> (CIDR block) and a <strong>target</strong> (where to send the traffic).</p>
                 <table>
                     <thead>
                         <tr><th>Destination</th><th>Target</th><th>Purpose</th></tr>
                     </thead>
                     <tbody>
-                        <tr class="fragment fade-up"><td><code>10.0.0.0/16</code></td><td><code>local</code></td><td>VPC internal traffic (cannot be removed)</td></tr>
-                        <tr class="fragment fade-up"><td><code>0.0.0.0/0</code></td><td><code>igw-xxxxxxxx</code></td><td>Internet access via IGW (public subnet)</td></tr>
-                        <tr class="fragment fade-up"><td><code>0.0.0.0/0</code></td><td><code>nat-xxxxxxxx</code></td><td>Internet access via NAT GW (private subnet)</td></tr>
-                        <tr class="fragment fade-up"><td><code>10.1.0.0/16</code></td><td><code>pcx-xxxxxxxx</code></td><td>VPC peering connection</td></tr>
-                        <tr class="fragment fade-up"><td><code>pl-xxxxxxxx</code></td><td><code>vpce-xxxxxxxx</code></td><td>VPC endpoint (e.g., S3)</td></tr>
+                        <tr class="fragment fade-up"><td><code>10.0.0.0/16</code></td><td><code>local</code></td><td>VPC internal (cannot remove)</td></tr>
+                        <tr class="fragment fade-up"><td><code>0.0.0.0/0</code></td><td><code>igw-xxx</code></td><td>Internet via IGW (public)</td></tr>
+                        <tr class="fragment fade-up"><td><code>0.0.0.0/0</code></td><td><code>nat-xxx</code></td><td>Internet via NAT GW (private)</td></tr>
+                        <tr class="fragment fade-up"><td><code>10.1.0.0/16</code></td><td><code>pcx-xxx</code></td><td>VPC peering</td></tr>
                     </tbody>
                 </table>
-                <aside class="notes">The local route is automatically present and cannot be deleted. It ensures all traffic within the VPC CIDR can communicate. The most specific route wins when there are overlapping destinations. For example, a /24 route takes precedence over /16.</aside>
+                <aside class="notes">Each route has a destination CIDR and a target. The local route is automatically present and cannot be deleted. Best practice: Do not add internet routes to the main route table; create custom route tables for public subnets. This ensures new subnets default to private. One subnet can only be associated with one route table, but many subnets can share the same route table. VPC endpoints (e.g., for S3) can also be added as route targets.</aside>
             </section>
 
-            <!-- Slide 21: How Traffic Flows -->
+            <!-- Slide 18: Traffic Flow & Route Table Associations (merged) -->
             <section>
-                <h2>How Traffic Flows Through a VPC</h2>
-                <div class="concept-box">
-                    <h4>&#128269; Route Evaluation</h4>
-                    <p>When an instance sends traffic, the VPC router evaluates the route table associated with the instance's subnet. The <strong>most specific route</strong> (longest prefix match) wins.</p>
-                </div>
+                <h2>Traffic Flow &amp; Route Associations</h2>
                 <div class="two-columns fragment fade-up">
                     <div class="card">
-                        <h4>&#127758; Public Subnet Traffic Flow</h4>
-                        <p style="font-size: 0.85em;">Instance &#8594; VPC Router &#8594; Route Table &#8594; IGW &#8594; Internet</p>
+                        <h4>&#127758; Public Subnet Flow</h4>
+                        <p style="font-size: 0.8em;">Instance &#8594; Router &#8594; IGW &#8594; Internet</p>
+                        <p style="font-size: 0.75em; font-family: monospace;">10.0.0.0/16 &#8594; local<br>0.0.0.0/0 &nbsp;&nbsp;&#8594; igw-abc</p>
                     </div>
                     <div class="card">
-                        <h4>&#128274; Private Subnet Traffic Flow</h4>
-                        <p style="font-size: 0.85em;">Instance &#8594; VPC Router &#8594; Route Table &#8594; NAT GW &#8594; IGW &#8594; Internet</p>
+                        <h4>&#128274; Private Subnet Flow</h4>
+                        <p style="font-size: 0.8em;">Instance &#8594; Router &#8594; NAT GW &#8594; IGW</p>
+                        <p style="font-size: 0.75em; font-family: monospace;">10.0.0.0/16 &#8594; local<br>0.0.0.0/0 &nbsp;&nbsp;&#8594; nat-def</p>
                     </div>
                 </div>
-                <aside class="notes">Remember: Traffic between subnets within the same VPC always uses the local route and does not leave the VPC. The VPC router is an implicit component &mdash; you don't see or manage it, but it exists at the .1 address of every subnet. All traffic decisions are made by consulting the route table. Intra-VPC traffic never hits the IGW, even between public subnets.</aside>
-            </section>
-
-            <!-- Slide 22: Subnet-Route Table Associations -->
-            <section>
-                <h2>Subnet-Route Table Associations</h2>
-                <div class="highlight-box" style="font-family: monospace; font-size: 0.8em; line-height: 2;">
-                    <strong>Public Route Table (rtb-pub)</strong><br>
-                    10.0.0.0/16 &#8594; local<br>
-                    0.0.0.0/0 &nbsp;&nbsp;&#8594; igw-abc123<br>
-                    &#8627; Associated: subnet-pub-a, subnet-pub-b<br><br>
-                    <strong>Private Route Table (rtb-priv)</strong><br>
-                    10.0.0.0/16 &#8594; local<br>
-                    0.0.0.0/0 &nbsp;&nbsp;&#8594; nat-def456<br>
-                    &#8627; Associated: subnet-priv-a, subnet-priv-b
-                </div>
                 <div class="highlight-box success fragment fade-up">
-                    <strong>Pattern:</strong> One route table per subnet tier. Public subnets share one route table (with IGW route). Private subnets share another (with NAT GW route).
+                    <strong>Pattern:</strong> One route table per tier. Public subnets share IGW route table; private subnets share NAT GW route table.
                 </div>
-                <aside class="notes">This is the standard pattern. You typically have two route tables: one for public subnets pointing to the IGW, and one for private subnets pointing to a NAT Gateway. If you have NAT Gateways in multiple AZs, you'd have one private route table per AZ.</aside>
+                <aside class="notes">Traffic between subnets within the same VPC always uses the local route. The VPC router is implicit at the .1 address of every subnet. Intra-VPC traffic never hits the IGW. If you have NAT Gateways in multiple AZs, you'd have one private route table per AZ.</aside>
             </section>
 
-            <!-- Slide 23: Section Divider - VPC Security -->
+            <!-- Slide 19: Section Divider - VPC Security -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%)" class="section-divider">
                 <h2>&#128737;&#65039; Amazon VPC Security</h2>
-                <h3>Implementing defense in depth with security groups and NACLs</h3>
+                <h3>Defense in depth with security groups and NACLs</h3>
                 <aside class="notes">VPC security is a layered approach. Security groups protect at the instance level, Network ACLs protect at the subnet level. Together, they form a defense-in-depth strategy.</aside>
             </section>
 
-            <!-- Slide 24: Security Groups -->
+            <!-- Slide 20: Security Groups -->
             <section>
                 <h2>Security Groups</h2>
                 <div class="concept-box">
                     <h4>&#128274; Instance-Level Firewall</h4>
-                    <p>Security groups act as <strong>stateful</strong> virtual firewalls that control inbound and outbound traffic at the <strong>network interface level</strong>.</p>
+                    <p><strong>Stateful</strong> virtual firewalls controlling traffic at the network interface level.</p>
                 </div>
                 <ul>
-                    <li class="fragment fade-up"><strong>Stateful:</strong> Return traffic is automatically allowed regardless of outbound rules</li>
-                    <li class="fragment fade-up"><strong>Default behavior:</strong> All inbound denied, all outbound allowed</li>
-                    <li class="fragment fade-up"><strong>Allow rules only</strong> &mdash; you cannot create deny rules</li>
-                    <li class="fragment fade-up">Evaluated as a <strong>collective set</strong> (all rules are considered)</li>
-                    <li class="fragment fade-up">An instance can have <strong>multiple security groups</strong> (up to 5)</li>
+                    <li class="fragment fade-up"><strong>Stateful:</strong> return traffic automatically allowed</li>
+                    <li class="fragment fade-up"><strong>Default:</strong> all inbound denied, all outbound allowed</li>
+                    <li class="fragment fade-up"><strong>Allow rules only</strong> &mdash; no deny rules</li>
+                    <li class="fragment fade-up">All rules evaluated as a collective set</li>
+                    <li class="fragment fade-up">Up to 5 SGs per instance</li>
                 </ul>
                 <aside class="notes">Stateful is the key characteristic. If you allow inbound HTTP on port 80, the response traffic is automatically allowed out, even if the outbound rules don't explicitly permit it. This simplifies rule management compared to NACLs.</aside>
             </section>
 
-            <!-- Slide 25: Security Group Rules -->
+            <!-- Slide 21: Security Group Rules -->
             <section>
                 <h2>Security Group Rules: Example</h2>
                 <p><strong>Web Server Security Group:</strong></p>
                 <table>
                     <thead>
-                        <tr><th>Direction</th><th>Protocol</th><th>Port</th><th>Source / Destination</th><th>Description</th></tr>
+                        <tr><th>Direction</th><th>Protocol</th><th>Port</th><th>Source/Dest</th><th>Description</th></tr>
                     </thead>
                     <tbody>
-                        <tr class="fragment fade-up"><td>Inbound</td><td>TCP</td><td>80</td><td><code>0.0.0.0/0</code></td><td>HTTP from anywhere</td></tr>
-                        <tr class="fragment fade-up"><td>Inbound</td><td>TCP</td><td>443</td><td><code>0.0.0.0/0</code></td><td>HTTPS from anywhere</td></tr>
-                        <tr class="fragment fade-up"><td>Inbound</td><td>TCP</td><td>22</td><td><code>10.0.0.0/16</code></td><td>SSH from VPC only</td></tr>
-                        <tr class="fragment fade-up"><td>Outbound</td><td>All</td><td>All</td><td><code>0.0.0.0/0</code></td><td>Allow all outbound</td></tr>
+                        <tr class="fragment fade-up"><td>Inbound</td><td>TCP</td><td>80</td><td><code>0.0.0.0/0</code></td><td>HTTP</td></tr>
+                        <tr class="fragment fade-up"><td>Inbound</td><td>TCP</td><td>443</td><td><code>0.0.0.0/0</code></td><td>HTTPS</td></tr>
+                        <tr class="fragment fade-up"><td>Inbound</td><td>TCP</td><td>22</td><td><code>10.0.0.0/16</code></td><td>SSH from VPC</td></tr>
+                        <tr class="fragment fade-up"><td>Outbound</td><td>All</td><td>All</td><td><code>0.0.0.0/0</code></td><td>All outbound</td></tr>
                     </tbody>
                 </table>
-                <aside class="notes">Tip: Use descriptive names and add descriptions to every rule. This is essential for auditing and troubleshooting in environments with many security groups. This is a typical web server security group. Note that SSH is restricted to the VPC CIDR, not open to the internet. In production, you might further restrict SSH to a bastion host's security group. The default outbound rule allows all traffic out.</aside>
+                <aside class="notes">Use descriptive names and add descriptions to every rule. This is essential for auditing and troubleshooting. Note that SSH is restricted to the VPC CIDR, not open to the internet. In production, you might further restrict SSH to a bastion host's security group.</aside>
             </section>
 
-            <!-- Slide 26: Security Group Chaining -->
+            <!-- Slide 22: Security Group Chaining -->
             <section>
                 <h2>Security Group Chaining</h2>
                 <div class="concept-box">
-                    <h4>&#128279; Referencing Other Security Groups</h4>
-                    <p>Instead of specifying IP addresses, you can reference another security group as the source or destination. This creates a <strong>dynamic, self-maintaining</strong> rule set.</p>
+                    <h4>&#128279; Reference SGs Instead of IPs</h4>
+                    <p>Use another security group as source/destination for <strong>dynamic, self-maintaining</strong> rules.</p>
                 </div>
                 <div class="highlight-box" style="font-family: monospace; font-size: 0.8em; line-height: 2;">
-                    <strong>App Server SG (sg-app):</strong><br>
-                    Inbound: TCP 8080 from <strong>sg-alb</strong> (ALB security group)<br><br>
-                    <strong>Database SG (sg-db):</strong><br>
-                    Inbound: TCP 3306 from <strong>sg-app</strong> (App server security group)
+                    <strong>App SG:</strong> Inbound TCP 8080 from <strong>sg-alb</strong><br>
+                    <strong>DB SG:</strong> Inbound TCP 3306 from <strong>sg-app</strong>
                 </div>
-                <aside class="notes">Advantage: When you add or remove instances from a security group, the referencing rules automatically apply to the new set of instances. No IP address management needed. Security group chaining is a powerful pattern. The ALB can only talk to the app tier on port 8080, and the app tier can only talk to the database on port 3306. If you scale out by adding more app servers to sg-app, the database SG automatically allows them. This is the recommended approach for multi-tier architectures.</aside>
+                <aside class="notes">When you add or remove instances from a security group, the referencing rules automatically apply to the new set of instances. No IP address management needed. If you scale out by adding more app servers to sg-app, the database SG automatically allows them. This is the recommended approach for multi-tier architectures.</aside>
             </section>
 
-            <!-- Slide 27: Network ACLs -->
+            <!-- Slide 23: Network ACLs -->
             <section>
                 <h2>Network ACLs (NACLs)</h2>
                 <div class="concept-box">
                     <h4>&#128737;&#65039; Subnet-Level Firewall</h4>
-                    <p>Network ACLs are <strong>stateless</strong> firewalls that control traffic entering and leaving a <strong>subnet</strong>.</p>
+                    <p><strong>Stateless</strong> firewalls controlling traffic entering and leaving a subnet.</p>
                 </div>
                 <ul>
-                    <li class="fragment fade-up"><strong>Stateless:</strong> You must explicitly allow both inbound <em>and</em> outbound traffic (including return traffic)</li>
-                    <li class="fragment fade-up"><strong>Numbered rules:</strong> Evaluated in order, lowest number first</li>
+                    <li class="fragment fade-up"><strong>Stateless:</strong> must allow both inbound and return traffic</li>
+                    <li class="fragment fade-up"><strong>Numbered rules:</strong> evaluated lowest first, first match wins</li>
                     <li class="fragment fade-up">Supports <strong>allow and deny</strong> rules</li>
-                    <li class="fragment fade-up">Default NACL: allows all inbound and outbound traffic</li>
-                    <li class="fragment fade-up">Custom NACL: denies all traffic by default until rules are added</li>
+                    <li class="fragment fade-up">Default NACL allows all; custom NACL denies all</li>
                 </ul>
                 <aside class="notes">The key difference from security groups: NACLs are stateless. If you allow inbound port 80, you must also allow the ephemeral port range outbound for the response. Rules are evaluated in numeric order and the first matching rule applies. The implicit deny at rule * catches everything else.</aside>
             </section>
 
-            <!-- Slide 28a: NACL Inbound Rules -->
+            <!-- Slide 24: NACL Rules (merged inbound + outbound) -->
             <section>
-                <h2>NACL Inbound Rules</h2>
-                <p><strong>Public Subnet NACL &mdash; Inbound:</strong></p>
-                <table style="font-size: 0.7em;">
-                    <thead>
-                        <tr><th>Rule #</th><th>Protocol</th><th>Port Range</th><th>Source</th><th>Action</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr class="fragment fade-up"><td>100</td><td>TCP</td><td>80</td><td>0.0.0.0/0</td><td>ALLOW</td></tr>
-                        <tr class="fragment fade-up"><td>110</td><td>TCP</td><td>443</td><td>0.0.0.0/0</td><td>ALLOW</td></tr>
-                        <tr class="fragment fade-up"><td>120</td><td>TCP</td><td>1024-65535</td><td>0.0.0.0/0</td><td>ALLOW</td></tr>
-                        <tr class="fragment fade-up"><td>*</td><td>All</td><td>All</td><td>0.0.0.0/0</td><td>DENY</td></tr>
-                    </tbody>
-                </table>
-                <aside class="notes">Rule 120 allows ephemeral ports (1024-65535), which are required for return traffic. Without this rule, responses to allowed inbound requests will be blocked. Because NACLs are stateless, you must explicitly allow return traffic. The asterisk rule is the implicit deny that catches anything not matched by a numbered rule. Use increments of 10 or 100 for rule numbers to allow inserting rules later.</aside>
+                <h2>NACL Rules: Example</h2>
+                <div class="two-columns">
+                    <div>
+                        <p><strong>Inbound:</strong></p>
+                        <table style="font-size: 0.65em;">
+                            <thead>
+                                <tr><th>Rule</th><th>Port</th><th>Source</th><th>Action</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr class="fragment fade-up"><td>100</td><td>80</td><td>0.0.0.0/0</td><td>ALLOW</td></tr>
+                                <tr class="fragment fade-up"><td>110</td><td>443</td><td>0.0.0.0/0</td><td>ALLOW</td></tr>
+                                <tr class="fragment fade-up"><td>120</td><td>1024-65535</td><td>0.0.0.0/0</td><td>ALLOW</td></tr>
+                                <tr><td>*</td><td>All</td><td>0.0.0.0/0</td><td>DENY</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <p><strong>Outbound:</strong></p>
+                        <table style="font-size: 0.65em;">
+                            <thead>
+                                <tr><th>Rule</th><th>Port</th><th>Dest</th><th>Action</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr class="fragment fade-up"><td>100</td><td>80</td><td>0.0.0.0/0</td><td>ALLOW</td></tr>
+                                <tr class="fragment fade-up"><td>110</td><td>443</td><td>0.0.0.0/0</td><td>ALLOW</td></tr>
+                                <tr class="fragment fade-up"><td>120</td><td>1024-65535</td><td>0.0.0.0/0</td><td>ALLOW</td></tr>
+                                <tr><td>*</td><td>All</td><td>0.0.0.0/0</td><td>DENY</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <aside class="notes">Ephemeral ports (1024-65535) are required for return traffic on both sides because NACLs are stateless. Use increments of 10 or 100 for rule numbers to allow inserting rules later. The asterisk rule is the implicit deny that catches anything not matched.</aside>
             </section>
 
-            <!-- Slide 28b: NACL Outbound Rules -->
-            <section>
-                <h2>NACL Outbound Rules</h2>
-                <p><strong>Public Subnet NACL &mdash; Outbound:</strong></p>
-                <table style="font-size: 0.7em;">
-                    <thead>
-                        <tr><th>Rule #</th><th>Protocol</th><th>Port Range</th><th>Destination</th><th>Action</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr class="fragment fade-up"><td>100</td><td>TCP</td><td>80</td><td>0.0.0.0/0</td><td>ALLOW</td></tr>
-                        <tr class="fragment fade-up"><td>110</td><td>TCP</td><td>443</td><td>0.0.0.0/0</td><td>ALLOW</td></tr>
-                        <tr class="fragment fade-up"><td>120</td><td>TCP</td><td>1024-65535</td><td>0.0.0.0/0</td><td>ALLOW</td></tr>
-                        <tr class="fragment fade-up"><td>*</td><td>All</td><td>All</td><td>0.0.0.0/0</td><td>DENY</td></tr>
-                    </tbody>
-                </table>
-                <aside class="notes">Ephemeral ports (1024-65535) are required on the outbound side as well for return traffic from inbound connections. The outbound rules mirror the inbound rules in this example, allowing HTTP, HTTPS, and ephemeral port responses.</aside>
-            </section>
-
-            <!-- Slide 29: Security Groups vs NACLs -->
+            <!-- Slide 25: Security Groups vs NACLs -->
             <section>
                 <h2>Security Groups vs. Network ACLs</h2>
                 <table>
@@ -577,98 +503,73 @@
                         <tr><th>Feature</th><th>Security Group</th><th>Network ACL</th></tr>
                     </thead>
                     <tbody>
-                        <tr class="fragment fade-up"><td><strong>Scope &amp; Default</strong></td><td>Instance (ENI) level; deny in, allow out</td><td>Subnet level; allow all (default NACL)</td></tr>
-                        <tr class="fragment fade-up"><td><strong>State</strong></td><td>Stateful (return traffic automatic)</td><td>Stateless (return traffic must be allowed)</td></tr>
+                        <tr class="fragment fade-up"><td><strong>Scope</strong></td><td>Instance (ENI) level</td><td>Subnet level</td></tr>
+                        <tr class="fragment fade-up"><td><strong>State</strong></td><td>Stateful (auto return)</td><td>Stateless (explicit return)</td></tr>
                         <tr class="fragment fade-up"><td><strong>Rules</strong></td><td>Allow only</td><td>Allow and Deny</td></tr>
-                        <tr class="fragment fade-up"><td><strong>Evaluation</strong></td><td>All rules evaluated as a set</td><td>Rules in numeric order, first match wins</td></tr>
-                        <tr class="fragment fade-up"><td><strong>Assignment</strong></td><td>Attached to ENIs / instances</td><td>Associated with subnets</td></tr>
+                        <tr class="fragment fade-up"><td><strong>Evaluation</strong></td><td>All rules as a set</td><td>Numbered order, first match</td></tr>
+                        <tr class="fragment fade-up"><td><strong>Default</strong></td><td>Deny in, allow out</td><td>Allow all (default NACL)</td></tr>
                     </tbody>
                 </table>
-                <aside class="notes">This comparison is a very common exam and interview topic. The stateful vs stateless distinction is the most important differentiator. In practice, security groups handle most traffic filtering. NACLs provide an additional layer, often used to block known malicious IPs or add subnet-level deny rules that security groups cannot provide.</aside>
+                <aside class="notes">This comparison is a very common exam and interview topic. The stateful vs stateless distinction is the most important differentiator. In practice, security groups handle most traffic filtering. NACLs provide an additional layer, often used to block known malicious IPs.</aside>
             </section>
 
-            <!-- Slide 30: Defense in Depth -->
+            <!-- Slide 26: Defense in Depth & Best Practices (merged) -->
             <section>
-                <h2>Defense in Depth</h2>
+                <h2>Defense in Depth &amp; Best Practices</h2>
                 <div class="highlight-box" style="font-family: monospace; font-size: 0.8em; line-height: 2;">
-                    Internet &#8594; [NACL: Subnet boundary] &#8594; [Security Group: Instance boundary] &#8594; EC2 Instance
+                    Internet &#8594; [NACL: Subnet boundary] &#8594; [Security Group: Instance boundary] &#8594; EC2
                 </div>
-                <div class="two-columns fragment fade-up">
-                    <div class="card">
-                        <h4>&#128274; Security Groups For</h4>
-                        <ul>
-                            <li>Fine-grained instance-level control</li>
-                            <li>Application-tier segmentation</li>
-                            <li>SG chaining between tiers</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#128737;&#65039; NACLs For</h4>
-                        <ul>
-                            <li>Broad subnet-level policies</li>
-                            <li>Blocking known malicious IPs</li>
-                            <li>Explicit deny rules</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Layered security model: Use both security groups and NACLs together to create multiple layers of network security. Defense in depth means no single point of failure in your security model. Traffic first passes through the NACL at the subnet boundary, then through the security group at the instance level. Even if one layer is misconfigured, the other provides protection. AWS recommends using both, though security groups typically carry the majority of the filtering logic.</aside>
-            </section>
-
-            <!-- Slide 31: VPC Security Best Practices -->
-            <section>
-                <h2>VPC Security Best Practices</h2>
                 <ul>
-                    <li class="fragment fade-up"><strong>Principle of least privilege:</strong> Only allow traffic that is explicitly required</li>
-                    <li class="fragment fade-up"><strong>Use security group references</strong> instead of IP addresses where possible</li>
-                    <li class="fragment fade-up"><strong>Avoid 0.0.0.0/0</strong> on inbound rules unless genuinely needed (e.g., public-facing ALB)</li>
-                    <li class="fragment fade-up"><strong>Enable VPC Flow Logs</strong> to CloudWatch Logs or S3 for traffic auditing</li>
-                    <li class="fragment fade-up"><strong>Audit regularly:</strong> Use AWS Config rules to detect overly permissive or stale security group entries</li>
+                    <li class="fragment fade-up"><strong>Least privilege:</strong> only allow required traffic</li>
+                    <li class="fragment fade-up"><strong>Use SG references</strong> instead of IPs where possible</li>
+                    <li class="fragment fade-up"><strong>Avoid 0.0.0.0/0 inbound</strong> unless genuinely needed</li>
+                    <li class="fragment fade-up"><strong>Enable VPC Flow Logs</strong> for traffic auditing</li>
+                    <li class="fragment fade-up"><strong>Audit with AWS Config</strong> to detect permissive rules</li>
                 </ul>
-                <aside class="notes">Common mistake: Opening SSH (port 22) or RDP (port 3389) to 0.0.0.0/0. Use Session Manager, a bastion host, or restrict to known IP ranges. Security group sprawl is a real problem in large environments. Over time, rules accumulate and become difficult to audit. AWS Config can flag security groups with 0.0.0.0/0 on sensitive ports. Session Manager is the modern alternative to SSH bastion hosts, as it requires no inbound ports at all.</aside>
+                <aside class="notes">Use both security groups and NACLs together. Traffic first passes through the NACL at the subnet boundary, then through the security group at the instance level. Even if one layer is misconfigured, the other provides protection. Common mistake: Opening SSH (port 22) to 0.0.0.0/0. Use Session Manager or a bastion host instead. Security group sprawl is a real problem; AWS Config can flag overly permissive groups.</aside>
             </section>
 
-            <!-- Slide 32: Module Summary -->
+            <!-- Slide 27: Module Summary -->
             <section>
                 <h2>&#128218; Module Summary</h2>
                 <div class="two-columns">
                     <div>
                         <ul>
-                            <li class="fragment fade-up"><strong>VPC</strong> &mdash; Isolated virtual network in a Region, spans all AZs</li>
-                            <li class="fragment fade-up"><strong>Subnets</strong> &mdash; AZ-specific; public or private based on routing</li>
-                            <li class="fragment fade-up"><strong>Internet Gateway</strong> &mdash; Enables internet for public subnets</li>
-                            <li class="fragment fade-up"><strong>NAT Gateway</strong> &mdash; Outbound internet for private subnets</li>
+                            <li class="fragment fade-up"><strong>VPC</strong> &mdash; Isolated network, Region-scoped</li>
+                            <li class="fragment fade-up"><strong>Subnets</strong> &mdash; AZ-specific, public/private by routing</li>
+                            <li class="fragment fade-up"><strong>IGW</strong> &mdash; Internet for public subnets</li>
+                            <li class="fragment fade-up"><strong>NAT GW</strong> &mdash; Outbound for private subnets</li>
                         </ul>
                     </div>
                     <div>
                         <ul>
-                            <li class="fragment fade-up"><strong>Route Tables</strong> &mdash; Control traffic with destination/target rules</li>
-                            <li class="fragment fade-up"><strong>Security Groups</strong> &mdash; Stateful, instance-level, allow-only</li>
-                            <li class="fragment fade-up"><strong>NACLs</strong> &mdash; Stateless, subnet-level, allow and deny</li>
-                            <li class="fragment fade-up"><strong>Defense in depth</strong> &mdash; Layer both for maximum protection</li>
+                            <li class="fragment fade-up"><strong>Route Tables</strong> &mdash; Destination/target rules</li>
+                            <li class="fragment fade-up"><strong>Security Groups</strong> &mdash; Stateful, allow-only</li>
+                            <li class="fragment fade-up"><strong>NACLs</strong> &mdash; Stateless, allow and deny</li>
+                            <li class="fragment fade-up"><strong>Defense in depth</strong> &mdash; Layer both controls</li>
                         </ul>
                     </div>
                 </div>
                 <aside class="notes">This module covered the foundational networking knowledge needed for AWS. Every service we deploy from here on will use these VPC concepts. The lab will reinforce these concepts by building a VPC from scratch.</aside>
             </section>
 
-            <!-- Slide 33: Lab Callout -->
+            <!-- Slide 28: Lab Callout -->
             <section data-background-color="#1a365d" class="lab-callout">
                 <h2>&#129489;&#8205;&#128187; Hands-On Lab</h2>
-                <h3>Create a VPC and Relaunch the Employee Directory Application in Amazon EC2</h3>
+                <h3>Create a VPC and Relaunch the Employee Directory App</h3>
                 <ul>
                     <li class="fragment fade-up">Create a custom VPC with public and private subnets</li>
-                    <li class="fragment fade-up">Configure an Internet Gateway and route tables</li>
+                    <li class="fragment fade-up">Configure Internet Gateway and route tables</li>
                     <li class="fragment fade-up">Set up security groups for the web application</li>
                     <li class="fragment fade-up">Launch the Employee Directory app in the new VPC</li>
-                    <li class="fragment fade-up">Verify connectivity and test security controls</li>
                 </ul>
                 <div class="highlight-box" style="margin-top: 20px;">
-                    <strong>Goal:</strong> Apply the networking concepts from this module to build a secure, functional VPC and deploy a real application into it.
+                    <strong>Goal:</strong> Build a secure, functional VPC and deploy a real application into it.
                 </div>
                 <aside class="notes">This lab ties together everything from this module. Students will create a VPC from scratch, configure subnets, routing, and security groups, then relaunch the Employee Directory application from the previous module into this new, properly architected network.</aside>
             </section>
 
-            <!-- Slide 34: Questions -->
+            <!-- Slide 29: Questions -->
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="questions-slide" style="text-align: center;">
                 <h2>&#10067; Questions?</h2>
                 <p>Let's discuss before moving to the lab</p>
