@@ -53,9 +53,7 @@
     <div class="reveal">
         <div class="slides">
 
-            <!-- ============================================================ -->
-            <!-- TITLE SLIDE                                                  -->
-            <!-- ============================================================ -->
+            <!-- Slide 1: Title -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="title-slide">
                 <h1>&#128272; Lab 1: Introduction to AWS IAM</h1>
                 <h2>AWS Technical Essentials</h2>
@@ -69,14 +67,11 @@
                     <div class="step"></div>
                 </div>
                 <aside class="notes">
-                    Welcome students to Lab 1. This is the first of six labs in the AWS Technical Essentials course.
-                    Ensure all students have their lab credentials ready before starting.
+                    Welcome students to Lab 1. Ensure all students have their lab credentials ready before starting.
                 </aside>
             </section>
 
-            <!-- ============================================================ -->
-            <!-- LAB OVERVIEW                                                 -->
-            <!-- ============================================================ -->
+            <!-- Slide 2: Overview -->
             <section>
                 <h2>&#128203; Lab Overview</h2>
                 <div class="two-columns">
@@ -84,429 +79,96 @@
                         <h4>&#127919; Objectives</h4>
                         <ul>
                             <li>Navigate the IAM Dashboard</li>
-                            <li>Create and manage IAM Users</li>
-                            <li>Create IAM Groups and assign policies</li>
-                            <li>Author a custom IAM Policy using JSON</li>
-                            <li>Explore IAM Roles and their trust relationships</li>
-                            <li>Test IAM permissions by signing in as a new user</li>
+                            <li>Create an IAM User with console access</li>
+                            <li>Create an IAM Group with a managed policy</li>
+                            <li>Author a custom scoped IAM Policy</li>
+                            <li>Test permissions as the new user</li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>&#128221; Lab Details</h4>
                         <ul>
-                            <li><strong>Duration:</strong> ~20 minutes</li>
+                            <li><strong>Duration:</strong> ~15 minutes</li>
                             <li><strong>Level:</strong> Introductory</li>
                             <li><strong>Services:</strong> IAM, S3, EC2</li>
                         </ul>
                         <h4 style="margin-top: 15px;">&#9989; Prerequisites</h4>
                         <ul>
                             <li>AWS lab account credentials</li>
-                            <li>Web browser (Chrome or Firefox recommended)</li>
-                            <li>Access to an incognito/private browsing window</li>
+                            <li>Web browser (Chrome or Firefox)</li>
                         </ul>
                     </div>
                 </div>
                 <aside class="notes">
-                    Review the objectives with students. Emphasize that IAM is a foundational service that underpins
-                    all access control in AWS. Every other lab in this course will build on the concepts covered here.
+                    Review objectives. IAM is foundational — every other lab builds on these concepts. Ensure all students have console access before proceeding.
                 </aside>
             </section>
 
-            <!-- ============================================================ -->
-            <!-- STEP 1 DIVIDER                                               -->
-            <!-- ============================================================ -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
-                <h2>Step 1</h2>
-                <h3>Sign in to the AWS Management Console</h3>
-                <div class="module-progress">
-                    <div class="step active"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                </div>
-                <aside class="notes">
-                    This step gets everyone logged in and oriented. Wait for all students to complete this before proceeding.
-                </aside>
-            </section>
-
+            <!-- Slide 3: Explore IAM Dashboard -->
             <section>
-                <h2>&#128275; Sign in to the AWS Management Console</h2>
+                <h2>&#128200; Explore the IAM Dashboard</h2>
                 <ol>
-                    <li class="fragment">Open your web browser and navigate to:<br>
-                        <code>https://console.aws.amazon.com/</code>
-                    </li>
-                    <li class="fragment">Enter the <strong>Account ID</strong> or <strong>account alias</strong> provided by your instructor</li>
-                    <li class="fragment">Enter the <strong>IAM user name</strong> and <strong>password</strong> from your lab credentials</li>
-                    <li class="fragment">Click <strong>Sign in</strong></li>
+                    <li>In the console search bar, type <strong>IAM</strong> and select it</li>
+                    <li>Note the <strong>IAM sign-in URL</strong> — copy it for later</li>
+                    <li>Review the resource summary: Users, Groups, Roles, Policies</li>
                 </ol>
-                <div class="highlight-box warning fragment">
-                    <strong>&#9888;&#65039; Important:</strong> Verify you are in the correct AWS Region.
-                    Check the Region selector in the top-right corner of the console. Your instructor will specify
-                    which Region to use (e.g., <strong>US East (N. Virginia) &mdash; us-east-1</strong>).
+                <div class="highlight-box">
+                    <strong>&#128161; Note:</strong> IAM is a <strong>global service</strong> — not tied to any specific AWS Region.
                 </div>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> You should see the AWS Management Console home page
-                    with service shortcuts and a search bar at the top.
+                <div class="highlight-box success">
+                    <strong>&#9989; Expected:</strong> You see the IAM Dashboard with resource counts and the account sign-in URL.
                 </div>
                 <aside class="notes">
-                    Distribute lab credentials if not already done. Confirm the Region with students.
-                    If any student has trouble signing in, verify they are using the correct Account ID and IAM credentials,
-                    not a personal AWS account.
+                    Have students copy the IAM sign-in URL to a notepad — they will need it when testing permissions later. Point out that IAM is global (common exam topic). Give students about 1 minute to explore.
                 </aside>
             </section>
 
-            <!-- ============================================================ -->
-            <!-- STEP 2 DIVIDER                                               -->
-            <!-- ============================================================ -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
-                <h2>Step 2</h2>
-                <h3>Explore the IAM Dashboard</h3>
-                <div class="module-progress">
-                    <div class="step completed"></div>
-                    <div class="step active"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                </div>
-                <aside class="notes">
-                    This step familiarizes students with the IAM Dashboard. Encourage them to take their time exploring.
-                </aside>
-            </section>
-
+            <!-- Slide 4: Create IAM User -->
             <section>
-                <h2>&#128200; Navigate to IAM</h2>
+                <h2>&#128221; Create an IAM User</h2>
                 <ol>
-                    <li class="fragment">In the AWS Management Console, click the <strong>Search bar</strong> at the top (or press <code>Alt+S</code>)</li>
-                    <li class="fragment">Type <strong>IAM</strong> and select <strong>IAM</strong> from the results</li>
-                    <li class="fragment">You will land on the <strong>IAM Dashboard</strong></li>
+                    <li>Click <strong>Users</strong> in the left nav, then <strong>Create user</strong></li>
+                    <li>User name: <code>lab-user</code></li>
+                    <li>Check <strong>Provide user access to the AWS Management Console</strong></li>
+                    <li>Select <strong>I want to create an IAM user</strong></li>
+                    <li>Set a custom password (e.g., <code>Lab@User123!</code>), uncheck "require password reset"</li>
+                    <li>Click <strong>Next</strong></li>
+                    <li>Select <strong>Attach policies directly</strong>, search <code>S3ReadOnly</code>, check <strong>AmazonS3ReadOnlyAccess</strong></li>
+                    <li>Click <strong>Next</strong>, then <strong>Create user</strong></li>
                 </ol>
-                <div class="highlight-box fragment">
-                    <strong>&#128161; Note:</strong> IAM is a <strong>global service</strong> &mdash; it is not tied to any specific AWS Region.
-                    You will notice there is no Region selector when viewing IAM resources.
+                <div class="highlight-box success">
+                    <strong>&#9989; Expected:</strong> Success banner. Save the sign-in URL and password — you will need them later.
                 </div>
                 <aside class="notes">
-                    Point out that IAM is global. This is a common exam topic. Resources created in IAM are available
-                    across all Regions.
+                    Walk through this step carefully. Make sure students select "I want to create an IAM user" (not Identity Center). The password must be saved now — it cannot be viewed again after closing the page. If missed, it can be reset from the Security credentials tab.
                 </aside>
             </section>
 
-            <section>
-                <h2>&#128200; Review the IAM Dashboard</h2>
-                <p>On the IAM Dashboard, take note of the following information:</p>
-                <ol>
-                    <li class="fragment"><strong>AWS Account section:</strong> Find the <strong>Account ID</strong> and <strong>Account Alias</strong> (if configured). Note the <strong>Sign-in URL for IAM users</strong> &mdash; you will use this later.</li>
-                    <li class="fragment"><strong>IAM Resources summary:</strong> Review the counts for:
-                        <ul>
-                            <li>Users</li>
-                            <li>User groups</li>
-                            <li>Roles</li>
-                            <li>Policies</li>
-                            <li>Identity providers</li>
-                        </ul>
-                    </li>
-                    <li class="fragment"><strong>Security recommendations:</strong> Review any recommendations displayed, such as enabling MFA on the root account or rotating access keys.</li>
-                </ol>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> You should see a summary dashboard with resource counts and
-                    the IAM sign-in URL for your account. Copy the sign-in URL &mdash; you will need it in Step 8.
-                </div>
-                <aside class="notes">
-                    Have students copy the IAM sign-in URL to a text file or notepad. They will need it when testing
-                    permissions in Step 8. Discuss the security recommendations briefly.
-                </aside>
-            </section>
-
-            <!-- ============================================================ -->
-            <!-- STEP 3 DIVIDER                                               -->
-            <!-- ============================================================ -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
-                <h2>Step 3</h2>
-                <h3>Explore Existing IAM Users</h3>
-                <div class="module-progress">
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step active"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                </div>
-                <aside class="notes">
-                    This step helps students understand the existing IAM configuration before they start making changes.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128100; Explore Existing IAM Users</h2>
-                <ol>
-                    <li class="fragment">In the left navigation pane, click <strong>Users</strong></li>
-                    <li class="fragment">Review the list of existing users in the account</li>
-                    <li class="fragment">Click on <strong>any existing user name</strong> to view their details</li>
-                    <li class="fragment">Explore each tab:
-                        <ul>
-                            <li><strong>Permissions</strong> &mdash; Shows directly attached policies and group-inherited policies</li>
-                            <li><strong>Groups</strong> &mdash; Shows which groups the user belongs to</li>
-                            <li><strong>Security credentials</strong> &mdash; Shows console access, access keys, MFA devices</li>
-                        </ul>
-                    </li>
-                </ol>
-                <aside class="notes">
-                    Walk through the user detail page with students. Highlight the difference between
-                    directly attached policies and those inherited through group membership.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128100; Console vs. Programmatic Access</h2>
-                <div class="concept-box">
-                    <h4>Understanding Access Types</h4>
-                    <div class="two-columns">
-                        <div>
-                            <strong>Console Access:</strong>
-                            <ul>
-                                <li>Username + password</li>
-                                <li>Used for AWS Management Console</li>
-                                <li>Optional MFA for additional security</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <strong>Programmatic Access:</strong>
-                            <ul>
-                                <li>Access Key ID + Secret Access Key</li>
-                                <li>Used for AWS CLI, SDKs, and APIs</li>
-                                <li>Best practice: use IAM Roles instead</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="highlight-box fragment">
-                    <strong>&#128161; Note:</strong> On the <strong>Security credentials</strong> tab, observe whether the user has
-                    console access enabled, any active access keys, or MFA configured. These are important security considerations.
-                </div>
-                <aside class="notes">
-                    Emphasize that best practice is to use IAM Roles for applications rather than long-lived access keys.
-                    Access keys should be rotated regularly if used.
-                </aside>
-            </section>
-
-            <!-- ============================================================ -->
-            <!-- STEP 4 DIVIDER                                               -->
-            <!-- ============================================================ -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
-                <h2>Step 4</h2>
-                <h3>Create an IAM User</h3>
-                <div class="module-progress">
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step active"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                </div>
-                <aside class="notes">
-                    This is a key hands-on step. Walk through it carefully and ensure all students complete it successfully.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128221; Create an IAM User (1/4)</h2>
-                <ol>
-                    <li class="fragment">In the left navigation, click <strong>Users</strong></li>
-                    <li class="fragment">Click the <strong>Create user</strong> button</li>
-                    <li class="fragment">For <strong>User name</strong>, enter: <code>lab-user</code></li>
-                    <li class="fragment">Check the box: <strong>Provide user access to the AWS Management Console</strong></li>
-                </ol>
-                <aside class="notes">
-                    Have students use a simple but memorable password. They will need it for Step 8 when testing permissions.
-                    If the console shows the Identity Center option, make sure students select the IAM user option for this lab.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128221; Create an IAM User (2/4)</h2>
-                <h3>Console Access Settings</h3>
-                <ol start="5">
-                    <li class="fragment">Select <strong>I want to create an IAM user</strong> (if prompted to choose between Identity Center and IAM)</li>
-                    <li class="fragment">Under Console password, select <strong>Custom password</strong> and enter a password you will remember (e.g., <code>Lab@User123!</code>)</li>
-                    <li class="fragment"><strong>Uncheck</strong> the box: &ldquo;Users must create a new password at next sign-in&rdquo;</li>
-                    <li class="fragment">Click <strong>Next</strong></li>
-                </ol>
-                <aside class="notes">
-                    Have students use a simple but memorable password. They will need it for Step 8 when testing permissions.
-                    If the console shows the Identity Center option, make sure students select the IAM user option for this lab.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128221; Create an IAM User (3/4)</h2>
-                <h3>Set Permissions</h3>
-                <ol>
-                    <li class="fragment">On the <strong>Set permissions</strong> page, select <strong>Attach policies directly</strong></li>
-                    <li class="fragment">In the search box under <strong>Permissions policies</strong>, type: <code>S3ReadOnly</code></li>
-                    <li class="fragment">Check the box next to <strong>AmazonS3ReadOnlyAccess</strong></li>
-                    <li class="fragment">Click <strong>Next</strong></li>
-                </ol>
-                <div class="highlight-box warning fragment">
-                    <strong>&#9888;&#65039; Important:</strong> Make sure you select <strong>AmazonS3ReadOnlyAccess</strong>
-                    (the AWS managed policy), not a similarly named custom policy. The policy type should show
-                    <strong>AWS managed</strong>.
-                </div>
-                <aside class="notes">
-                    The search filter helps narrow down the policy list. There are over 1,000 AWS managed policies,
-                    so searching is essential. Point out the difference between AWS managed and customer managed policies.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128221; Create an IAM User (4/4)</h2>
-                <h3>Review and Create</h3>
-                <ol>
-                    <li class="fragment">On the <strong>Review and create</strong> page, verify:
-                        <ul>
-                            <li>User name: <code>lab-user</code></li>
-                            <li>Console access: Enabled</li>
-                            <li>Permissions: AmazonS3ReadOnlyAccess</li>
-                        </ul>
-                    </li>
-                    <li class="fragment">Click <strong>Create user</strong></li>
-                    <li class="fragment">On the success page, note the following:
-                        <ul>
-                            <li><strong>Console sign-in URL</strong></li>
-                            <li><strong>User name</strong></li>
-                            <li><strong>Password</strong> (click &ldquo;Show&rdquo; to reveal)</li>
-                        </ul>
-                    </li>
-                </ol>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> A success banner appears confirming the user was created.
-                    You should see a console sign-in URL, the user name, and the password. Save these for Step 8.
-                </div>
-                <aside class="notes">
-                    Make absolutely sure students save the sign-in URL and credentials. They will need them in Step 8.
-                    IMPORTANT: Save the credentials now! Copy the sign-in URL and password to a text file.
-                    You will not be able to view the password again after closing this page.
-                    If a student misses the password, they can reset it from the user's Security credentials tab.
-                </aside>
-            </section>
-
-            <!-- ============================================================ -->
-            <!-- STEP 5 DIVIDER                                               -->
-            <!-- ============================================================ -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
-                <h2>Step 5</h2>
-                <h3>Create an IAM Group</h3>
-                <div class="module-progress">
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step active"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                </div>
-                <aside class="notes">
-                    Groups are the recommended way to manage permissions at scale. Emphasize this best practice.
-                </aside>
-            </section>
-
+            <!-- Slide 5: Create Group -->
             <section>
                 <h2>&#128101; Create an IAM Group</h2>
                 <ol>
-                    <li class="fragment">In the left navigation, click <strong>User groups</strong>, then click <strong>Create group</strong></li>
-                    <li class="fragment">For <strong>User group name</strong>, enter: <code>EC2-Admins</code></li>
-                    <li class="fragment">Under <strong>Add users to the group</strong>, check the box next to <strong>lab-user</strong></li>
-                    <li class="fragment">Under <strong>Attach permissions policies</strong>, search for <code>AmazonEC2FullAccess</code> and check the box next to it</li>
-                    <li class="fragment">Click <strong>Create user group</strong></li>
+                    <li>Click <strong>User groups</strong> in the left nav, then <strong>Create group</strong></li>
+                    <li>Group name: <code>EC2-Admins</code></li>
+                    <li>Under <strong>Add users</strong>, check <strong>lab-user</strong></li>
+                    <li>Under <strong>Attach permissions policies</strong>, search and select <strong>AmazonEC2FullAccess</strong></li>
+                    <li>Click <strong>Create user group</strong></li>
                 </ol>
+                <div class="highlight-box success">
+                    <strong>&#9989; Expected:</strong> EC2-Admins group created with lab-user as a member and AmazonEC2FullAccess attached.
+                </div>
                 <aside class="notes">
-                    Explain that by adding lab-user to this group, the user will inherit the AmazonEC2FullAccess policy
-                    in addition to the S3 read-only policy that was directly attached. This demonstrates how permissions
-                    can come from multiple sources.
+                    Explain that lab-user now has permissions from two sources: S3 read-only (direct) and EC2 full access (via group). IAM evaluates the union of all attached policies.
                 </aside>
             </section>
 
+            <!-- Slide 6: Create Custom Policy -->
             <section>
-                <h2>&#128101; Verify the Group</h2>
+                <h2>&#128220; Create a Custom IAM Policy</h2>
                 <ol>
-                    <li class="fragment">After creation, click on the <strong>EC2-Admins</strong> group name</li>
-                    <li class="fragment">Review the <strong>Users</strong> tab &mdash; confirm <strong>lab-user</strong> is listed as a member</li>
-                    <li class="fragment">Review the <strong>Permissions</strong> tab &mdash; confirm <strong>AmazonEC2FullAccess</strong> is attached</li>
+                    <li>Click <strong>Policies</strong>, then <strong>Create policy</strong></li>
+                    <li>Switch to the <strong>JSON</strong> tab and paste:</li>
                 </ol>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> The EC2-Admins group should show:
-                    <ul>
-                        <li>1 user (lab-user)</li>
-                        <li>1 attached policy (AmazonEC2FullAccess)</li>
-                    </ul>
-                </div>
-                <div class="key-point fragment">
-                    <strong>Best Practice:</strong> In production environments, always assign permissions to <strong>groups</strong>
-                    rather than individual users. This makes permission management scalable and auditable.
-                </div>
-                <aside class="notes">
-                    This is a good moment to discuss the principle of least privilege and how groups help manage
-                    permissions across teams. Ask students: what permissions does lab-user now have in total?
-                    Answer: S3 read-only (direct) + EC2 full access (via group).
-                </aside>
-            </section>
-
-            <!-- ============================================================ -->
-            <!-- STEP 6 DIVIDER                                               -->
-            <!-- ============================================================ -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
-                <h2>Step 6</h2>
-                <h3>Create a Custom IAM Policy</h3>
-                <div class="module-progress">
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step active"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                </div>
-                <aside class="notes">
-                    This step introduces policy authoring. Go slowly and explain each element of the JSON policy document.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128220; Create a Custom IAM Policy (1/2)</h2>
-                <ol>
-                    <li class="fragment">In the left navigation, click <strong>Policies</strong></li>
-                    <li class="fragment">Click <strong>Create policy</strong></li>
-                    <li class="fragment">On the policy editor page, click the <strong>JSON</strong> tab to switch to the JSON editor</li>
-                    <li class="fragment">Delete any existing content in the editor and paste the JSON from the next slide</li>
-                </ol>
-                <aside class="notes">
-                    Walk through each element: Version is always 2012-10-17, Effect is Allow or Deny,
-                    Action lists the specific API calls permitted, Resource specifies which AWS resources
-                    the policy applies to. Note the two Resource entries: one for the bucket itself (ListBucket)
-                    and one for objects within the bucket (GetObject).
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128220; Custom Policy JSON</h2>
-                <p>Paste this policy into the JSON editor:</p>
                 <pre><code class="json">{
     "Version": "2012-10-17",
     "Statement": [
@@ -517,388 +179,74 @@
                 "s3:GetObject"
             ],
             "Resource": [
-                "arn:aws:s3:::employee-directory-app-bucket",
-                "arn:aws:s3:::employee-directory-app-bucket/*"
+                "arn:aws:s3:::employee-directory-*",
+                "arn:aws:s3:::employee-directory-*/*"
             ]
         }
     ]
 }</code></pre>
-                <aside class="notes">
-                    Two Resource ARNs are needed: one for the bucket itself (ListBucket operates on the bucket)
-                    and one for objects within the bucket (GetObject operates on objects with the /* wildcard).
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128220; Understanding the Policy</h2>
-                <div class="concept-box">
-                    <h4>Policy Breakdown</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Element</th>
-                                <th>Value</th>
-                                <th>Purpose</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Version</strong></td>
-                                <td><code>2012-10-17</code></td>
-                                <td>Policy language version (always use this date)</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Effect</strong></td>
-                                <td><code>Allow</code></td>
-                                <td>Grants the specified permissions</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Action</strong></td>
-                                <td><code>s3:ListBucket</code>, <code>s3:GetObject</code></td>
-                                <td>Specific S3 API operations permitted</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Resource</strong></td>
-                                <td>Bucket ARN + Object ARN</td>
-                                <td>Scoped to a single bucket and its contents</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="key-point fragment">
-                    <strong>Key Concept:</strong> Two Resource ARNs are needed because <code>s3:ListBucket</code> operates
-                    on the <strong>bucket</strong> (<code>arn:aws:s3:::bucket-name</code>) while <code>s3:GetObject</code>
-                    operates on <strong>objects</strong> (<code>arn:aws:s3:::bucket-name/*</code>).
-                </div>
-                <aside class="notes">
-                    This is a common point of confusion. The bucket-level ARN and object-level ARN are different.
-                    ListBucket needs the bucket ARN; GetObject needs the object ARN with the wildcard.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128220; Create a Custom IAM Policy (2/2)</h2>
-                <ol>
-                    <li class="fragment">Click <strong>Next</strong></li>
-                    <li class="fragment">For <strong>Policy name</strong>, enter: <code>EmployeeDirectoryS3ReadPolicy</code></li>
-                    <li class="fragment">Optionally add a description: <code>Allows read access to the employee directory S3 bucket</code></li>
-                    <li class="fragment">Review the <strong>Summary</strong> section &mdash; it should show:
-                        <ul>
-                            <li>Service: S3</li>
-                            <li>Access level: List, Read</li>
-                            <li>Resource: Specific bucket</li>
-                        </ul>
-                    </li>
-                    <li class="fragment">Click <strong>Create policy</strong></li>
-                </ol>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> A success banner appears confirming the policy
-                    <strong>EmployeeDirectoryS3ReadPolicy</strong> was created. You can find it by searching
-                    for &ldquo;EmployeeDirectory&rdquo; in the Policies list with the <strong>Customer managed</strong> filter.
-                </div>
-                <aside class="notes">
-                    After creation, have students search for their policy and review it. Point out the difference
-                    between AWS managed policies and customer managed policies in the filter options.
-                </aside>
-            </section>
-
-            <!-- ============================================================ -->
-            <!-- STEP 7 DIVIDER                                               -->
-            <!-- ============================================================ -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
-                <h2>Step 7</h2>
-                <h3>Explore IAM Roles</h3>
-                <div class="module-progress">
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step active"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                </div>
-                <aside class="notes">
-                    Roles are a critical concept. Students do not create a role in this lab, but understanding them
-                    is essential for the remaining labs in this course.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#127917; Explore IAM Roles</h2>
-                <ol>
-                    <li class="fragment">In the left navigation, click <strong>Roles</strong></li>
-                    <li class="fragment">Browse the list of existing roles (these are created by AWS services and the lab environment)</li>
-                    <li class="fragment">Click on <strong>any role</strong> to examine its details</li>
-                    <li class="fragment">Review the following tabs:
-                        <ul>
-                            <li><strong>Permissions</strong> &mdash; The policies attached to this role</li>
-                            <li><strong>Trust relationships</strong> &mdash; Which entities (services, accounts, users) can assume this role</li>
-                        </ul>
-                    </li>
-                </ol>
-                <aside class="notes">
-                    Look for a role with ec2.amazonaws.com in the trust policy to demonstrate how EC2 instances
-                    can assume roles. This is a key pattern students will use in later labs.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#127917; Roles vs. Users</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>&#128100; IAM Users</h4>
-                        <ul>
-                            <li>Long-term credentials (password, access keys)</li>
-                            <li>Assigned to a specific person or application</li>
-                            <li>Credentials do not expire automatically</li>
-                            <li>Directly owns permissions</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#127917; IAM Roles</h4>
-                        <ul>
-                            <li>Temporary credentials (auto-rotated)</li>
-                            <li>Assumed by users, services, or applications</li>
-                            <li>Credentials expire and are refreshed automatically</li>
-                            <li>Defined by a trust policy (who can assume it)</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="key-point fragment">
-                    <strong>Best Practice:</strong> Use <strong>IAM Roles</strong> instead of long-term access keys whenever possible.
-                    For EC2 instances, Lambda functions, and other AWS services, always assign a role rather than embedding credentials.
-                </div>
-                <aside class="notes">
-                    Roles are preferred over users for machine-to-machine access because temporary credentials
-                    reduce the risk of credential exposure. Roles are also used for cross-account access and
-                    federation scenarios.
-                </aside>
-            </section>
-
-            <!-- ============================================================ -->
-            <!-- STEP 8 DIVIDER                                               -->
-            <!-- ============================================================ -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
-                <h2>Step 8</h2>
-                <h3>Test IAM Permissions</h3>
-                <div class="module-progress">
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step active"></div>
-                    <div class="step"></div>
-                </div>
-                <aside class="notes">
-                    This is the most engaging step. Students get to see IAM permissions in action by testing
-                    what lab-user can and cannot do.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128270; Test IAM Permissions &mdash; Sign In</h2>
-                <ol>
-                    <li class="fragment">Open a new <strong>incognito / private browser window</strong>
-                        <ul>
-                            <li>Chrome: <code>Ctrl+Shift+N</code> (Windows/Linux) or <code>Cmd+Shift+N</code> (Mac)</li>
-                            <li>Firefox: <code>Ctrl+Shift+P</code> (Windows/Linux) or <code>Cmd+Shift+P</code> (Mac)</li>
-                        </ul>
-                    </li>
-                    <li class="fragment">Navigate to the <strong>IAM sign-in URL</strong> you saved from Step 2 or Step 4</li>
-                    <li class="fragment">Sign in with:
-                        <ul>
-                            <li><strong>User name:</strong> <code>lab-user</code></li>
-                            <li><strong>Password:</strong> The password you set in Step 4</li>
-                        </ul>
-                    </li>
-                </ol>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> You should successfully sign in and see the AWS Management Console
-                    as <strong>lab-user</strong>. Check the top-right corner to confirm the user name.
-                </div>
-                <div class="highlight-box danger fragment">
-                    <strong>&#128680; Troubleshooting:</strong> If sign-in fails, verify you are using the correct IAM sign-in URL
-                    (not the root account URL). The URL should contain your Account ID or alias. If you forgot the password,
-                    return to the admin session and reset it from the user&#39;s Security credentials tab.
-                </div>
-                <aside class="notes">
-                    It is important to use an incognito window to avoid session conflicts. If students have trouble,
-                    verify they are using the IAM user sign-in URL, not the standard console URL.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128270; Test Read Access</h2>
-                <ol>
-                    <li class="fragment">In the <strong>lab-user</strong> session, navigate to <strong>S3</strong> using the search bar</li>
-                    <li class="fragment">You should be able to see the list of S3 buckets</li>
-                    <li class="fragment">Click on any bucket to view its contents</li>
-                </ol>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> You can <strong>view</strong> S3 buckets and their contents.
-                    The S3 console loads successfully and displays bucket listings.
-                </div>
-                <aside class="notes">
-                    This demonstrates that the read-only policy allows List and Get operations.
-                    The S3 console should load successfully and display bucket listings.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128270; Test Write Access Denied</h2>
-                <p>Now try to <strong>create</strong> a new bucket:</p>
-                <ol>
-                    <li class="fragment">Click <strong>Create bucket</strong></li>
-                    <li class="fragment">Enter any bucket name and click <strong>Create bucket</strong></li>
-                </ol>
-                <div class="highlight-box danger fragment">
-                    <strong>&#10060; Expected Result:</strong> You should see an <strong>Access Denied</strong> or
-                    <strong>insufficient permissions</strong> error. This confirms that lab-user has <strong>read-only</strong>
-                    access to S3 &mdash; they cannot create, modify, or delete resources.
-                </div>
-                <aside class="notes">
-                    This clearly demonstrates how IAM policies control access. The read-only policy allows List and Get
-                    operations but denies Put, Create, and Delete operations.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128270; Test EC2 Access (Full Access via Group)</h2>
-                <ol>
-                    <li class="fragment">Still in the <strong>lab-user</strong> session, navigate to <strong>EC2</strong> using the search bar</li>
-                    <li class="fragment">You should be able to view EC2 instances, security groups, and other resources</li>
-                    <li class="fragment">Explore the EC2 Dashboard &mdash; note that you have full access</li>
-                </ol>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> The EC2 console loads fully. You can view instances, security groups,
-                    key pairs, and other EC2 resources. Lab-user has <strong>full EC2 access</strong> because they are a
-                    member of the <strong>EC2-Admins</strong> group, which has the AmazonEC2FullAccess policy attached.
-                </div>
-                <div class="concept-box fragment">
-                    <h4>&#128161; Understanding Permission Sources</h4>
-                    <p><strong>lab-user</strong> currently has permissions from two sources:</p>
-                    <ul>
-                        <li><strong>Direct:</strong> AmazonS3ReadOnlyAccess (attached to the user)</li>
-                        <li><strong>Group:</strong> AmazonEC2FullAccess (inherited from EC2-Admins group)</li>
-                    </ul>
-                    <p>IAM evaluates permissions as the <strong>union</strong> of all attached policies (unless there is an explicit Deny).</p>
-                </div>
-                <aside class="notes">
-                    This is a great teaching moment. Ask students to try accessing another service like RDS or Lambda.
-                    They should see access denied, since lab-user only has S3 read and EC2 full access.
-                    Reinforce the concept that IAM defaults to deny unless explicitly allowed.
-                </aside>
-            </section>
-
-            <!-- ============================================================ -->
-            <!-- STEP 9 DIVIDER                                               -->
-            <!-- ============================================================ -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="section-divider">
-                <h2>Step 9</h2>
-                <h3>Clean Up</h3>
-                <div class="module-progress">
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step active"></div>
-                </div>
-                <aside class="notes">
-                    Clean up is important to avoid confusion in later labs and to practice good cloud hygiene.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128465; Clean Up &mdash; Sign Out and Return</h2>
-                <ol>
-                    <li class="fragment">In the <strong>incognito window</strong> (lab-user session), click the account name in the top-right corner and select <strong>Sign out</strong></li>
-                    <li class="fragment"><strong>Close</strong> the incognito/private browser window</li>
-                    <li class="fragment">Return to your <strong>original browser window</strong> with the admin session</li>
-                    <li class="fragment">Navigate to the <strong>IAM</strong> service</li>
-                </ol>
-                <div class="highlight-box warning fragment">
-                    <strong>&#9888;&#65039; Important:</strong> Ensure you are signed in as the <strong>admin user</strong>
-                    (not lab-user) before proceeding with the cleanup steps. Check the user name in the top-right corner.
-                </div>
-                <aside class="notes">
-                    Verify students are back in their admin session before proceeding with deletion steps.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128465; Clean Up &mdash; Policy and Group</h2>
-                <p>Delete resources in the following order:</p>
-                <ol>
-                    <li class="fragment"><strong>Delete the custom policy:</strong>
-                        <ul>
-                            <li>Go to <strong>Policies</strong>, search for <code>EmployeeDirectoryS3ReadPolicy</code></li>
-                            <li>Select the policy, click <strong>Actions</strong> &rarr; <strong>Delete</strong>, type the name to confirm</li>
-                        </ul>
-                    </li>
-                    <li class="fragment"><strong>Remove lab-user from the group:</strong>
-                        <ul>
-                            <li>Go to <strong>User groups</strong>, click <strong>EC2-Admins</strong></li>
-                            <li>On the <strong>Users</strong> tab, select <strong>lab-user</strong> and click <strong>Remove users</strong></li>
-                        </ul>
-                    </li>
-                </ol>
-                <aside class="notes">
-                    The order matters: delete the policy first (since it is not attached to anything, it can be deleted directly).
-                    Remove the user from the group before deleting the group.
-                </aside>
-            </section>
-
-            <section>
-                <h2>&#128465; Clean Up &mdash; Group and User</h2>
                 <ol start="3">
-                    <li class="fragment"><strong>Delete the group:</strong>
-                        <ul>
-                            <li>Go to <strong>User groups</strong>, select <strong>EC2-Admins</strong></li>
-                            <li>Click <strong>Delete</strong>, type the group name to confirm</li>
-                        </ul>
-                    </li>
-                    <li class="fragment"><strong>Delete the user:</strong>
-                        <ul>
-                            <li>Go to <strong>Users</strong>, select <strong>lab-user</strong></li>
-                            <li>Click <strong>Delete</strong>, type the user name to confirm</li>
-                        </ul>
-                    </li>
+                    <li>Click <strong>Next</strong>, name it <code>S3ScopedReadPolicy</code>, click <strong>Create policy</strong></li>
                 </ol>
                 <aside class="notes">
-                    Finally delete the user. If the policy was attached to a user or group, it would need to be detached first.
+                    Walk through the JSON: Version is always 2012-10-17, Effect Allow, two Actions for list and get, two Resource ARNs because ListBucket operates on the bucket and GetObject operates on objects. The wildcard pattern scopes access to buckets starting with "employee-directory-".
                 </aside>
             </section>
 
+            <!-- Slide 7: Test Permissions — Sign In -->
             <section>
-                <h2>&#128465; Verify Clean Up</h2>
-                <p>Confirm all lab resources have been removed:</p>
+                <h2>&#128270; Test Permissions — Sign In as lab-user</h2>
                 <ol>
-                    <li class="fragment"><strong>Users:</strong> <code>lab-user</code> should no longer appear in the Users list</li>
-                    <li class="fragment"><strong>User groups:</strong> <code>EC2-Admins</code> should no longer appear in the Groups list</li>
-                    <li class="fragment"><strong>Policies:</strong> <code>EmployeeDirectoryS3ReadPolicy</code> should no longer appear in the Customer managed policies</li>
+                    <li>Open an <strong>incognito/private browser window</strong></li>
+                    <li>Navigate to the <strong>IAM sign-in URL</strong> you saved earlier</li>
+                    <li>Sign in as <strong>lab-user</strong> with the password you set</li>
                 </ol>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> All three resources (user, group, policy) have been successfully deleted.
-                    The IAM Dashboard resource counts should reflect the removals.
+                <div class="highlight-box success">
+                    <strong>&#9989; Expected:</strong> You sign in successfully. Confirm the user name in the top-right corner shows <strong>lab-user</strong>.
                 </div>
                 <aside class="notes">
-                    Give students a moment to verify. If any resources remain, help them complete the cleanup.
-                    Reinforce that in production, you would also review CloudTrail logs to confirm the actions.
+                    Use incognito to avoid session conflicts. If sign-in fails, verify the IAM sign-in URL (not root account URL). If the password was forgotten, return to admin session and reset it from the user's Security credentials tab.
                 </aside>
             </section>
 
-            <!-- ============================================================ -->
-            <!-- LAB COMPLETE                                                 -->
-            <!-- ============================================================ -->
+            <!-- Slide 8: Test Permissions — Verify -->
+            <section>
+                <h2>&#128270; Test Permissions — Verify Access</h2>
+                <ol>
+                    <li>Navigate to <strong>S3</strong> — you should be able to <strong>view</strong> buckets</li>
+                    <li>Try to <strong>create a bucket</strong> — you should get <strong>Access Denied</strong></li>
+                    <li>Navigate to <strong>EC2</strong> — you should have <strong>full access</strong> (via group)</li>
+                </ol>
+                <div class="highlight-box danger">
+                    <strong>&#10060; S3 write = denied:</strong> lab-user has read-only S3 access (direct policy).
+                </div>
+                <div class="highlight-box success">
+                    <strong>&#9989; EC2 = full access:</strong> lab-user inherits EC2FullAccess from the EC2-Admins group.
+                </div>
+                <aside class="notes">
+                    This clearly demonstrates how IAM policies control access from multiple sources. Ask students to try accessing another service like RDS — they should see access denied (default deny). Close the incognito window when done and return to the admin session.
+                </aside>
+            </section>
+
+            <!-- Slide 9: Clean Up -->
+            <section>
+                <h2>&#128465; Clean Up</h2>
+                <p>Return to your <strong>admin session</strong> and delete the following (in order):</p>
+                <ol>
+                    <li><strong>Policy:</strong> Policies &rarr; search <code>S3ScopedReadPolicy</code> &rarr; Delete</li>
+                    <li><strong>Remove user from group:</strong> User groups &rarr; EC2-Admins &rarr; remove lab-user</li>
+                    <li><strong>Group:</strong> User groups &rarr; delete EC2-Admins</li>
+                    <li><strong>User:</strong> Users &rarr; delete lab-user</li>
+                </ol>
+                <div class="highlight-box success">
+                    <strong>&#9989; Verify:</strong> lab-user, EC2-Admins, and S3ScopedReadPolicy are all removed.
+                </div>
+                <aside class="notes">
+                    Order matters: delete the policy first, remove the user from the group, then delete the group, then the user. Give students a moment to verify cleanup is complete.
+                </aside>
+            </section>
+
+            <!-- Slide 10: Lab Complete -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="title-slide">
                 <h1>&#127881; Lab 1 Complete!</h1>
                 <h2>Introduction to AWS IAM</h2>
@@ -911,52 +259,45 @@
                     <div class="step"></div>
                 </div>
                 <aside class="notes">
-                    Congratulate students on completing the first lab. Briefly recap the key takeaways before
-                    transitioning to the next module.
+                    Congratulate students. Briefly recap key takeaways before transitioning to the next module.
                 </aside>
             </section>
 
+            <!-- Slide 11: Summary -->
             <section>
-                <h2>&#127919; What You Accomplished</h2>
+                <h2>&#127919; Key Takeaways</h2>
                 <div class="two-columns">
                     <div class="card">
-                        <h4>&#128736;&#65039; Hands-On Skills</h4>
+                        <h4>&#128736;&#65039; What You Did</h4>
                         <ul>
                             <li>Navigated the IAM Dashboard</li>
                             <li>Created an IAM User with console access</li>
-                            <li>Created an IAM Group with policies</li>
-                            <li>Authored a custom JSON IAM Policy</li>
+                            <li>Created a Group with a managed policy</li>
+                            <li>Authored a custom JSON policy</li>
                             <li>Tested permissions across services</li>
-                            <li>Cleaned up IAM resources</li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>&#128218; Key Concepts</h4>
                         <ul>
-                            <li><strong>IAM is global</strong> &mdash; not Region-specific</li>
-                            <li><strong>Least privilege</strong> &mdash; grant only needed permissions</li>
-                            <li><strong>Groups</strong> &mdash; manage permissions at scale</li>
-                            <li><strong>Policies</strong> &mdash; JSON documents that define permissions</li>
-                            <li><strong>Roles vs. Users</strong> &mdash; temporary vs. long-term credentials</li>
-                            <li><strong>Default deny</strong> &mdash; everything is denied unless explicitly allowed</li>
+                            <li><strong>IAM is global</strong> — not Region-specific</li>
+                            <li><strong>Least privilege</strong> — grant only needed permissions</li>
+                            <li><strong>Groups</strong> — manage permissions at scale</li>
+                            <li><strong>Default deny</strong> — everything denied unless allowed</li>
                         </ul>
                     </div>
                 </div>
                 <aside class="notes">
-                    Review the key takeaways. Ask if there are any questions before moving on.
-                    The next module will cover compute services (EC2), building on the IAM concepts learned here.
+                    Review key takeaways. The next module covers compute services (EC2), building on the IAM concepts learned here.
                 </aside>
             </section>
 
+            <!-- Slide 12: Questions -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Ask your instructor before proceeding to the next module</p>
                 <aside class="notes">
-                    Take questions from students. Common questions at this point include:
-                    - What happens when a Deny and Allow conflict? (Explicit Deny always wins)
-                    - Can a user belong to multiple groups? (Yes, permissions are the union of all policies)
-                    - What is the difference between identity-based and resource-based policies?
-                    Transition to the next lecture module when ready.
+                    Common questions: What happens when Deny and Allow conflict? (Explicit Deny always wins.) Can a user belong to multiple groups? (Yes, permissions are the union.) What about Roles vs Users? (Roles use temporary credentials — preferred for services.)
                 </aside>
             </section>
 

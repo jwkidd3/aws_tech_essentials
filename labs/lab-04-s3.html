@@ -53,331 +53,125 @@
     <div class="reveal">
         <div class="slides">
 
-            <!-- Title Slide -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%)">
-                <div class="title-slide">
-                    <h1>&#128230; Lab 4: Create an Amazon S3 Bucket</h1>
-                    <h2>AWS Technical Essentials</h2>
-                    <h3>Duration: ~25 minutes</h3>
-                    <div class="module-progress">
-                        <div class="step completed"></div>
-                        <div class="step completed"></div>
-                        <div class="step completed"></div>
-                        <div class="step active"></div>
-                        <div class="step"></div>
-                        <div class="step"></div>
-                    </div>
+            <!-- Slide 1: Title -->
+            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%)" class="title-slide">
+                <h1>&#128230; Lab 4: Create an Amazon S3 Bucket</h1>
+                <h2>AWS Technical Essentials</h2>
+                <h3>Duration: ~15 minutes</h3>
+                <div class="module-progress">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step active"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
                 </div>
-                <aside class="notes">Lab 4 of 6. Students will create an S3 bucket, explore object storage concepts, configure static website hosting, versioning, and lifecycle policies. This builds on the employee directory app theme.</aside>
+                <aside class="notes">Lab 4 of 6. Students will create an S3 bucket, upload objects, test presigned URLs, and configure static website hosting.</aside>
             </section>
 
-            <!-- Lab Overview -->
+            <!-- Slide 2: Overview -->
             <section>
                 <h2>&#127919; Lab Overview</h2>
-                <p>In this lab, you will work with Amazon S3 to understand object storage fundamentals:</p>
-                <ul>
-                    <li class="fragment">Create and configure an S3 bucket with best-practice settings</li>
-                    <li class="fragment">Upload objects and explore their properties</li>
-                    <li class="fragment">Work with presigned URLs for secure temporary access</li>
-                    <li class="fragment">Configure static website hosting with a bucket policy</li>
-                    <li class="fragment">Explore versioning, storage classes, and lifecycle rules</li>
-                </ul>
-                <div class="highlight-box warning fragment">
-                    <strong>&#9888;&#65039; Important:</strong> Use the same AWS Region you selected for your EC2 instances in previous labs.
-                </div>
-                <aside class="notes">Give students an overview of what they will accomplish. Emphasize that S3 is one of the most foundational AWS services and is used in nearly every AWS architecture.</aside>
-            </section>
-
-            <!-- Architecture Context -->
-            <section>
-                <h2>&#128736;&#65039; Where S3 Fits</h2>
-                <div class="concept-box">
-                    <h4>Employee Directory Application</h4>
-                    <p>In our employee directory app, S3 will serve as the storage layer for:</p>
-                    <ul>
-                        <li>Employee photos and profile images</li>
-                        <li>Static website assets (HTML, CSS, JS)</li>
-                        <li>Application backups and archives</li>
-                    </ul>
-                </div>
-                <div class="key-point fragment">
-                    <strong>Key Concept:</strong> S3 provides virtually unlimited, highly durable (99.999999999% &mdash; 11 nines) object storage with multiple storage classes for cost optimization.
-                </div>
-                <aside class="notes">Explain how S3 fits into the broader architecture. The employee directory app needs a place to store employee photos and potentially host a static frontend. S3 is the natural choice.</aside>
-            </section>
-
-            <!-- Step 1: Create Bucket - Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
-                <div class="section-divider">
-                    <h2>Step 1: Create an S3 Bucket</h2>
-                    <h3>Setting up your object storage</h3>
-                </div>
-                <aside class="notes">Walk students through creating their first S3 bucket. Emphasize the global uniqueness requirement for bucket names.</aside>
-            </section>
-
-            <!-- Step 1: Navigate to S3 -->
-            <section>
-                <h2>&#128230; Step 1a: Navigate to S3</h2>
-                <ol>
-                    <li class="fragment">In the AWS Management Console, type <strong>S3</strong> in the search bar at the top</li>
-                    <li class="fragment">Click <strong>S3</strong> under Services</li>
-                    <li class="fragment">You will see the S3 dashboard showing any existing buckets</li>
-                    <li class="fragment">Click the <strong>Create bucket</strong> button (orange button)</li>
-                </ol>
-                <div class="highlight-box fragment">
-                    <strong>&#128161; Note:</strong> S3 is a global service, but each bucket is created in a specific AWS Region. Your bucket data resides in the Region you select.
-                </div>
-                <aside class="notes">S3 appears as a global service in the console, but buckets are always regional. Data never leaves a Region unless you explicitly configure cross-region replication.</aside>
-            </section>
-
-            <!-- Step 1: Configure Bucket -->
-            <section>
-                <h2>&#128230; Step 1b: Configure Bucket Settings</h2>
-                <p>On the <strong>Create bucket</strong> page, enter the following:</p>
-                <ol>
-                    <li class="fragment"><strong>Bucket name:</strong> <code>employee-directory-app-bucket-&lt;UNIQUE_ID&gt;</code>
-                        <br><em>Replace &lt;UNIQUE_ID&gt; with your initials and a random number (e.g., <code>employee-directory-app-bucket-jw-8374</code>)</em></li>
-                    <li class="fragment"><strong>AWS Region:</strong> Select the same Region as your EC2 instances</li>
-                    <li class="fragment"><strong>Object Ownership:</strong> ACLs disabled (recommended)</li>
-                </ol>
-                <div class="highlight-box warning fragment">
-                    <strong>&#9888;&#65039; Bucket names must be globally unique</strong> across all AWS accounts worldwide. If your name is taken, try a different combination.
-                </div>
-                <aside class="notes">Bucket names must be globally unique, DNS-compliant, 3-63 characters, lowercase only. Explain that ACLs disabled is the modern best practice &mdash; use IAM policies and bucket policies instead.</aside>
-            </section>
-
-            <!-- Step 1: Security and Versioning -->
-            <section>
-                <h2>&#128230; Step 1c: Security &amp; Versioning</h2>
-                <p>Continue configuring the bucket:</p>
-                <ol>
-                    <li class="fragment"><strong>Block Public Access:</strong> Keep <em>all four settings enabled</em> (checked)
-                        <br><em>This is the secure default &mdash; we will modify this later in the lab</em></li>
-                    <li class="fragment"><strong>Bucket Versioning:</strong> Select <strong>Enable</strong></li>
-                    <li class="fragment"><strong>Default encryption:</strong>
-                        <ul>
-                            <li>Encryption type: <strong>Server-side encryption with Amazon S3 managed keys (SSE-S3)</strong></li>
-                            <li>Bucket Key: <strong>Enable</strong> (default)</li>
-                        </ul>
-                    </li>
-                    <li class="fragment">Click <strong>Create bucket</strong></li>
-                </ol>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> You should see a green success banner: "Successfully created bucket <em>employee-directory-app-bucket-&lt;UNIQUE_ID&gt;</em>"
-                </div>
-                <aside class="notes">Emphasize that Block Public Access is a safety net that prevents accidental public exposure. Versioning protects against accidental deletes. SSE-S3 is free encryption at rest.</aside>
-            </section>
-
-            <!-- Step 2: Explore Bucket - Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
-                <div class="section-divider">
-                    <h2>Step 2: Explore Bucket Properties</h2>
-                    <h3>Understanding your bucket configuration</h3>
-                </div>
-                <aside class="notes">Now that the bucket is created, have students explore the various tabs and settings to understand what was configured.</aside>
-            </section>
-
-            <!-- Step 2: Properties Tab -->
-            <section>
-                <h2>&#128269; Step 2a: Review Properties Tab</h2>
-                <ol>
-                    <li class="fragment">Click on your newly created bucket name in the bucket list</li>
-                    <li class="fragment">Click the <strong>Properties</strong> tab</li>
-                    <li class="fragment">Scroll through and verify the following settings:</li>
-                </ol>
-                <div class="two-columns fragment">
+                <div class="two-columns">
                     <div class="card">
-                        <h4>&#9989; Configured Settings</h4>
+                        <h4>&#128203; Objectives</h4>
                         <ul>
-                            <li><strong>Bucket Versioning:</strong> Enabled</li>
-                            <li><strong>Default encryption:</strong> SSE-S3</li>
-                            <li><strong>Bucket Key:</strong> Enabled</li>
+                            <li>Create an S3 bucket with versioning</li>
+                            <li>Upload objects and test access</li>
+                            <li>Generate a presigned URL</li>
+                            <li>Enable static website hosting</li>
+                            <li>Add a public bucket policy</li>
                         </ul>
                     </div>
                     <div class="card">
-                        <h4>&#128308; Default Settings</h4>
+                        <h4>&#128221; Lab Details</h4>
                         <ul>
-                            <li><strong>Static website hosting:</strong> Disabled</li>
-                            <li><strong>Requester pays:</strong> Disabled</li>
-                            <li><strong>Object Lock:</strong> Disabled</li>
+                            <li><strong>Duration:</strong> ~15 minutes</li>
+                            <li><strong>Region:</strong> Same as previous labs</li>
                         </ul>
+                        <div class="highlight-box warning" style="margin-top: 15px;">
+                            <strong>&#9888;&#65039;</strong> Bucket names must be <strong>globally unique</strong> across all AWS accounts.
+                        </div>
                     </div>
                 </div>
-                <aside class="notes">Walk through each property. Explain what each setting does. Object Lock is for compliance/WORM requirements. Requester pays shifts data transfer costs to the requester.</aside>
+                <aside class="notes">Give students an overview. S3 is one of the most foundational AWS services. This lab covers the core operations they need to understand.</aside>
             </section>
 
-            <!-- Step 2: Permissions Tab -->
+            <!-- Slide 3: Create Bucket -->
             <section>
-                <h2>&#128269; Step 2b: Review Permissions Tab</h2>
+                <h2>&#128230; Create a Bucket with Versioning</h2>
                 <ol>
-                    <li class="fragment">Click the <strong>Permissions</strong> tab</li>
-                    <li class="fragment">Review the following sections:</li>
+                    <li>Navigate to <strong>S3</strong> in the console</li>
+                    <li>Click <strong>Create bucket</strong></li>
+                    <li>Bucket name: <code>employee-directory-app-bucket-&lt;YOUR_INITIALS&gt;-&lt;RANDOM&gt;</code></li>
+                    <li>Region: Same as previous labs</li>
+                    <li>Block Public Access: <strong>Keep all checked</strong> (for now)</li>
+                    <li>Bucket Versioning: <strong>Enable</strong></li>
+                    <li>Encryption: <strong>SSE-S3</strong> (default)</li>
+                    <li>Click <strong>Create bucket</strong></li>
                 </ol>
-                <div class="concept-box fragment">
-                    <h4>Permissions Overview</h4>
-                    <ul>
-                        <li><strong>Block public access:</strong> All four settings should be <em>On</em> (blocking all public access)</li>
-                        <li><strong>Bucket policy:</strong> Currently empty &mdash; no custom access policies defined yet</li>
-                        <li><strong>Access control list (ACL):</strong> Disabled (as configured during creation)</li>
-                        <li><strong>CORS:</strong> No configuration &mdash; used for cross-origin web requests</li>
-                    </ul>
+                <div class="highlight-box success">
+                    <strong>&#9989; Expected:</strong> Green success banner confirming bucket creation.
                 </div>
-                <div class="key-point fragment">
-                    <strong>Key Concept:</strong> S3 uses a layered security model: IAM policies, bucket policies, Block Public Access, ACLs, and encryption all work together.
-                </div>
-                <aside class="notes">Emphasize the defense-in-depth approach. Block Public Access is an account-level or bucket-level override that prevents any policy from granting public access. This was introduced after several high-profile S3 data exposures.</aside>
+                <aside class="notes">
+                    Bucket names must be globally unique, DNS-compliant, 3-63 characters, lowercase. If the name is taken, try a different combination. Versioning protects against accidental deletes. SSE-S3 is free encryption at rest.
+                </aside>
             </section>
 
-            <!-- Step 3: Upload Objects - Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
-                <div class="section-divider">
-                    <h2>Step 3: Upload Objects</h2>
-                    <h3>Adding files to your bucket</h3>
-                </div>
-                <aside class="notes">Students will upload their first objects. Any small files will work &mdash; images, text files, etc.</aside>
-            </section>
-
-            <!-- Step 3: Upload Files -->
+            <!-- Slide 4: Upload Objects -->
             <section>
-                <h2>&#128228; Step 3: Upload Objects</h2>
+                <h2>&#128228; Upload Objects</h2>
                 <ol>
-                    <li class="fragment">Click the <strong>Objects</strong> tab in your bucket</li>
-                    <li class="fragment">Click the <strong>Upload</strong> button</li>
-                    <li class="fragment">Click <strong>Add files</strong> and select 2&ndash;3 small image files from your computer
-                        <br><em>(Any files will work &mdash; JPG, PNG, or even text files)</em></li>
-                    <li class="fragment">Under <strong>Properties</strong>, verify the storage class is set to <strong>Standard</strong></li>
-                    <li class="fragment">Leave all other settings as default</li>
-                    <li class="fragment">Click <strong>Upload</strong></li>
+                    <li>Click on your bucket name to open it</li>
+                    <li>Click <strong>Upload</strong></li>
+                    <li>Click <strong>Add files</strong> and select 2-3 small files from your computer</li>
+                    <li>Click <strong>Upload</strong>, then <strong>Close</strong></li>
                 </ol>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> You should see a success message showing all files uploaded successfully. Click <strong>Close</strong> to return to the bucket, and verify your objects appear in the object list.
+                <div class="highlight-box success">
+                    <strong>&#9989; Expected:</strong> Files appear in the objects list with their size and storage class (Standard).
                 </div>
-                <aside class="notes">If students do not have image files handy, they can create simple text files or download sample images from the internet. The file type does not matter for this exercise.</aside>
+                <aside class="notes">
+                    Any files work — images, text files, etc. If students do not have files handy, they can create a simple text file. The file type does not matter for this exercise.
+                </aside>
             </section>
 
-            <!-- Step 4: Object Properties - Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
-                <div class="section-divider">
-                    <h2>Step 4: Explore Object Properties</h2>
-                    <h3>Understanding S3 objects and presigned URLs</h3>
-                </div>
-                <aside class="notes">This step teaches students about object metadata and presigned URLs, which are essential for providing temporary access to private objects.</aside>
-            </section>
-
-            <!-- Step 4: Object Details -->
+            <!-- Slide 5: Test Object URL + Presigned URL -->
             <section>
-                <h2>&#128196; Step 4a: Review Object Properties</h2>
+                <h2>&#128279; Test Access: Object URL vs Presigned URL</h2>
                 <ol>
-                    <li class="fragment">Click on one of your uploaded objects (click the object name)</li>
-                    <li class="fragment">Review the <strong>Object overview</strong> section:</li>
+                    <li>Click on any uploaded object name</li>
+                    <li>Copy the <strong>Object URL</strong> and open it in a new tab</li>
                 </ol>
-                <div class="concept-box fragment">
-                    <h4>Object Metadata</h4>
-                    <ul>
-                        <li><strong>Key:</strong> The object name (file path within the bucket)</li>
-                        <li><strong>Size:</strong> The object size in bytes</li>
-                        <li><strong>Type:</strong> The content type (e.g., image/jpeg)</li>
-                        <li><strong>Storage class:</strong> Standard</li>
-                        <li><strong>Object URL:</strong> The direct URL to the object</li>
-                        <li><strong>Version ID:</strong> A unique identifier for this version</li>
-                    </ul>
+                <div class="highlight-box danger">
+                    <strong>&#10060; Expected:</strong> <strong>Access Denied</strong> — Block Public Access is enabled.
                 </div>
-                <aside class="notes">Explain that every object has a unique key within the bucket. The combination of bucket name and key uniquely identifies every object in S3 globally.</aside>
+                <ol start="3">
+                    <li>Back in the console, select the object checkbox</li>
+                    <li>Click <strong>Actions</strong> &rarr; <strong>Share with a presigned URL</strong></li>
+                    <li>Set duration to <strong>5 minutes</strong>, click <strong>Create presigned URL</strong></li>
+                    <li>Open the presigned URL in a new tab</li>
+                </ol>
+                <div class="highlight-box success">
+                    <strong>&#9989; Expected:</strong> The object loads. Presigned URLs include temporary credentials in the query string.
+                </div>
+                <aside class="notes">
+                    This demonstrates the difference between direct object URLs (blocked) and presigned URLs (temporary authenticated access). Presigned URLs are commonly used for file downloads, image previews, and upload workflows. They expire after the specified duration.
+                </aside>
             </section>
 
-            <!-- Step 4b: Test Object URL -->
+            <!-- Slide 6: Enable Static Website Hosting -->
             <section>
-                <h2>&#128279; Step 4b: Test the Object URL</h2>
+                <h2>&#127760; Enable Static Website Hosting</h2>
                 <ol>
-                    <li class="fragment">Copy the <strong>Object URL</strong> from the object details page</li>
-                    <li class="fragment">Open it in a new browser tab</li>
-                    <li class="fragment">Go back to the object in the S3 console</li>
+                    <li>Go to your bucket's <strong>Properties</strong> tab</li>
+                    <li>Scroll to <strong>Static website hosting</strong>, click <strong>Edit</strong></li>
+                    <li>Select <strong>Enable</strong></li>
+                    <li>Index document: <code>index.html</code></li>
+                    <li>Click <strong>Save changes</strong></li>
+                    <li>Note the <strong>Bucket website endpoint</strong> URL</li>
                 </ol>
-                <div class="highlight-box danger fragment">
-                    <strong>&#10060; Expected Result:</strong> You will see an <strong>Access Denied</strong> XML error message. This is expected because Block Public Access is enabled.
-                </div>
-                <aside class="notes">Presigned URLs are critical for applications that need to provide temporary access to private objects. They are commonly used for file downloads, image previews, and upload workflows. The URL expires after the specified duration.</aside>
-            </section>
-
-            <!-- Step 4c: Generate Presigned URL -->
-            <section>
-                <h2>&#128279; Step 4c: Generate a Presigned URL</h2>
-                <ol>
-                    <li class="fragment">Select the object using the checkbox, then click <strong>Actions</strong> &rarr; <strong>Share with a presigned URL</strong></li>
-                    <li class="fragment">Set the time interval to <strong>5 minutes</strong></li>
-                    <li class="fragment">Click <strong>Create presigned URL</strong></li>
-                    <li class="fragment">Copy the presigned URL and open it in a new browser tab</li>
-                </ol>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> The object should load successfully! The presigned URL contains temporary authentication credentials embedded in the query string.
-                </div>
-                <aside class="notes">Presigned URLs are critical for applications that need to provide temporary access to private objects. They are commonly used for file downloads, image previews, and upload workflows. The URL expires after the specified duration.</aside>
-            </section>
-
-            <!-- Step 5: Folder Structure - Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
-                <div class="section-divider">
-                    <h2>Step 5: Create a Folder Structure</h2>
-                    <h3>Understanding S3 key prefixes</h3>
-                </div>
-                <aside class="notes">This step demonstrates how S3 simulates folders using key prefixes. It is important that students understand S3 is a flat namespace.</aside>
-            </section>
-
-            <!-- Step 5: Create Folder -->
-            <section>
-                <h2>&#128193; Step 5: Create a Folder</h2>
-                <ol>
-                    <li class="fragment">In your bucket, click <strong>Create folder</strong></li>
-                    <li class="fragment">Folder name: <code>employee-photos</code></li>
-                    <li class="fragment">Click <strong>Create folder</strong></li>
-                    <li class="fragment">Click on the <strong>employee-photos/</strong> folder to navigate into it</li>
-                    <li class="fragment">Click <strong>Upload</strong> and upload an image file into this folder</li>
-                    <li class="fragment">After uploading, note the object key: <code>employee-photos/yourfile.jpg</code></li>
-                </ol>
-                <aside class="notes">This is a commonly misunderstood concept. The folder is actually a zero-byte object with the key ending in a forward slash. Applications use the delimiter and prefix parameters in API calls to simulate folder navigation.</aside>
-            </section>
-
-            <!-- Step 5: Key Concept - Flat Namespace -->
-            <section>
-                <h2>&#128193; S3 Flat Namespace</h2>
-                <div class="key-point">
-                    <strong>Key Concept:</strong> S3 does not actually have folders or directories. It is a <em>flat namespace</em>. What appears as a folder is simply a shared key prefix. The object key <code>employee-photos/image.jpg</code> is a single string &mdash; the <code>/</code> is just part of the name. The console displays prefixes as folders for convenience.
-                </div>
-                <aside class="notes">This is a commonly misunderstood concept. The folder is actually a zero-byte object with the key ending in a forward slash. Applications use the delimiter and prefix parameters in API calls to simulate folder navigation.</aside>
-            </section>
-
-            <!-- Step 6: Static Website Hosting - Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
-                <div class="section-divider">
-                    <h2>Step 6: Enable Static Website Hosting</h2>
-                    <h3>Serving web content from S3</h3>
-                </div>
-                <aside class="notes">Static website hosting is a powerful S3 feature that allows you to serve HTML, CSS, and JavaScript directly from a bucket. This is the foundation for many serverless web architectures.</aside>
-            </section>
-
-            <!-- Step 6: Enable Hosting -->
-            <section>
-                <h2>&#127760; Step 6a: Enable Static Website Hosting</h2>
-                <ol>
-                    <li class="fragment">Go to your bucket&#39;s <strong>Properties</strong> tab</li>
-                    <li class="fragment">Scroll down to <strong>Static website hosting</strong></li>
-                    <li class="fragment">Click <strong>Edit</strong></li>
-                    <li class="fragment">Select <strong>Enable</strong></li>
-                    <li class="fragment"><strong>Index document:</strong> <code>index.html</code></li>
-                    <li class="fragment"><strong>Error document:</strong> <code>error.html</code></li>
-                    <li class="fragment">Click <strong>Save changes</strong></li>
-                </ol>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> Static website hosting is now enabled. Note the <strong>Bucket website endpoint</strong> URL displayed &mdash; copy this for later use. It will look like: <code>http://BUCKET-NAME.s3-website-REGION.amazonaws.com</code>
-                </div>
-                <aside class="notes">Point out the difference between the S3 REST endpoint and the website endpoint. The website endpoint supports index documents and redirects. The REST endpoint does not.</aside>
-            </section>
-
-            <!-- Step 6b: Create index.html -->
-            <section>
-                <h2>&#127760; Step 6b: Create index.html</h2>
-                <p>On your local computer, create a file named <code>index.html</code> with this content:</p>
-                <pre class="fragment"><code class="html">&lt;!DOCTYPE html&gt;
+                <p>Create a file named <code>index.html</code> on your computer with:</p>
+                <pre><code class="html">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;&lt;title&gt;Employee Directory&lt;/title&gt;&lt;/head&gt;
 &lt;body&gt;
@@ -386,57 +180,23 @@
      hosted on S3!&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-                <aside class="notes">Have students try the endpoint to see the 403 error. This reinforces that enabling static website hosting alone is not enough &mdash; you also need to configure permissions.</aside>
-            </section>
-
-            <!-- Step 6c: Upload index.html -->
-            <section>
-                <h2>&#127760; Step 6c: Upload index.html</h2>
-                <ol>
-                    <li class="fragment">In your S3 bucket, click <strong>Upload</strong></li>
-                    <li class="fragment">Upload the <code>index.html</code> file</li>
-                    <li class="fragment">Click <strong>Upload</strong>, then <strong>Close</strong></li>
+                <ol start="7">
+                    <li>Upload <code>index.html</code> to your bucket</li>
                 </ol>
-                <div class="highlight-box warning fragment">
-                    <strong>&#9888;&#65039; Note:</strong> If you try the website endpoint URL now, you will still get a <strong>403 Forbidden</strong> error. Block Public Access is still enabled, so the website is not publicly accessible yet.
-                </div>
-                <aside class="notes">Have students try the endpoint to see the 403 error. This reinforces that enabling static website hosting alone is not enough &mdash; you also need to configure permissions.</aside>
+                <aside class="notes">
+                    If students try the website endpoint now, they will get a 403 Forbidden because Block Public Access is still on. This is intentional — the next slide adds the bucket policy to enable public access.
+                </aside>
             </section>
 
-            <!-- Step 7: Bucket Policy - Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
-                <div class="section-divider">
-                    <h2>Step 7: Configure Bucket Policy</h2>
-                    <h3>Enabling public website access</h3>
-                </div>
-                <aside class="notes">This step involves modifying security settings. Emphasize that this is only appropriate for public website content and should be done carefully in production.</aside>
-            </section>
-
-            <!-- Step 7: Disable Block Public Access -->
+            <!-- Slide 7: Add Bucket Policy -->
             <section>
-                <h2>&#128275; Step 7a: Disable Block Public Access</h2>
+                <h2>&#128275; Add Bucket Policy for Public Access</h2>
                 <ol>
-                    <li class="fragment">Go to your bucket&#39;s <strong>Permissions</strong> tab</li>
-                    <li class="fragment">Under <strong>Block public access (bucket settings)</strong>, click <strong>Edit</strong></li>
-                    <li class="fragment"><strong>Uncheck</strong> the <em>Block all public access</em> checkbox</li>
-                    <li class="fragment">Click <strong>Save changes</strong></li>
-                    <li class="fragment">Type <code>confirm</code> in the confirmation dialog and click <strong>Confirm</strong></li>
+                    <li>Go to <strong>Permissions</strong> tab</li>
+                    <li>Under <strong>Block public access</strong>, click <strong>Edit</strong>, <strong>uncheck all</strong>, Save, type <code>confirm</code></li>
+                    <li>Under <strong>Bucket policy</strong>, click <strong>Edit</strong> and paste:</li>
                 </ol>
-                <div class="highlight-box danger fragment">
-                    <strong>&#9888;&#65039; Production Warning:</strong> Disabling Block Public Access should only be done when you intentionally want to serve public content (such as a static website). In production, use CloudFront with Origin Access Control instead of making buckets directly public.
-                </div>
-                <aside class="notes">Stress the importance of this being a deliberate action. AWS requires the typed confirmation specifically because this is a sensitive security change. In real-world scenarios, CloudFront + OAC is the recommended pattern.</aside>
-            </section>
-
-            <!-- Step 7: Add Bucket Policy -->
-            <section>
-                <h2>&#128275; Step 7b: Add Bucket Policy</h2>
-                <ol>
-                    <li class="fragment">Still on the <strong>Permissions</strong> tab, scroll to <strong>Bucket policy</strong></li>
-                    <li class="fragment">Click <strong>Edit</strong></li>
-                    <li class="fragment">Paste the following policy (replace <code>BUCKET_NAME</code> with your actual bucket name):</li>
-                </ol>
-                <pre class="fragment"><code class="json">{
+                <pre><code class="json">{
     "Version": "2012-10-17",
     "Statement": [
         {
@@ -449,230 +209,100 @@
     ]
 }</code></pre>
                 <ol start="4">
-                    <li class="fragment">Click <strong>Save changes</strong></li>
+                    <li>Replace <code>BUCKET_NAME</code> with your actual bucket name</li>
+                    <li>Click <strong>Save changes</strong></li>
                 </ol>
-                <aside class="notes">Walk through the policy structure: Version, Statement array, Sid for identification, Effect Allow, Principal * means everyone, Action is limited to GetObject (read only), Resource uses the bucket ARN with /* for all objects. Emphasize that this only allows reading objects, not listing or writing.</aside>
+                <div class="highlight-box danger">
+                    <strong>&#9888;&#65039; Production note:</strong> Only disable Block Public Access for intentionally public content. Use CloudFront + OAC in production.
+                </div>
+                <aside class="notes">
+                    Two things are required: (1) disable Block Public Access and (2) add the bucket policy. Both are necessary. The policy only allows GetObject — no listing, writing, or deleting. Common mistake: forgetting the /* at the end of the Resource ARN.
+                </aside>
             </section>
 
-            <!-- Step 7: Test Website -->
+            <!-- Slide 8: Test Website -->
             <section>
-                <h2>&#128275; Step 7c: Test the Website</h2>
+                <h2>&#127760; Test the Website Endpoint</h2>
                 <ol>
-                    <li class="fragment">Go to your bucket&#39;s <strong>Properties</strong> tab</li>
-                    <li class="fragment">Scroll down to <strong>Static website hosting</strong></li>
-                    <li class="fragment">Click the <strong>Bucket website endpoint</strong> URL</li>
+                    <li>Go to <strong>Properties</strong> tab</li>
+                    <li>Scroll to <strong>Static website hosting</strong></li>
+                    <li>Click the <strong>Bucket website endpoint</strong> URL</li>
                 </ol>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> Your browser should display the Employee Directory page with the heading "Employee Directory Application" and the welcome message. Congratulations &mdash; you are hosting a static website on S3!
+                <div class="highlight-box success">
+                    <strong>&#9989; Expected:</strong> Your browser displays the "Employee Directory Application" page. You are hosting a static website on S3.
                 </div>
-                <div class="key-point fragment">
-                    <strong>Key Concept:</strong> Two things were required to make this work: (1) disabling Block Public Access and (2) adding a bucket policy that grants <code>s3:GetObject</code> to everyone. Both are necessary.
-                </div>
-                <aside class="notes">Make sure every student can see their website. If anyone gets errors, check that the bucket policy has the correct bucket name and that Block Public Access is disabled. Common mistake: forgetting the /* at the end of the Resource ARN.</aside>
+                <aside class="notes">
+                    Make sure every student can see their website. If anyone gets errors, check: bucket policy has correct bucket name, Block Public Access is disabled, index.html is uploaded to root of bucket (not inside a folder). The website endpoint URL format is: http://BUCKET-NAME.s3-website-REGION.amazonaws.com
+                </aside>
             </section>
 
-            <!-- Step 8: Versioning - Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
-                <div class="section-divider">
-                    <h2>Step 8: Explore Versioning</h2>
-                    <h3>Protecting against accidental changes</h3>
-                </div>
-                <aside class="notes">Versioning is a critical data protection feature. This step demonstrates how it works in practice.</aside>
-            </section>
-
-            <!-- Step 8: Upload New Version -->
+            <!-- Slide 9: Clean Up -->
             <section>
-                <h2>&#128260; Step 8a: Upload a New Version</h2>
+                <h2>&#128465; Clean Up</h2>
+                <p>Delete the S3 bucket and its contents:</p>
                 <ol>
-                    <li class="fragment">Modify your local <code>index.html</code> file &mdash; change the content to:
-                        <pre><code class="html">&lt;h1&gt;Employee Directory Application - v2&lt;/h1&gt;
-&lt;p&gt;Updated version of the Employee Directory!&lt;/p&gt;</code></pre>
-                    </li>
-                    <li class="fragment">Upload the modified <code>index.html</code> to your bucket (same process as before)</li>
-                    <li class="fragment">Refresh your website endpoint &mdash; you should see the updated text</li>
-                    <li class="fragment">In the S3 console, click on <strong>index.html</strong></li>
+                    <li>Go to the S3 bucket list</li>
+                    <li>Select your bucket, click <strong>Empty</strong>, type <em>permanently delete</em>, confirm</li>
+                    <li>Select your bucket again, click <strong>Delete</strong>, type the bucket name, confirm</li>
                 </ol>
-                <aside class="notes">Show students both versions and explain that the latest version is served by default. Discuss the cost implications &mdash; all versions count toward storage costs. Mention that lifecycle rules can be used to manage old versions.</aside>
-            </section>
-
-            <!-- Step 8b: Review Versions -->
-            <section>
-                <h2>&#128260; Step 8b: Review Versions</h2>
-                <ol>
-                    <li class="fragment">Click the <strong>Versions</strong> tab on the index.html object</li>
-                    <li class="fragment">You should see <strong>two versions</strong> listed, each with a unique Version ID</li>
-                    <li class="fragment">Back in the Objects list, toggle <strong>Show versions</strong> to see version IDs for all objects</li>
-                </ol>
-                <div class="key-point fragment">
-                    <strong>Key Concept:</strong> Versioning protects against accidental overwrites and deletes. When you delete a versioned object, S3 inserts a <em>delete marker</em> rather than permanently removing the data. You can restore any previous version.
+                <div class="highlight-box warning">
+                    <strong>&#9888;&#65039; Note:</strong> You must empty a bucket before you can delete it. With versioning enabled, "Empty" removes all object versions and delete markers.
                 </div>
-                <aside class="notes">Show students both versions and explain that the latest version is served by default. Discuss the cost implications &mdash; all versions count toward storage costs. Mention that lifecycle rules can be used to manage old versions.</aside>
+                <aside class="notes">
+                    Emptying the bucket removes all current and previous versions. This is required before deletion. If students skip the empty step, the delete will fail.
+                </aside>
             </section>
 
-            <!-- Step 9: Storage Classes - Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
-                <div class="section-divider">
-                    <h2>Step 9: Explore Storage Classes</h2>
-                    <h3>Optimizing storage costs</h3>
+            <!-- Slide 10: Lab Complete -->
+            <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="title-slide">
+                <h1>&#127881; Lab 4 Complete!</h1>
+                <h2>Amazon S3 Bucket with Static Website</h2>
+                <div class="module-progress" style="margin-top: 30px;">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
                 </div>
-                <aside class="notes">Storage classes are how AWS provides different cost tiers for different access patterns. This is a review-only step &mdash; students should not change any settings.</aside>
+                <aside class="notes">Congratulate students. They created a bucket, tested access controls, and hosted a static website.</aside>
             </section>
 
-            <!-- Step 9: Review Storage Classes -->
+            <!-- Slide 11: Summary -->
             <section>
-                <h2>&#128178; Step 9: Review Storage Classes</h2>
-                <ol>
-                    <li class="fragment">Select one of your uploaded objects using the checkbox</li>
-                    <li class="fragment">Click <strong>Actions</strong> &rarr; <strong>Edit storage class</strong></li>
-                    <li class="fragment">Review the available storage classes (do <strong>not</strong> change the setting):</li>
-                </ol>
-                <table class="fragment">
-                    <thead>
-                        <tr><th>Storage Class</th><th>Use Case</th><th>Retrieval</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Standard</td><td>Frequently accessed data</td><td>Immediate</td></tr>
-                        <tr><td>Intelligent-Tiering</td><td>Unknown or changing access patterns</td><td>Immediate</td></tr>
-                        <tr><td>Standard-IA</td><td>Infrequent access, rapid retrieval needed</td><td>Immediate</td></tr>
-                        <tr><td>Glacier Flexible Retrieval</td><td>Archive, minutes to hours retrieval</td><td>1&ndash;12 hours</td></tr>
-                        <tr><td>Glacier Deep Archive</td><td>Long-term archive, rare access</td><td>12&ndash;48 hours</td></tr>
-                    </tbody>
-                </table>
-                <ol start="4">
-                    <li class="fragment">Click <strong>Cancel</strong> &mdash; do not change the storage class</li>
-                </ol>
-                <aside class="notes">Walk through each storage class and its pricing model. Emphasize that Standard-IA has a minimum storage duration of 30 days and a per-GB retrieval fee. Glacier classes have even longer minimums. Intelligent-Tiering automatically moves objects between tiers based on access patterns.</aside>
-            </section>
-
-            <!-- Step 10: Lifecycle Rules - Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)">
-                <div class="section-divider">
-                    <h2>Step 10: Create a Lifecycle Rule</h2>
-                    <h3>Automating cost optimization</h3>
-                </div>
-                <aside class="notes">Lifecycle rules automate the transition of objects between storage classes and eventual deletion. This is essential for cost management at scale.</aside>
-            </section>
-
-            <!-- Step 10: Create Lifecycle Rule -->
-            <section>
-                <h2>&#9851;&#65039; Step 10a: Create the Rule</h2>
-                <ol>
-                    <li class="fragment">Go to your bucket&#39;s <strong>Management</strong> tab</li>
-                    <li class="fragment">Under <strong>Lifecycle rules</strong>, click <strong>Create lifecycle rule</strong></li>
-                    <li class="fragment"><strong>Lifecycle rule name:</strong> <code>MoveToIA</code></li>
-                    <li class="fragment"><strong>Choose a rule scope:</strong> Select <em>Apply to all objects in the bucket</em></li>
-                    <li class="fragment">Check the acknowledgement box that this applies to all objects</li>
-                </ol>
-                <aside class="notes">Lifecycle rules can be scoped to specific prefixes or tags, but for this exercise we apply it to the entire bucket. In production, you would typically scope rules to specific prefixes or object tags.</aside>
-            </section>
-
-            <!-- Step 10: Configure Transitions -->
-            <section>
-                <h2>&#9851;&#65039; Step 10b: Configure Transitions</h2>
-                <p>Under <strong>Lifecycle rule actions</strong>, check the following:</p>
-                <ol>
-                    <li class="fragment">&#9745; <strong>Transition current versions of objects between storage classes</strong>
-                        <ul>
-                            <li>Add transition: <strong>Standard-IA</strong> &mdash; after <strong>30</strong> days</li>
-                            <li>Add transition: <strong>Glacier Flexible Retrieval</strong> &mdash; after <strong>90</strong> days</li>
-                        </ul>
-                    </li>
-                    <li class="fragment">&#9745; <strong>Expire current versions of objects</strong>
-                        <ul>
-                            <li>After <strong>365</strong> days</li>
-                        </ul>
-                    </li>
-                    <li class="fragment">Click <strong>Create rule</strong></li>
-                </ol>
-                <div class="highlight-box success fragment">
-                    <strong>&#9989; Expected Result:</strong> The lifecycle rule <strong>MoveToIA</strong> appears in the lifecycle rules list with status <em>Enabled</em>.
-                </div>
-                <aside class="notes">Explain the cost savings at each tier. Standard costs about $0.023/GB, Standard-IA about $0.0125/GB, Glacier about $0.004/GB. Over the lifecycle of data, this can represent significant savings. The 30-day minimum for IA transitions is enforced by S3.</aside>
-            </section>
-
-            <!-- Step 10: Lifecycle Timeline -->
-            <section>
-                <h2>&#9851;&#65039; Lifecycle Rule Timeline</h2>
-                <div class="concept-box">
-                    <h4>What This Rule Does</h4>
-                    <p><strong>Day 0&ndash;30:</strong> Standard &#8594; <strong>Day 30:</strong> Standard-IA &#8594; <strong>Day 90:</strong> Glacier Flexible Retrieval &#8594; <strong>Day 365:</strong> Deleted</p>
-                    <p>This automates cost optimization as data ages and is accessed less frequently.</p>
-                </div>
-                <aside class="notes">Explain the cost savings at each tier. Standard costs about $0.023/GB, Standard-IA about $0.0125/GB, Glacier about $0.004/GB. Over the lifecycle of data, this can represent significant savings. The 30-day minimum for IA transitions is enforced by S3.</aside>
-            </section>
-
-            <!-- Step 11: Clean Up - Divider -->
-            <section data-background="linear-gradient(135deg, #c05621 0%, #dd6b20 100%)">
-                <div class="section-divider">
-                    <h2>Step 11: Clean Up</h2>
-                    <h3>Restoring secure defaults</h3>
-                </div>
-                <aside class="notes">Clean up is important to restore security settings. Students should keep the bucket and objects for later labs but remove the public access configuration.</aside>
-            </section>
-
-            <!-- Step 11: Clean Up -->
-            <section>
-                <h2>&#128656; Step 11: Clean Up</h2>
-                <p>Restore the bucket to a secure state while keeping it for later labs:</p>
-                <ol>
-                    <li class="fragment"><strong>Delete the lifecycle rule:</strong>
-                        <br>Management tab &rarr; Select <strong>MoveToIA</strong> &rarr; <strong>Delete</strong> &rarr; Confirm</li>
-                    <li class="fragment"><strong>Remove the bucket policy:</strong>
-                        <br>Permissions tab &rarr; Bucket policy &rarr; <strong>Edit</strong> &rarr; Delete all policy text &rarr; <strong>Save changes</strong></li>
-                    <li class="fragment"><strong>Re-enable Block Public Access:</strong>
-                        <br>Permissions tab &rarr; Block public access &rarr; <strong>Edit</strong> &rarr; Check <em>Block all public access</em> &rarr; <strong>Save changes</strong> &rarr; Type <code>confirm</code></li>
-                    <li class="fragment"><strong>Disable static website hosting:</strong>
-                        <br>Properties tab &rarr; Static website hosting &rarr; <strong>Edit</strong> &rarr; Select <strong>Disable</strong> &rarr; <strong>Save changes</strong></li>
-                </ol>
-                <div class="highlight-box warning fragment">
-                    <strong>&#128221; Keep the bucket!</strong> Do not delete the bucket or its objects. We will use this bucket in later labs.
-                </div>
-                <aside class="notes">Verify that students have completed all cleanup steps. The bucket should be private again with no public access. The objects and versioning should remain intact for use in later labs.</aside>
-            </section>
-
-            <!-- Lab Summary -->
-            <section>
-                <h2>&#128218; Lab Summary</h2>
+                <h2>&#127919; Key Takeaways</h2>
                 <div class="two-columns">
                     <div class="card">
-                        <h4>&#9989; What You Accomplished</h4>
+                        <h4>&#128736;&#65039; What You Did</h4>
                         <ul>
-                            <li>Created an S3 bucket with versioning and encryption</li>
-                            <li>Uploaded objects and generated presigned URLs</li>
-                            <li>Configured static website hosting with bucket policies</li>
-                            <li>Explored versioning and storage classes</li>
-                            <li>Created lifecycle rules for cost optimization</li>
+                            <li>Created an S3 bucket with versioning</li>
+                            <li>Uploaded objects and tested access</li>
+                            <li>Generated a presigned URL</li>
+                            <li>Hosted a static website on S3</li>
                         </ul>
                     </div>
                     <div class="card">
-                        <h4>&#128273; Key Takeaways</h4>
+                        <h4>&#128218; Key Concepts</h4>
                         <ul>
-                            <li>S3 is a flat namespace using key prefixes</li>
-                            <li>Block Public Access is a security safety net</li>
-                            <li>Presigned URLs provide temporary secure access</li>
-                            <li>Versioning protects against accidental changes</li>
-                            <li>Lifecycle rules automate storage transitions</li>
+                            <li><strong>Block Public Access</strong> prevents accidental exposure</li>
+                            <li><strong>Presigned URLs</strong> provide temporary access</li>
+                            <li><strong>Bucket policies</strong> control resource-level access</li>
+                            <li><strong>Static hosting</strong> serves web content from S3</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Review the key takeaways. Ask students what surprised them or what they found most useful. This lab covered a lot of ground &mdash; S3 is a deep service with many features.</aside>
+                <aside class="notes">
+                    Review key takeaways. Next module covers databases, where students will work with DynamoDB.
+                </aside>
             </section>
 
-            <!-- Questions Slide -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%)">
-                <div class="questions-slide" style="text-align: center;">
-                    <h2>&#129300; Questions?</h2>
-                    <p>Ask about anything covered in this lab</p>
-                    <div class="module-progress" style="margin-top: 40px;">
-                        <div class="step completed"></div>
-                        <div class="step completed"></div>
-                        <div class="step completed"></div>
-                        <div class="step completed"></div>
-                        <div class="step"></div>
-                        <div class="step"></div>
-                    </div>
-                </div>
-                <aside class="notes">Open the floor for questions. Common questions: How does S3 pricing work? When should I use CloudFront vs direct S3 hosting? How do I handle CORS for web apps? What about S3 event notifications?</aside>
+            <!-- Slide 12: Questions -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="questions-slide" style="text-align: center !important;">
+                <h2>&#10067; Questions?</h2>
+                <p>Ask your instructor before proceeding to the next module</p>
+                <aside class="notes">
+                    Common questions: How is S3 pricing calculated? (Storage, requests, data transfer.) What are storage classes? (Standard, IA, Glacier — different cost/access tradeoffs.) What is the max object size? (5 TB, but multipart upload required above 5 GB.)
+                </aside>
             </section>
 
         </div>

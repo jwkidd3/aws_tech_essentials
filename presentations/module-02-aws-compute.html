@@ -62,7 +62,6 @@
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="title-slide">
                 <h1>&#9881; AWS Compute</h1>
                 <h2>Module 2 &mdash; AWS Technical Essentials</h2>
-                <h3>EC2, Containers, Lambda &amp; Choosing the Right Service</h3>
                 <div class="module-progress">
                     <div class="step completed"></div>
                     <div class="step active"></div>
@@ -72,752 +71,229 @@
                     <div class="step"></div>
                     <div class="step"></div>
                 </div>
-                <aside class="notes">Module 2 covers the full spectrum of AWS compute services: EC2, containers (ECS/EKS/Fargate), and serverless (Lambda). We'll end with a hands-on lab launching an EC2 instance.</aside>
+                <aside class="notes">Module 2 covers the full spectrum of AWS compute services: EC2, containers (ECS/EKS/Fargate), and serverless (Lambda). We'll end with a hands-on lab launching an EC2 instance for the employee directory application.</aside>
             </section>
 
-            <!-- Slide 2: Module Objectives -->
+            <!-- Slide 2: Agenda -->
             <section>
-                <h2>&#127919; Module Objectives</h2>
+                <h2>&#128203; Module 2 Agenda</h2>
                 <ul>
-                    <li class="fragment fade-up">Survey the AWS compute landscape</li>
-                    <li class="fragment fade-up">Launch and configure EC2 instances</li>
-                    <li class="fragment fade-up">Describe EC2 lifecycle and pricing</li>
-                    <li class="fragment fade-up">Differentiate ECS, EKS, and Fargate</li>
-                    <li class="fragment fade-up">Explain serverless with AWS Lambda</li>
+                    <li>Amazon EC2 overview</li>
+                    <li>Instance types and pricing</li>
+                    <li>Containers on AWS</li>
+                    <li>Lab: Launch the Employee Directory App on EC2</li>
                 </ul>
-                <aside class="notes">These objectives map to the AWS Cloud Practitioner and Solutions Architect Associate domains. By the end of this module, students should be able to justify compute choices for different application patterns. An additional implicit objective is selecting the right compute service for a given workload.</aside>
+                <aside class="notes">This module walks through the compute spectrum from full VM control with EC2, through containers, to fully managed serverless with Lambda. The lab at the end has students launch an EC2 instance running the employee directory application.</aside>
             </section>
 
-            <!-- Slide 3: Section Divider - Compute as a Service -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="section-divider">
-                <h2>&#9729;&#65039; Compute as a Service</h2>
-                <h3>From physical servers to cloud compute</h3>
-                <aside class="notes">We start by understanding what "compute as a service" means and how it differs from traditional on-premises server management.</aside>
-            </section>
-
-            <!-- Slide 4: Traditional vs Cloud Compute -->
-            <section>
-                <h2>&#127970; Traditional vs Cloud Compute</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>Traditional Data Center</h4>
-                        <ul>
-                            <li class="fragment fade-up">Upfront hardware purchase</li>
-                            <li class="fragment fade-up">Weeks-to-months lead time</li>
-                            <li class="fragment fade-up">Over-provision for peak</li>
-                            <li class="fragment fade-up">Maintain hardware, cooling, power</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Cloud Compute</h4>
-                        <ul>
-                            <li class="fragment fade-up">No upfront investment</li>
-                            <li class="fragment fade-up">Provision in seconds</li>
-                            <li class="fragment fade-up">Scale to actual demand</li>
-                            <li class="fragment fade-up">AWS manages infrastructure</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">The key shift is from capital expense to operational expense, and from fixed capacity planning to elastic scaling. Cloud compute removes the undifferentiated heavy lifting of managing physical servers. Traditional data centers also have fixed capacity that is difficult to scale.</aside>
-            </section>
-
-            <!-- Slide 5: AWS Compute Options Overview -->
-            <section>
-                <h2>&#128736; AWS Compute Options</h2>
-                <div class="three-columns">
-                    <div class="card">
-                        <h4>&#128187; Virtual Machines</h4>
-                        <p>Amazon EC2</p>
-                        <ul>
-                            <li class="fragment fade-up">Full OS-level control</li>
-                            <li class="fragment fade-up">Broad instance selection</li>
-                            <li class="fragment fade-up">Traditional app hosting</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#128230; Containers</h4>
-                        <p>ECS, EKS, Fargate</p>
-                        <ul>
-                            <li class="fragment fade-up">Lightweight, portable</li>
-                            <li class="fragment fade-up">Microservices architecture</li>
-                            <li class="fragment fade-up">Consistent environments</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#9889; Serverless</h4>
-                        <p>AWS Lambda</p>
-                        <ul>
-                            <li class="fragment fade-up">No server management</li>
-                            <li class="fragment fade-up">Event-driven execution</li>
-                            <li class="fragment fade-up">Pay-per-invocation</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">AWS provides a spectrum of compute options. The choice depends on how much control you need versus how much operational overhead you want to manage. We'll cover each of these in depth.</aside>
-            </section>
-
-            <!-- Slide 6: Section Divider - Amazon EC2 -->
+            <!-- Slide 3: Section Divider — EC2 -->
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="section-divider">
                 <h2>&#128187; Amazon EC2</h2>
-                <h3>Elastic Compute Cloud &mdash; Virtual servers in the cloud</h3>
-                <aside class="notes">EC2 is the foundational compute service in AWS. Understanding EC2 is essential for almost every AWS workload.</aside>
+                <h3>Virtual servers in the cloud</h3>
+                <aside class="notes">EC2 is the foundational compute service in AWS. Understanding EC2 is essential because most AWS architectures include it in some form.</aside>
             </section>
 
-            <!-- Slide 7: What is Amazon EC2? -->
+            <!-- Slide 4: What Is Amazon EC2? -->
             <section>
-                <h2>What is Amazon EC2?</h2>
+                <h2>&#128187; What Is Amazon EC2?</h2>
                 <div class="concept-box">
-                    <h4>&#128161; Virtual Servers in the Cloud</h4>
                     <p>Resizable virtual machines launched in minutes. Pay only while running.</p>
                 </div>
                 <ul>
-                    <li class="fragment fade-up"><strong>Configurable</strong> &mdash; choose CPU, memory, storage, networking</li>
-                    <li class="fragment fade-up"><strong>Multi-OS</strong> &mdash; Amazon Linux, Ubuntu, Windows, RHEL, SUSE</li>
-                    <li class="fragment fade-up"><strong>VPC integration</strong> &mdash; network isolation and security controls</li>
-                    <li class="fragment fade-up"><strong>Root access</strong> &mdash; install any software</li>
+                    <li>Full OS-level control (Linux, Windows)</li>
+                    <li>Choose CPU, memory, storage, network</li>
+                    <li>Runs inside your VPC</li>
+                    <li>Install any software you need</li>
                 </ul>
-                <aside class="notes">EC2 gives you virtual machines with root/admin access, allowing you to install and configure software just as you would on a physical server. The key difference is the speed of provisioning and the elasticity of scaling.</aside>
+                <aside class="notes">EC2 gives you virtual machines with root/admin access, allowing you to install and configure software just as you would on a physical server. The key difference is the speed of provisioning and the elasticity of scaling. You launch instances from Amazon Machine Images (AMIs), which are templates containing the OS and pre-installed software. You can use AWS-provided AMIs, marketplace AMIs, or create your own custom golden images.</aside>
             </section>
 
-            <!-- Slide 8: Amazon Machine Images (AMIs) -->
+            <!-- Slide 5: EC2 Instance Types -->
             <section>
-                <h2>&#128451; Amazon Machine Images (AMIs)</h2>
-                <p>A <strong>template</strong> defining OS, software, and launch permissions for an instance.</p>
+                <h2>&#128736; EC2 Instance Type Families</h2>
                 <div class="two-columns">
                     <div>
-                        <h4>AMI Sources</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>AWS-provided</strong> &mdash; Amazon Linux, Windows, Ubuntu</li>
-                            <li class="fragment fade-up"><strong>Marketplace</strong> &mdash; pre-configured vendor images</li>
-                            <li class="fragment fade-up"><strong>Community</strong> &mdash; shared by other users</li>
-                            <li class="fragment fade-up"><strong>Custom</strong> &mdash; your own golden images</li>
+                            <li><strong>General Purpose (M, T)</strong> &mdash; balanced workloads</li>
+                            <li><strong>Compute Optimized (C)</strong> &mdash; CPU-intensive tasks</li>
                         </ul>
                     </div>
-                    <div class="highlight-box">
-                        <h4>AMI Contains</h4>
+                    <div>
                         <ul>
-                            <li>Root volume template (OS + apps)</li>
-                            <li>Launch permissions</li>
-                            <li>Block device mapping</li>
-                            <li>Architecture (x86_64, arm64)</li>
+                            <li><strong>Memory Optimized (R, X)</strong> &mdash; in-memory databases</li>
+                            <li><strong>Storage Optimized (I, D)</strong> &mdash; high disk throughput</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">AMIs are region-specific but can be copied across regions. Custom AMIs are a best practice for creating golden images with your organization's software and security baselines pre-installed. This dramatically reduces launch time for new instances.</aside>
-            </section>
-
-            <!-- Slide 9: Instance Type Naming Convention -->
-            <section>
-                <h2>&#128218; EC2 Instance Type Naming</h2>
-                <div class="concept-box">
-                    <h4>Example: <code>c5n.xlarge</code></h4>
-                    <table>
-                        <tr>
-                            <th>Component</th>
-                            <th>Value</th>
-                            <th>Meaning</th>
-                        </tr>
-                        <tr>
-                            <td><strong>Family</strong></td>
-                            <td><code>c</code></td>
-                            <td>Compute Optimized</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Generation</strong></td>
-                            <td><code>5</code></td>
-                            <td>5th generation</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Attributes</strong></td>
-                            <td><code>n</code></td>
-                            <td>Network enhanced</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Size</strong></td>
-                            <td><code>xlarge</code></td>
-                            <td>CPU &amp; memory allocation</td>
-                        </tr>
-                    </table>
+                <div class="key-point" style="margin-top: 15px;">
+                    <strong>Naming:</strong> e.g. <code>m5.xlarge</code> = family (m) + generation (5) + size (xlarge)
                 </div>
-                <aside class="notes">Each step up in size typically doubles the vCPUs and memory. Additional attributes like 'n' (network optimized), 'a' (AMD processor), 'g' (Graviton/ARM), 'd' (local NVMe storage) provide further differentiation. Always choose the latest generation for best price-performance. Common sizes: nano, micro, small, medium, large, xlarge, 2xlarge, 4xlarge, up to metal.</aside>
+                <aside class="notes">There are also accelerated computing instances (P, G families) with GPUs for machine learning and graphics. The T family includes burstable instances that are cost-effective for variable workloads. Instance naming convention: family letter, generation number, then size from nano to metal. Start with general purpose (T3 or M5) and right-size based on monitoring data. You don't need to memorize specs — the key is knowing which family fits which workload pattern.</aside>
             </section>
 
-            <!-- Slide 10: Instance Families -->
-            <section>
-                <h2>&#128202; EC2 Instance Families</h2>
-                <table>
-                    <tr>
-                        <th>Family</th>
-                        <th>Prefixes</th>
-                        <th>Optimized For</th>
-                        <th>Use Cases</th>
-                    </tr>
-                    <tr>
-                        <td><strong>General Purpose</strong></td>
-                        <td>T, M</td>
-                        <td>Balanced CPU/memory</td>
-                        <td>Web servers, small DBs</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Compute Optimized</strong></td>
-                        <td>C</td>
-                        <td>High-performance CPU</td>
-                        <td>Batch, HPC, ML inference</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Memory Optimized</strong></td>
-                        <td>R, X</td>
-                        <td>Large in-memory datasets</td>
-                        <td>Caches, real-time analytics</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Storage Optimized</strong></td>
-                        <td>D, I</td>
-                        <td>High sequential I/O</td>
-                        <td>Data warehousing</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Accelerated</strong></td>
-                        <td>P, G</td>
-                        <td>GPU / accelerators</td>
-                        <td>ML training, video</td>
-                    </tr>
-                </table>
-                <div class="key-point">
-                    <strong>Tip:</strong> Start with General Purpose (T3/M6i). Optimize after profiling your workload.
-                </div>
-                <aside class="notes">T-series instances use a burstable CPU credit model, which is cost-effective for variable workloads. M-series provides fixed baseline performance. When selecting instance families, match the resource profile of your application: CPU-bound workloads go to C, memory-bound to R/X, and so on.</aside>
-            </section>
-
-            <!-- Slide 11: EC2 Pricing Models (consolidated) -->
+            <!-- Slide 6: EC2 Pricing Overview -->
             <section>
                 <h2>&#128176; EC2 Pricing Models</h2>
-                <table>
-                    <tr>
-                        <th>Model</th>
-                        <th>Commitment</th>
-                        <th>Discount</th>
-                        <th>Best For</th>
-                    </tr>
-                    <tr>
-                        <td><strong>On-Demand</strong></td>
-                        <td>None</td>
-                        <td>0%</td>
-                        <td>Short-term, unpredictable</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Savings Plans</strong></td>
-                        <td>1 or 3 yr ($/hr)</td>
-                        <td>Up to 72%</td>
-                        <td>Steady-state, flexible</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Reserved</strong></td>
-                        <td>1 or 3 yr</td>
-                        <td>Up to 72%</td>
-                        <td>Predictable, fixed type</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Spot</strong></td>
-                        <td>None</td>
-                        <td>Up to 90%</td>
-                        <td>Fault-tolerant batch</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Dedicated Hosts</strong></td>
-                        <td>Varies</td>
-                        <td>Varies</td>
-                        <td>Licensing, compliance</td>
-                    </tr>
-                </table>
-                <div class="key-point">
-                    <strong>Strategy:</strong> Baseline on Savings Plans, burst with On-Demand, batch on Spot.
-                </div>
-                <aside class="notes">Savings Plans are generally recommended over Reserved Instances for new customers because they offer similar discounts with more flexibility. Spot Instances can be interrupted with a 2-minute warning, so design for fault tolerance. Dedicated Hosts give you a physical server and are required for some socket-based software licenses. A common cost optimization strategy is to cover your baseline with Savings Plans, handle variable demand with On-Demand, and use Spot for fault-tolerant batch workloads. This can reduce your overall compute bill by 50-70%. Payment options for Reserved: All Upfront, Partial, No Upfront. Convertible RIs can change instance type.</aside>
-            </section>
-
-            <!-- Slide 12: Key Pairs and Security Groups -->
-            <section>
-                <h2>&#128272; Key Pairs &amp; Security Groups</h2>
                 <div class="two-columns">
                     <div class="card">
-                        <h4>&#128273; Key Pairs</h4>
+                        <h4>On-Demand</h4>
                         <ul>
-                            <li class="fragment fade-up">SSH (Linux) / RDP (Windows) access</li>
-                            <li class="fragment fade-up">Private key downloaded <strong>once</strong></li>
-                            <li class="fragment fade-up">ED25519 or RSA supported</li>
-                            <li class="fragment fade-up">Protect with <code>chmod 400</code></li>
+                            <li>Pay by the second/hour</li>
+                            <li>No commitment required</li>
                         </ul>
                     </div>
                     <div class="card">
-                        <h4>&#128737; Security Groups</h4>
+                        <h4>Reserved / Savings Plans</h4>
                         <ul>
-                            <li class="fragment fade-up">Instance-level virtual firewall</li>
-                            <li class="fragment fade-up"><strong>Stateful</strong> &mdash; return traffic auto-allowed</li>
-                            <li class="fragment fade-up">Allow rules only (no deny)</li>
-                            <li class="fragment fade-up">Default: all inbound denied</li>
+                            <li>1 or 3-year commitment</li>
+                            <li>Up to 72% discount</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Key pairs are essential for secure access. Security groups act as instance-level firewalls. A common pattern is to create separate security groups for web, app, and database tiers, and reference them in rules rather than using IP addresses. This creates dynamic, self-updating firewall rules. Default outbound is all allowed. Can reference other security groups in rules.</aside>
-            </section>
-
-            <!-- Slide 13: User Data and Bootstrapping -->
-            <section>
-                <h2>&#128640; User Data &amp; Bootstrapping</h2>
-                <p>Scripts that run <strong>once at first launch</strong> as root.</p>
-                <pre><code class="bash">#!/bin/bash
-yum update -y
-yum install -y httpd
-systemctl start httpd
-systemctl enable httpd
-echo "&lt;h1&gt;Hello from $(hostname)&lt;/h1&gt;" > /var/www/html/index.html</code></pre>
-                <div class="highlight-box warning">
-                    <h4>Key Points</h4>
-                    <ul>
-                        <li>First boot only (by default)</li>
-                        <li>Increases boot time &mdash; keep lean</li>
-                        <li>Logged to <code>/var/log/cloud-init-output.log</code></li>
-                    </ul>
+                <div class="two-columns" style="margin-top: 15px;">
+                    <div class="card">
+                        <h4>Spot Instances</h4>
+                        <ul>
+                            <li>Up to 90% discount</li>
+                            <li>Can be interrupted by AWS</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Dedicated Hosts</h4>
+                        <ul>
+                            <li>Physical server for you</li>
+                            <li>Compliance / licensing needs</li>
+                        </ul>
+                    </div>
                 </div>
-                <aside class="notes">User data is frequently used to install agents, configure applications, pull code from repositories, or join the instance to a domain. For complex bootstrapping, consider using AWS Systems Manager, CloudFormation cfn-init, or pre-baked AMIs instead. Size limit: 16 KB raw or 64 KB base64-encoded.</aside>
+                <aside class="notes">On-Demand is the default and most flexible — great for unpredictable workloads and development. Reserved Instances and Savings Plans reward commitment with significant discounts — ideal for steady-state production workloads. Spot Instances offer the deepest discounts but can be reclaimed with 2 minutes notice — perfect for batch processing, CI/CD, and fault-tolerant workloads. Dedicated Hosts are for regulatory or licensing requirements (e.g., per-socket Oracle licenses).</aside>
             </section>
 
-            <!-- Slide 14: Section Divider - EC2 Lifecycle -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="section-divider">
+            <!-- Slide 7: EC2 Instance Lifecycle -->
+            <section>
                 <h2>&#128260; EC2 Instance Lifecycle</h2>
-                <h3>States, transitions, and storage implications</h3>
-                <aside class="notes">Understanding the lifecycle is critical for cost management and operational procedures. Each state has billing and data implications.</aside>
-            </section>
-
-            <!-- Slide 15: Instance States -->
-            <section>
-                <h2>&#128260; EC2 Instance States</h2>
-                <table>
-                    <tr>
-                        <th>State</th>
-                        <th>Description</th>
-                        <th>Billing</th>
-                    </tr>
-                    <tr>
-                        <td><strong>pending</strong></td>
-                        <td>Being launched</td>
-                        <td>Not charged</td>
-                    </tr>
-                    <tr>
-                        <td><strong>running</strong></td>
-                        <td>Active and operational</td>
-                        <td>Charged</td>
-                    </tr>
-                    <tr>
-                        <td><strong>stopped</strong></td>
-                        <td>Shut down, EBS persists</td>
-                        <td>EBS costs only</td>
-                    </tr>
-                    <tr>
-                        <td><strong>terminated</strong></td>
-                        <td>Permanently deleted</td>
-                        <td>Not charged</td>
-                    </tr>
-                </table>
-                <div class="key-point">
-                    <strong>Key:</strong> Stopped instances keep EBS volumes and private IP. Terminated instances are gone.
-                </div>
-                <aside class="notes">Additional transitional states: stopping and shutting-down. A stopped instance retains its instance ID, EBS volumes, Elastic IP associations, and private IP. However, data on instance store volumes is lost when stopping. A terminated instance is gone permanently, though EBS volumes can be configured to persist via the DeleteOnTermination attribute.</aside>
-            </section>
-
-            <!-- Slide 16: Lifecycle Actions (consolidated) -->
-            <section>
-                <h2>&#128295; Lifecycle Actions</h2>
-                <div class="two-columns">
-                    <div>
-                        <div class="highlight-box success">
-                            <h4>Start / Stop / Reboot</h4>
-                            <ul>
-                                <li><strong>Stop</strong> &mdash; EBS data saved; may change host</li>
-                                <li><strong>Reboot</strong> &mdash; stays on same host, IPs kept</li>
-                                <li>Public IPv4 changes on stop/start (unless Elastic IP)</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="highlight-box danger">
-                            <h4>Terminate / Hibernate</h4>
-                            <ul>
-                                <li><strong>Terminate</strong> &mdash; permanently deleted; root EBS gone by default</li>
-                                <li><strong>Hibernate</strong> &mdash; saves RAM to EBS; faster resume</li>
-                                <li>Enable <strong>termination protection</strong> for production</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <aside class="notes">Start/stop only works for EBS-backed instances. Termination protection is a simple flag that prevents accidental termination via the console or API. It does not prevent termination from within the OS (shutdown command) or from Auto Scaling events. Hibernate must be enabled at launch time. Instance store data is always lost on stop or terminate, but preserved on reboot.</aside>
-            </section>
-
-            <!-- Slide 17: EBS-backed vs Instance Store -->
-            <section>
-                <h2>&#128190; EBS-Backed vs Instance Store</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>EBS-Backed (Default)</h4>
-                        <ul>
-                            <li class="fragment fade-up">Data persists when stopped</li>
-                            <li class="fragment fade-up">Supports stop, start, reboot</li>
-                            <li class="fragment fade-up">Snapshots for backup</li>
-                            <li class="fragment fade-up">Resizable volumes</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Instance Store</h4>
-                        <ul>
-                            <li class="fragment fade-up">Ephemeral local disk</li>
-                            <li class="fragment fade-up">Data lost on stop/terminate</li>
-                            <li class="fragment fade-up">Very high I/O performance</li>
-                            <li class="fragment fade-up">Best for caches, temp data</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Key takeaway: Use EBS-backed instances for most workloads. Use instance store for ephemeral, high-performance scratch data only. Most modern instances are EBS-backed. Instance store volumes provide very high IOPS because they are physically attached to the host. Some instance types like i3 and d2 are specifically designed to leverage local NVMe storage.</aside>
-            </section>
-
-            <!-- Slide 18: Section Divider - Container Services -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="section-divider">
-                <h2>&#128230; AWS Container Services</h2>
-                <h3>ECS, EKS, and Fargate</h3>
-                <aside class="notes">Containers are a key technology for modern application architectures. AWS offers managed services that remove the operational overhead of running container orchestration platforms.</aside>
-            </section>
-
-            <!-- Slide 19: Containers vs VMs -->
-            <section>
-                <h2>&#128230; Containers vs Virtual Machines</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>Virtual Machines</h4>
-                        <ul>
-                            <li class="fragment fade-up">Full OS per instance</li>
-                            <li class="fragment fade-up">Hypervisor-based isolation</li>
-                            <li class="fragment fade-up">Minutes to boot</li>
-                            <li class="fragment fade-up">Gigabytes in size</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Containers</h4>
-                        <ul>
-                            <li class="fragment fade-up">Share host OS kernel</li>
-                            <li class="fragment fade-up">Process-level isolation</li>
-                            <li class="fragment fade-up">Seconds to start</li>
-                            <li class="fragment fade-up">Megabytes in size</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Containers package application code, runtime, libraries, and dependencies into a single portable unit that runs consistently across environments. Containers are not a replacement for VMs — they solve different problems. VMs provide hardware-level isolation; containers provide application-level isolation. Both provide strong security boundaries. Containers enable consistent dev-to-prod environments. In AWS, containers often run ON EC2 instances (or Fargate), so both technologies are used together.</aside>
-            </section>
-
-            <!-- Slide 20: Amazon ECS -->
-            <section>
-                <h2>&#128230; Amazon ECS</h2>
-                <p>AWS-native container orchestration service.</p>
-                <div class="three-columns">
-                    <div class="card">
-                        <h4>Tasks</h4>
-                        <ul>
-                            <li>Defined in JSON</li>
-                            <li>Image, CPU, memory, ports</li>
-                            <li>One+ containers per task</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Services</h4>
-                        <ul>
-                            <li>Maintain desired task count</li>
-                            <li>ALB/NLB integration</li>
-                            <li>Auto-restart on failure</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Clusters</h4>
-                        <ul>
-                            <li>Logical task grouping</li>
-                            <li>EC2 or <strong>Fargate</strong> launch</li>
-                            <li>Regional resource</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">ECS is AWS-native and tightly integrated with other AWS services like IAM, CloudWatch, ALB, and VPC. It's simpler to operate than Kubernetes and is a great choice if you don't already have Kubernetes expertise or requirements. Simpler learning curve than EKS; best for AWS-focused teams.</aside>
-            </section>
-
-            <!-- Slide 21: Amazon EKS -->
-            <section>
-                <h2>&#9784;&#65039; Amazon EKS</h2>
-                <p>Managed Kubernetes control plane on AWS.</p>
-                <div class="two-columns">
-                    <div>
-                        <h4>Key Features</h4>
-                        <ul>
-                            <li class="fragment fade-up"><strong>Upstream K8s</strong> &mdash; fully conformant</li>
-                            <li class="fragment fade-up">AWS manages control plane</li>
-                            <li class="fragment fade-up">Worker nodes or Fargate</li>
-                            <li class="fragment fade-up">Full K8s ecosystem (Helm, operators)</li>
-                        </ul>
-                    </div>
-                    <div class="highlight-box">
-                        <h4>Choose EKS When</h4>
-                        <ul>
-                            <li>Existing Kubernetes expertise</li>
-                            <li>Multi-cloud / hybrid strategy</li>
-                            <li>K8s-specific features needed</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">EKS is ideal when your team already knows Kubernetes or when portability across cloud providers is important. EKS Anywhere extends this to on-premises. The control plane runs across multiple AZs for high availability, and AWS handles patches and upgrades. Integrates with IAM, VPC, ALB, CloudWatch. Choose ECS for simplicity; choose EKS for K8s portability and ecosystem. Both support Fargate for serverless containers.</aside>
-            </section>
-
-            <!-- Slide 22: AWS Fargate -->
-            <section>
-                <h2>&#9889; AWS Fargate</h2>
                 <div class="concept-box">
-                    <h4>Serverless Compute for Containers</h4>
-                    <p>No EC2 instances to manage. Define CPU and memory per task; Fargate handles the rest.</p>
+                    <p><strong>Launch</strong> &#8594; <strong>Running</strong> &#8594; <strong>Stop</strong> / <strong>Terminate</strong></p>
                 </div>
                 <ul>
-                    <li class="fragment fade-up"><strong>Works with ECS and EKS</strong></li>
-                    <li class="fragment fade-up"><strong>Per-task isolation</strong> &mdash; dedicated kernel per task</li>
-                    <li class="fragment fade-up"><strong>Pay per vCPU + memory</strong> per second</li>
-                    <li class="fragment fade-up"><strong>No cluster capacity planning</strong></li>
+                    <li><strong>Running:</strong> billed, fully operational</li>
+                    <li><strong>Stopped:</strong> no compute charges, EBS persists</li>
+                    <li><strong>Terminated:</strong> instance deleted permanently</li>
+                    <li><strong>Rebooted:</strong> keeps public IP and data</li>
                 </ul>
-                <aside class="notes">Fargate is often described as "serverless containers." The trade-off is slightly higher per-unit cost compared to self-managed EC2, but you eliminate the operational overhead of patching, scaling, and managing the underlying compute fleet. For many teams, this is a worthwhile trade-off. Benefits also include enhanced security isolation per task and the ability to scale without over-provisioning.</aside>
+                <aside class="notes">Understanding the lifecycle is important for cost management. Stopped instances don't incur compute charges but you still pay for attached EBS volumes and Elastic IPs. Termination is permanent — the instance and its root volume are deleted (unless configured to preserve the volume). Hibernate is a special stop state that saves RAM contents to EBS, enabling faster restart. A stopped instance loses its public IP unless you use an Elastic IP.</aside>
             </section>
 
-            <!-- Slide 23: Section Divider - Serverless -->
+            <!-- Slide 8: Section Divider — Containers & Serverless -->
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="section-divider">
-                <h2>&#9889; Serverless Computing</h2>
-                <h3>No servers to manage &mdash; focus on your code</h3>
-                <aside class="notes">Serverless is one of the fastest-growing cloud paradigms. It shifts even more responsibility to the cloud provider, letting developers focus purely on business logic.</aside>
+                <h2>&#128230; Containers &amp; Serverless</h2>
+                <h3>Beyond virtual machines</h3>
+                <aside class="notes">Now let's look at lighter-weight compute options. Containers and serverless reduce the operational overhead compared to managing full EC2 instances.</aside>
             </section>
 
-            <!-- Slide 24: Serverless Concepts -->
+            <!-- Slide 9: Containers on AWS -->
             <section>
-                <h2>&#9889; What Serverless Means</h2>
+                <h2>&#128230; Containers on AWS</h2>
+                <div class="three-columns">
+                    <div class="card">
+                        <h4>Amazon ECS</h4>
+                        <ul>
+                            <li>AWS-native orchestrator</li>
+                            <li>Tight AWS integration</li>
+                            <li>Simpler to start</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Amazon EKS</h4>
+                        <ul>
+                            <li>Managed Kubernetes</li>
+                            <li>Open-source ecosystem</li>
+                            <li>Portable across clouds</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>AWS Fargate</h4>
+                        <ul>
+                            <li>Serverless containers</li>
+                            <li>No EC2 to manage</li>
+                            <li>Works with ECS or EKS</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">Containers package application code with dependencies for consistent deployment. ECS is AWS's own orchestrator — simpler if you're all-in on AWS. EKS runs Kubernetes for teams that want portability or already use K8s. Fargate removes the need to manage the underlying EC2 instances for either ECS or EKS — you just define CPU and memory per container. Use ECS for AWS-native simplicity, EKS for Kubernetes ecosystem, Fargate when you want serverless container hosting.</aside>
+            </section>
+
+            <!-- Slide 10: Serverless with Lambda -->
+            <section>
+                <h2>&#9889; AWS Lambda</h2>
                 <div class="concept-box">
-                    <h4>Serverless &#8800; No Servers</h4>
-                    <p>Servers exist &mdash; but <strong>you</strong> don't provision, patch, or scale them.</p>
+                    <p>Run code without provisioning servers. Pay only per invocation.</p>
                 </div>
-                <div class="two-columns">
-                    <div>
-                        <h4>Core Benefits</h4>
-                        <ul>
-                            <li class="fragment fade-up"><strong>No provisioning</strong> needed</li>
-                            <li class="fragment fade-up"><strong>Auto-scaling</strong> from zero to thousands</li>
-                            <li class="fragment fade-up"><strong>Pay-per-use</strong> pricing</li>
-                            <li class="fragment fade-up"><strong>Built-in HA</strong> across AZs</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4>AWS Serverless Services</h4>
-                        <ul>
-                            <li class="fragment fade-up"><strong>Lambda</strong> &mdash; compute</li>
-                            <li class="fragment fade-up"><strong>API Gateway</strong> &mdash; REST APIs</li>
-                            <li class="fragment fade-up"><strong>DynamoDB</strong> &mdash; database</li>
-                            <li class="fragment fade-up"><strong>S3</strong> &mdash; storage</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Other serverless services include AWS Fargate (containers) and Amazon EventBridge (events). Serverless is a spectrum, not a binary. Some services like Lambda are fully serverless while others like Fargate are "serverless containers." The key criteria: no server management, automatic scaling, pay-per-use pricing, and built-in fault tolerance.</aside>
+                <ul>
+                    <li>Event-driven (S3, API Gateway, etc.)</li>
+                    <li>Auto-scales to demand</li>
+                    <li>Supports Python, Node.js, Java, Go, .NET</li>
+                    <li>Max 15 minutes per execution</li>
+                </ul>
+                <aside class="notes">Lambda is AWS's Function-as-a-Service offering. You upload code, define a trigger, and AWS handles everything else: provisioning, scaling, patching, and high availability. Billing is per invocation (first 1M requests/month free) plus compute time in GB-seconds. Lambda is ideal for event-driven workloads: processing S3 uploads, handling API requests, running scheduled tasks, and responding to database changes. The 15-minute timeout means Lambda isn't suited for long-running batch jobs.</aside>
             </section>
 
-            <!-- Slide 25: How Lambda Works -->
+            <!-- Slide 11: Choosing Compute -->
             <section>
-                <h2>&#955; How AWS Lambda Works</h2>
-                <div class="concept-box">
-                    <h4>Event-Driven Execution</h4>
-                    <p>Upload code &#8594; Configure trigger &#8594; Lambda runs on events &#8594; Pay only for execution time.</p>
-                </div>
+                <h2>&#127919; Choosing the Right Compute</h2>
                 <div class="two-columns">
-                    <div>
-                        <h4>Common Triggers</h4>
+                    <div class="card">
+                        <h4>&#128187; EC2 When...</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>S3</strong> &mdash; object uploads</li>
-                            <li class="fragment fade-up"><strong>API Gateway</strong> &mdash; HTTP requests</li>
-                            <li class="fragment fade-up"><strong>CloudWatch</strong> &mdash; scheduled (cron)</li>
-                            <li class="fragment fade-up"><strong>DynamoDB Streams</strong> &mdash; table changes</li>
+                            <li>Full OS control needed</li>
+                            <li>Long-running processes</li>
+                            <li>Legacy app migration</li>
                         </ul>
                     </div>
-                    <div>
-                        <h4>Execution Flow</h4>
-                        <ol>
-                            <li class="fragment fade-up">Event triggers Lambda</li>
-                            <li class="fragment fade-up">Execution environment provisioned</li>
-                            <li class="fragment fade-up">Handler processes event</li>
-                            <li class="fragment fade-up">Response returned</li>
-                        </ol>
-                    </div>
-                </div>
-                <aside class="notes">Other common event sources include SQS/SNS (messages) and Kinesis (stream processing). Lambda automatically scales by creating new execution environments for each concurrent invocation. Cold starts occur when a new environment is provisioned; warm environments are reused for subsequent invocations. Provisioned Concurrency can eliminate cold starts for latency-sensitive applications.</aside>
-            </section>
-
-            <!-- Slide 26: Lambda Function Components -->
-            <section>
-                <h2>&#128295; Lambda Function Anatomy</h2>
-                <div class="two-columns">
-                    <div>
-                        <div class="card">
-                            <h4>Handler</h4>
-                            <pre><code class="python">def handler(event, context):
-    name = event.get('name', 'World')
-    return {
-        'statusCode': 200,
-        'body': f'Hello, {name}!'
-    }</code></pre>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="highlight-box">
-                            <h4>Configuration</h4>
-                            <ul>
-                                <li><strong>Runtime:</strong> Python, Node.js, Java, .NET, Go, Ruby</li>
-                                <li><strong>Memory:</strong> 128 MB &ndash; 10,240 MB</li>
-                                <li><strong>Timeout:</strong> up to 15 minutes</li>
-                                <li><strong>Execution role:</strong> IAM permissions</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <aside class="notes">The handler function signature varies by runtime. The event object contains the trigger data (e.g., S3 bucket name and key, API Gateway request body). The context object provides metadata like the function name, remaining execution time, and request ID. vCPU allocation scales linearly with memory — at 1,769 MB you get 1 full vCPU. Environment variables can be used for configuration. Resource policies control who can invoke the function.</aside>
-            </section>
-
-            <!-- Slide 27: Lambda Pricing, Use Cases & Limits (consolidated) -->
-            <section>
-                <h2>&#128176; Lambda Pricing &amp; Limits</h2>
-                <div class="two-columns">
-                    <div>
-                        <h4>Pricing</h4>
+                    <div class="card">
+                        <h4>&#9889; Lambda When...</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>Requests:</strong> $0.20 per 1M</li>
-                            <li class="fragment fade-up"><strong>Duration:</strong> per GB-second (1ms granularity)</li>
-                            <li class="fragment fade-up"><strong>Free tier:</strong> 1M requests + 400K GB-sec/mo</li>
-                            <li class="fragment fade-up"><strong>Zero cost when idle</strong></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4>Key Limits</h4>
-                        <ul>
-                            <li class="fragment fade-up"><strong>Timeout:</strong> 15 minutes max</li>
-                            <li class="fragment fade-up"><strong>Package:</strong> 50 MB zip, 250 MB unzipped</li>
-                            <li class="fragment fade-up"><strong>Concurrency:</strong> 1,000 (adjustable)</li>
-                            <li class="fragment fade-up"><strong>/tmp storage:</strong> up to 10 GB</li>
+                            <li>Event-driven, short tasks</li>
+                            <li>Variable / spiky traffic</li>
+                            <li>Zero admin overhead desired</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Common use cases: REST API backends with API Gateway, real-time file processing via S3 triggers, ETL data transformation, and scheduled cron jobs. The generous free tier means many lightweight workloads run at no cost. Lambda is not suited for long-running processes (over 15 minutes) or workloads requiring persistent connections. Cost example: a function with 256 MB memory, 200ms average duration, invoked 10M times/month costs about $10.33. For sustained high-throughput workloads, EC2 or Fargate may be more cost-effective.</aside>
-            </section>
-
-            <!-- Slide 28: Section Divider - Choosing Compute -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="section-divider">
-                <h2>&#129300; Choosing the Right Compute</h2>
-                <h3>Decision framework for AWS compute services</h3>
-                <aside class="notes">There is no one-size-fits-all answer. The right choice depends on your application requirements, team skills, and operational priorities.</aside>
-            </section>
-
-            <!-- Slide 29: Compute Decision Matrix (consolidated) -->
-            <section>
-                <h2>&#129300; Compute Decision Matrix</h2>
-                <table>
-                    <tr>
-                        <th>Factor</th>
-                        <th>EC2</th>
-                        <th>ECS / EKS</th>
-                        <th>Lambda</th>
-                    </tr>
-                    <tr>
-                        <td><strong>Control</strong></td>
-                        <td>Full OS</td>
-                        <td>Container-level</td>
-                        <td>Code-level</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Scaling</strong></td>
-                        <td>Auto Scaling Groups</td>
-                        <td>Service auto-scaling</td>
-                        <td>Automatic per request</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Ops Overhead</strong></td>
-                        <td>High</td>
-                        <td>Medium</td>
-                        <td>Low</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Cost Model</strong></td>
-                        <td>Per-second/hour</td>
-                        <td>Per-hour or per-task</td>
-                        <td>Per-request + duration</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Startup</strong></td>
-                        <td>Minutes</td>
-                        <td>Seconds</td>
-                        <td>Milliseconds</td>
-                    </tr>
-                </table>
-                <div class="key-point">
-                    <strong>Best practice:</strong> Start with the least overhead that meets your requirements. Most architectures combine multiple services.
+                <div class="key-point" style="margin-top: 15px;">
+                    <strong>Containers</strong> (ECS/EKS) fit between: microservices needing portability without full VM overhead.
                 </div>
-                <aside class="notes">Decision guide questions: Need full OS access? EC2. Containerized or microservices? ECS/EKS + Fargate. Event-driven and short-lived? Lambda. Need Kubernetes portability? EKS. Want minimal ops? Lambda or Fargate. The decision is rarely binary. Many production environments use multiple compute services together. For example, a web application might use EC2 for the primary app server, ECS/Fargate for microservices, and Lambda for event-driven tasks like image processing.</aside>
+                <aside class="notes">There's no one-size-fits-all answer. EC2 gives maximum control, Lambda gives minimum management. Containers sit in between. Many production architectures use a mix: EC2 for the main application, Lambda for event processing, containers for microservices. Start with the question: "How much infrastructure do I want to manage?" and work from there. Cost depends heavily on workload patterns — Lambda can be cheaper for sporadic traffic, EC2 for steady high utilization.</aside>
             </section>
 
-            <!-- Slide 30: Module Summary -->
+            <!-- Slide 12: Module Summary -->
             <section>
                 <h2>&#128203; Module 2 Summary</h2>
-                <div class="two-columns">
-                    <div>
-                        <ul>
-                            <li class="fragment fade-up"><strong>EC2</strong> &mdash; virtual servers with full OS control and multiple pricing models</li>
-                            <li class="fragment fade-up"><strong>Lifecycle states</strong> determine billing and data persistence</li>
-                            <li class="fragment fade-up"><strong>ECS / EKS</strong> &mdash; managed container orchestration; Fargate for serverless containers</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <ul>
-                            <li class="fragment fade-up"><strong>Lambda</strong> &mdash; event-driven, pay-per-use serverless compute</li>
-                            <li class="fragment fade-up"><strong>No single best option</strong> &mdash; choose by control, cost, and ops needs</li>
-                            <li class="fragment fade-up">Modern apps often <strong>combine multiple services</strong></li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Reinforce key takeaways: EC2 for full control, containers for microservices and portability, Lambda for event-driven workloads. The right answer is almost always "it depends" — and now students have the framework to make that decision.</aside>
+                <ul>
+                    <li>EC2: full-control virtual machines</li>
+                    <li>Instance families match workload needs</li>
+                    <li>Containers: ECS, EKS, Fargate</li>
+                    <li>Lambda: serverless, event-driven compute</li>
+                </ul>
+                <aside class="notes">Recap: EC2 provides full VM control with multiple pricing options. Instance types are grouped into families optimized for different workloads. Containers offer portability and efficiency for microservices. Lambda removes all server management for event-driven functions. The right choice depends on your control needs, workload patterns, and operational preferences.</aside>
             </section>
 
-            <!-- Slide 31: Lab Callout -->
-            <section data-background-color="#1a365d" class="lab-callout">
-                <h2>&#129489;&#8205;&#128187; Hands-On Lab</h2>
+            <!-- Slide 13: Lab Callout -->
+            <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="lab-callout" style="text-align: center !important;">
+                <h2>&#128736;&#65039; Lab Time</h2>
                 <h3>Launch the Employee Directory App on EC2</h3>
-                <p>Apply what you've learned by launching and configuring an EC2 instance.</p>
-                <div class="highlight-box">
-                    <h4>What You'll Do</h4>
-                    <ul>
-                        <li>Select an AMI and instance type</li>
-                        <li>Configure a security group</li>
-                        <li>Bootstrap with a user data script</li>
-                        <li>Connect to the running application</li>
-                    </ul>
-                </div>
-                <aside class="notes">This lab ties together the EC2 concepts covered in this module. Students will launch an EC2 instance running the Employee Directory web application using a user data script. They will configure security groups, verify the application is accessible, and explore instance metadata.</aside>
+                <ul>
+                    <li>Launch an EC2 instance with a web application</li>
+                    <li>Configure security group for HTTP access</li>
+                    <li>Verify the application in a browser</li>
+                </ul>
+                <aside class="notes">In this lab, students launch an EC2 instance using an AMI with the employee directory application pre-installed. They'll configure a security group to allow HTTP traffic and verify the app is accessible. This builds on Module 1's IAM role, which gives the instance permissions to access other AWS services. Circulate and help students troubleshoot connectivity issues — usually related to security group rules.</aside>
             </section>
 
-            <!-- Slide 32: Questions -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="questions-slide">
+            <!-- Slide 14: Questions -->
+            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
-                <p>Let's discuss before moving to Module 3 &mdash; Networking</p>
-                <div class="module-progress">
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                </div>
-                <aside class="notes">Open the floor for questions. Common questions at this point: "When would I choose Fargate over Lambda?" (duration, container compatibility), "How do I estimate EC2 costs?" (AWS Pricing Calculator), "Can Lambda call other Lambda functions?" (yes, but prefer Step Functions for orchestration).</aside>
+                <p>Module 2: AWS Compute</p>
+                <aside class="notes">Open the floor for questions about EC2, containers, Lambda, or compute selection. Common questions: When to use Fargate vs EC2 launch type? How does Lambda pricing compare at scale? Address any confusion before moving to Module 3 on networking.</aside>
             </section>
 
         </div>

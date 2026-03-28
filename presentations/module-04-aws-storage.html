@@ -60,7 +60,7 @@
             <!-- Slide 1: Title -->
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="title-slide">
                 <h1>&#128190; AWS Storage</h1>
-                <h2>AWS Technical Essentials &mdash; Module 4</h2>
+                <h2>Module 4 &mdash; AWS Technical Essentials</h2>
                 <div class="module-progress">
                     <div class="step completed"></div>
                     <div class="step completed"></div>
@@ -70,613 +70,220 @@
                     <div class="step"></div>
                     <div class="step"></div>
                 </div>
-                <aside class="notes">Module 4 of 7. We now move from compute to storage. Storage is foundational — every application needs to persist data somewhere. This module covers block, file, and object storage options on AWS.</aside>
+                <aside class="notes">Module 4 covers AWS storage services. Every application needs to persist data somewhere. We'll cover the three storage paradigms (block, file, object) and focus on EBS and S3 as the core services.</aside>
             </section>
 
-            <!-- Slide 2: Module Objectives -->
+            <!-- Slide 2: Agenda -->
             <section>
-                <h2>&#127919; Module Objectives</h2>
+                <h2>&#128203; Module 4 Agenda</h2>
                 <ul>
-                    <li class="fragment fade-up">Differentiate block, file, and object storage</li>
-                    <li class="fragment fade-up">Compare EC2 instance store vs. Amazon EBS</li>
-                    <li class="fragment fade-up">Understand S3 buckets, objects, and storage classes</li>
-                    <li class="fragment fade-up">Configure S3 access control and encryption</li>
-                    <li class="fragment fade-up">Choose the right storage service per workload</li>
+                    <li>Storage types: block, file, object</li>
+                    <li>EC2 instance store and Amazon EBS</li>
+                    <li>Amazon S3 fundamentals</li>
+                    <li>Lab: Create an S3 bucket for the app</li>
                 </ul>
-                <aside class="notes">By the end of this module, participants will be able to select and justify the appropriate AWS storage service for common application architectures. EBS volume types and performance characteristics are covered in the EBS section. S3 lifecycle policies are covered alongside storage classes.</aside>
+                <aside class="notes">We start with the three storage paradigms, then dive into EBS for block storage and S3 for object storage. The lab has students create an S3 bucket to store employee profile photos for the directory application.</aside>
             </section>
 
             <!-- Slide 3: Section Divider — Storage Types -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%)" class="section-divider">
                 <h2>&#128451; AWS Storage Types</h2>
-                <h3>Block, File, and Object Storage</h3>
+                <h3>Block, File, and Object</h3>
                 <aside class="notes">Before diving into specific services, let's establish the three fundamental storage paradigms and how they map to AWS offerings.</aside>
             </section>
 
-            <!-- Slide 4: Three Storage Paradigms -->
+            <!-- Slide 4: Storage Types Overview -->
             <section>
-                <h2>Three Storage Paradigms</h2>
+                <h2>&#128451; Three Storage Types</h2>
                 <div class="three-columns">
                     <div class="card">
-                        <h4>&#129521; Block Storage</h4>
+                        <h4>&#129521; Block</h4>
                         <ul>
-                            <li class="fragment fade-up">Fixed-size blocks with unique addresses</li>
-                            <li class="fragment fade-up">Low latency, high IOPS</li>
-                            <li class="fragment fade-up"><strong>Use:</strong> databases, boot volumes</li>
+                            <li>Like a hard drive</li>
+                            <li>Low latency, high IOPS</li>
+                            <li>Databases, boot volumes</li>
                         </ul>
                     </div>
                     <div class="card">
-                        <h4>&#128193; File Storage</h4>
+                        <h4>&#128193; File</h4>
                         <ul>
-                            <li class="fragment fade-up">Hierarchical directory structure</li>
-                            <li class="fragment fade-up">Shared via NFS or SMB</li>
-                            <li class="fragment fade-up"><strong>Use:</strong> shared app data, CMS</li>
+                            <li>Shared filesystem (NFS/SMB)</li>
+                            <li>Multiple instances access</li>
+                            <li>EFS, FSx</li>
                         </ul>
                     </div>
                     <div class="card">
-                        <h4>&#128230; Object Storage</h4>
+                        <h4>&#128230; Object</h4>
                         <ul>
-                            <li class="fragment fade-up">Flat namespace: data + metadata + key</li>
-                            <li class="fragment fade-up">Massive scalability</li>
-                            <li class="fragment fade-up"><strong>Use:</strong> backups, media, data lakes</li>
+                            <li>Flat namespace + metadata</li>
+                            <li>Massive scalability</li>
+                            <li>Backups, media, data lakes</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Block storage is like a raw hard drive — the OS manages the filesystem. File storage provides a shared filesystem. Object storage treats each item as an immutable object with metadata. Each paradigm has distinct performance, cost, and access characteristics.</aside>
+                <aside class="notes">Block storage is like a raw hard drive — the OS manages the filesystem. File storage provides a shared filesystem accessible by multiple servers. Object storage treats each item as a flat object with metadata and a unique key. Each has distinct performance, cost, and access characteristics. AWS maps these to EBS/Instance Store (block), EFS/FSx (file), and S3 (object).</aside>
             </section>
 
-            <!-- Slide 5: AWS Storage Services Landscape -->
-            <section>
-                <h2>AWS Storage Services Landscape</h2>
-                <table>
-                    <thead>
-                        <tr><th>Paradigm</th><th>AWS Service</th><th>Access</th><th>Key Trait</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr class="fragment fade-up"><td>Block</td><td>Amazon EBS</td><td>Attached to EC2</td><td>Persistent, per-AZ</td></tr>
-                        <tr class="fragment fade-up"><td>Block</td><td>EC2 Instance Store</td><td>Attached to EC2</td><td>Ephemeral, high I/O</td></tr>
-                        <tr class="fragment fade-up"><td>File</td><td>Amazon EFS</td><td>NFS v4.1</td><td>Elastic, multi-AZ</td></tr>
-                        <tr class="fragment fade-up"><td>File</td><td>Amazon FSx</td><td>SMB / Lustre</td><td>Managed specialty FS</td></tr>
-                        <tr class="fragment fade-up"><td>Object</td><td>Amazon S3</td><td>HTTPS / REST API</td><td>11 9s durability</td></tr>
-                        <tr class="fragment fade-up"><td>Object</td><td>S3 Glacier</td><td>HTTPS / REST API</td><td>Archive-tier, lowest cost</td></tr>
-                    </tbody>
-                </table>
-                <aside class="notes">This table gives a quick mapping. We'll focus primarily on EBS and S3 in this module, with a brief comparison to EFS and FSx at the end. S3 Glacier is actually a set of S3 storage classes now.</aside>
-            </section>
-
-            <!-- Slide 6: Section Divider — EC2 Instance Storage & EBS -->
+            <!-- Slide 5: Section Divider — EBS -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%)" class="section-divider">
-                <h2>&#128425; EC2 Instance Storage &amp; Amazon EBS</h2>
-                <h3>Block Storage for EC2 Workloads</h3>
-                <aside class="notes">Let's start with the block storage options directly attached to or associated with EC2 instances.</aside>
+                <h2>&#128425; EC2 Storage</h2>
+                <h3>Instance Store and Amazon EBS</h3>
+                <aside class="notes">Let's look at the block storage options directly attached to or associated with EC2 instances.</aside>
             </section>
 
-            <!-- Slide 7: EC2 Instance Store -->
+            <!-- Slide 6: Instance Store vs EBS -->
             <section>
-                <h2>EC2 Instance Store</h2>
+                <h2>&#9889; Instance Store vs EBS</h2>
                 <div class="two-columns">
-                    <div>
-                        <h3>&#9889; Characteristics</h3>
+                    <div class="card">
+                        <h4>Instance Store</h4>
                         <ul>
-                            <li class="fragment fade-up">Physically attached NVMe/SSD disks</li>
-                            <li class="fragment fade-up">Millions of IOPS possible</li>
-                            <li class="fragment fade-up">Included in instance price</li>
-                            <li class="fragment fade-up">Size depends on instance type</li>
+                            <li>Physically attached to host</li>
+                            <li>Ephemeral (data lost on stop)</li>
+                            <li>Highest possible IOPS</li>
+                            <li>Use for caches, temp data</li>
                         </ul>
                     </div>
-                    <div>
-                        <h3>&#9888;&#65039; Limitations</h3>
+                    <div class="card">
+                        <h4>Amazon EBS</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>Ephemeral</strong> &mdash; data lost on stop/terminate</li>
-                            <li class="fragment fade-up">Cannot detach or reattach</li>
-                            <li class="fragment fade-up">No snapshot support</li>
-                            <li class="fragment fade-up">Not available on all instance types</li>
+                            <li>Network-attached volumes</li>
+                            <li>Persistent across stop/start</li>
+                            <li>Snapshots for backup</li>
+                            <li>Use for databases, OS volumes</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Rule of thumb: Never store data on instance store that you cannot afford to lose. Use it for caches, scratch data, and temporary buffers. The i3 and i3en families offer up to 60 TB of NVMe instance storage. Always replicate critical data elsewhere.</aside>
+                <aside class="notes">Instance store is included with certain EC2 instance types and offers the highest raw performance since it's physically attached. However, data is lost when the instance stops or terminates — never store data you can't afford to lose. EBS is the workhorse for persistent storage: network-attached volumes within a single AZ, replicated for durability, supporting snapshots and encryption. EBS volumes can be resized, re-typed, and moved between instances (within the same AZ).</aside>
             </section>
 
-            <!-- Slide 8: Amazon EBS Overview -->
+            <!-- Slide 7: EBS Volume Types -->
             <section>
-                <h2>Amazon Elastic Block Store (EBS)</h2>
-                <div class="concept-box">
-                    <h4>&#128190; Persistent Block Storage for EC2</h4>
-                    <p>Network-attached block volumes within a single Availability Zone.</p>
-                </div>
-                <ul>
-                    <li class="fragment fade-up">Replicated <strong>within its AZ</strong> for durability</li>
-                    <li class="fragment fade-up">Live resizing, type changes, IOPS adjustments</li>
-                    <li class="fragment fade-up">Point-in-time snapshots stored in S3</li>
-                    <li class="fragment fade-up">AES-256 encryption at rest and in transit</li>
-                    <li class="fragment fade-up">Billed per GB-month + IOPS (io1/io2)</li>
-                </ul>
-                <aside class="notes">EBS is the workhorse for persistent block storage. Think of it as a virtual hard drive. Unlike instance store, EBS data persists across stop/start and can be snapshotted. The tradeoff is slightly higher latency since it's network-attached.</aside>
-            </section>
-
-            <!-- Slide 9: EBS Volume Types (merged SSD + HDD) -->
-            <section>
-                <h2>EBS Volume Types</h2>
-                <table>
-                    <thead>
-                        <tr><th>Type</th><th>Category</th><th>Max IOPS</th><th>Max Throughput</th><th>Use Case</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr class="fragment fade-up"><td><strong>gp3</strong></td><td>SSD &mdash; General</td><td>16,000</td><td>1,000 MiB/s</td><td>Default for most workloads</td></tr>
-                        <tr class="fragment fade-up"><td><strong>io2 Block Express</strong></td><td>SSD &mdash; Provisioned</td><td>256,000</td><td>4,000 MiB/s</td><td>High-perf databases</td></tr>
-                        <tr class="fragment fade-up"><td><strong>st1</strong></td><td>HDD &mdash; Throughput</td><td>500</td><td>500 MiB/s</td><td>Big data, log processing</td></tr>
-                        <tr class="fragment fade-up"><td><strong>sc1</strong></td><td>HDD &mdash; Cold</td><td>250</td><td>250 MiB/s</td><td>Infrequent access, lowest cost</td></tr>
-                    </tbody>
-                </table>
-                <div class="highlight-box fragment fade-up">
-                    <strong>Tip:</strong> gp3 decouples IOPS from volume size &mdash; often 20% cheaper than gp2. HDD types cannot be boot volumes.
-                </div>
-                <aside class="notes">gp3 is the recommended default. It provides a baseline of 3,000 IOPS and 125 MiB/s regardless of volume size. gp2 and io1 still exist but gp3 and io2 Block Express are the current-generation options. HDD volumes are optimized for large sequential I/O, not random reads. st1 is great for streaming workloads like Kafka or Hadoop HDFS. sc1 is the lowest cost option for rarely accessed data.</aside>
-            </section>
-
-            <!-- Slide 10: EBS Snapshots -->
-            <section>
-                <h2>EBS Snapshots</h2>
-                <div class="concept-box">
-                    <h4>&#128248; Point-in-Time Backups</h4>
-                    <p>Incremental backups stored in S3 &mdash; only changed blocks are saved after the first snapshot.</p>
-                </div>
-                <ul>
-                    <li class="fragment fade-up"><strong>Cross-region copy</strong> for disaster recovery</li>
-                    <li class="fragment fade-up"><strong>Restore</strong> into new volumes in any AZ</li>
-                    <li class="fragment fade-up"><strong>Share</strong> with other accounts or make public</li>
-                    <li class="fragment fade-up"><strong>Fast Snapshot Restore</strong> eliminates first-read latency</li>
-                </ul>
-                <div class="highlight-box fragment fade-up">
-                    <strong>Automate:</strong> Use Data Lifecycle Manager (DLM) for scheduled snapshots.
-                </div>
-                <aside class="notes">Snapshots are critical for backup and disaster recovery. Any single snapshot is self-sufficient — you can delete earlier snapshots without affecting later ones. FSR is useful for boot volumes or databases that need immediate full performance. Snapshots are billed per GB-month of data stored.</aside>
-            </section>
-
-            <!-- Slide 11: EBS Encryption & Multi-Attach -->
-            <section>
-                <h2>EBS Encryption &amp; Multi-Attach</h2>
+                <h2>&#128190; EBS Volume Types</h2>
                 <div class="two-columns">
-                    <div>
-                        <h3>&#128274; Encryption</h3>
+                    <div class="card">
+                        <h4>SSD-Backed</h4>
                         <ul>
-                            <li class="fragment fade-up">AES-256 at rest and in transit</li>
-                            <li class="fragment fade-up">AWS KMS keys (managed or custom)</li>
-                            <li class="fragment fade-up">Encrypted snapshots automatic</li>
-                            <li class="fragment fade-up">Enable <em>encryption by default</em> per region</li>
+                            <li><strong>gp3/gp2:</strong> general purpose (boot, apps)</li>
+                            <li><strong>io2/io1:</strong> high-performance databases</li>
                         </ul>
                     </div>
-                    <div>
-                        <h3>&#128279; Multi-Attach</h3>
+                    <div class="card">
+                        <h4>HDD-Backed</h4>
                         <ul>
-                            <li class="fragment fade-up"><strong>io1/io2 only</strong></li>
-                            <li class="fragment fade-up">Up to 16 Nitro instances per volume</li>
-                            <li class="fragment fade-up">All instances in the <strong>same AZ</strong></li>
-                            <li class="fragment fade-up">App must manage concurrent writes</li>
+                            <li><strong>st1:</strong> throughput-optimized (big data)</li>
+                            <li><strong>sc1:</strong> cold storage (infrequent access)</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Encryption is transparent to the application — no code changes needed. Multi-Attach enables shared-disk clusters but requires a cluster-aware filesystem (like GFS2 or OCFS2) to prevent data corruption from concurrent writes. Cost tip: Delete unattached EBS volumes and old snapshots to avoid unnecessary charges. Use Elastic Volumes to right-size without downtime.</aside>
+                <div class="key-point" style="margin-top: 15px;">
+                    <strong>Default choice:</strong> gp3 for most workloads (balanced cost and performance).
+                </div>
+                <aside class="notes">gp3 is the latest general purpose SSD — it offers a baseline of 3,000 IOPS and 125 MB/s, and you can independently provision more. gp2 uses a burst credit model. io2 Block Express is for the most demanding databases needing sub-millisecond latency and up to 256,000 IOPS. st1 is for sequential reads (data warehouses, log processing). sc1 is the lowest cost for infrequently accessed data. Most workloads should start with gp3 and upgrade only if monitoring shows they need more.</aside>
             </section>
 
-            <!-- Slide 12: Section Divider — Amazon S3 -->
+            <!-- Slide 8: Section Divider — S3 -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%)" class="section-divider">
                 <h2>&#128230; Amazon S3</h2>
-                <h3>Object Storage at Any Scale</h3>
-                <aside class="notes">Now we move to one of AWS's most important and widely used services — Amazon S3. It's not just storage; it's a foundational building block for data lakes, backups, content delivery, and more.</aside>
+                <h3>Scalable object storage</h3>
+                <aside class="notes">S3 is one of the most widely used AWS services. It stores virtually unlimited data as objects, accessed over HTTPS.</aside>
             </section>
 
-            <!-- Slide 13: What is Amazon S3? -->
+            <!-- Slide 9: What Is Amazon S3? -->
             <section>
-                <h2>What is Amazon S3?</h2>
+                <h2>&#128230; What Is Amazon S3?</h2>
                 <div class="concept-box">
-                    <h4>&#127758; Object Storage, Built for the Cloud</h4>
-                    <p>Data stored as objects in <strong>buckets</strong>. Designed for <strong>99.999999999% (11 nines)</strong> durability.</p>
+                    <p><strong>Simple Storage Service</strong> &mdash; store and retrieve any amount of data, anytime, from anywhere.</p>
                 </div>
-                <div class="two-columns fragment fade-up">
-                    <div>
-                        <h4>Core Concepts</h4>
-                        <ul>
-                            <li><strong>Bucket:</strong> globally unique container</li>
-                            <li><strong>Object:</strong> file + metadata (up to 5 TB)</li>
-                            <li><strong>Key:</strong> unique ID within a bucket</li>
-                            <li><strong>Prefix:</strong> simulates folder structure</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4>Key Properties</h4>
-                        <ul>
-                            <li>Unlimited storage capacity</li>
-                            <li>Regional service</li>
-                            <li>RESTful API access</li>
-                            <li>Event notifications and triggers</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">S3 is one of the oldest AWS services (launched 2006) and is incredibly versatile. The flat namespace with keys means there are no real directories — the console simulates folders using the "/" delimiter in keys. Objects can range from 0 bytes to 5 TB; uploads over 5 GB must use multipart upload.</aside>
-            </section>
-
-            <!-- Slide 14: S3 Bucket Naming & Structure -->
-            <section>
-                <h2>S3 Bucket Naming &amp; Structure</h2>
-                <div class="two-columns">
-                    <div>
-                        <h3>Naming Rules</h3>
-                        <ul>
-                            <li class="fragment fade-up"><strong>Globally unique</strong> across all accounts</li>
-                            <li class="fragment fade-up">3&ndash;63 chars; lowercase, numbers, hyphens</li>
-                            <li class="fragment fade-up">Must start with letter or number</li>
-                            <li class="fragment fade-up">Cannot look like an IP address</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3>Object Addressing</h3>
-                        <pre><code class="language-plaintext">https://my-bucket.s3.amazonaws.com/photos/image.jpg
-
-Bucket: my-bucket
-Key:    photos/image.jpg</code></pre>
-                        <div class="highlight-box fragment fade-up">
-                            <strong>Prefix:</strong> <code>photos/</code> acts as a virtual folder.
-                        </div>
-                    </div>
-                </div>
-                <aside class="notes">Bucket names form part of the DNS name, hence the strict rules. The global uniqueness requirement means you cannot create a bucket with a name someone else already uses in any region. Plan your naming convention early — include account ID or project prefix for uniqueness.</aside>
-            </section>
-
-            <!-- Slide 15: S3 Storage Classes (merged with cost tradeoffs) -->
-            <section>
-                <h2>S3 Storage Classes</h2>
-                <table>
-                    <thead>
-                        <tr><th>Storage Class</th><th>Availability</th><th>Retrieval</th><th>Use Case</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr class="fragment fade-up"><td><strong>Standard</strong></td><td>99.99%</td><td>Milliseconds</td><td>Frequently accessed data</td></tr>
-                        <tr class="fragment fade-up"><td><strong>Intelligent-Tiering</strong></td><td>99.9%</td><td>Milliseconds</td><td>Unknown access patterns</td></tr>
-                        <tr class="fragment fade-up"><td><strong>Standard-IA / One Zone-IA</strong></td><td>99.9% / 99.5%</td><td>Milliseconds</td><td>Infrequent access</td></tr>
-                        <tr class="fragment fade-up"><td><strong>Glacier Instant</strong></td><td>99.9%</td><td>Milliseconds</td><td>Archive, fast retrieval</td></tr>
-                        <tr class="fragment fade-up"><td><strong>Glacier Flexible</strong></td><td>99.99%*</td><td>1 min&ndash;12 hrs</td><td>Archive, flexible retrieval</td></tr>
-                        <tr class="fragment fade-up"><td><strong>Glacier Deep Archive</strong></td><td>99.99%*</td><td>12&ndash;48 hrs</td><td>Long-term archive (~$1/TB/mo)</td></tr>
-                    </tbody>
-                </table>
-                <div class="highlight-box fragment fade-up">
-                    <strong>All classes:</strong> 11 nines durability. Cost decreases top to bottom; retrieval cost increases.
-                </div>
-                <aside class="notes">*Glacier availability figures are after restoration. Intelligent-Tiering monitors and moves objects automatically with no retrieval fees. Standard-IA and One Zone-IA have a 30-day minimum charge and per-GB retrieval fee. Glacier classes have 90-day (Instant/Flexible) or 180-day (Deep Archive) minimums. Standard is ~$23/TB/mo in US East.</aside>
-            </section>
-
-            <!-- Slide 16: S3 Lifecycle Policies -->
-            <section>
-                <h2>S3 Lifecycle Policies</h2>
-                <p>Automate transitions between storage classes or schedule deletion.</p>
-                <div class="card fragment fade-up">
-                    <h4>&#128260; Example Lifecycle Rule</h4>
-                    <pre><code class="language-json">{
-  "Rules": [{
-    "ID": "ArchiveOldLogs",
-    "Filter": { "Prefix": "logs/" },
-    "Transitions": [
-      { "Days": 30, "StorageClass": "STANDARD_IA" },
-      { "Days": 90, "StorageClass": "GLACIER" }
-    ],
-    "Expiration": { "Days": 2555 }
-  }]
-}</code></pre>
-                </div>
-                <div class="key-point fragment fade-up">
-                    <strong>Fully automated</strong> &mdash; no Lambda needed. Transitions run at midnight UTC.
-                </div>
-                <aside class="notes">Lifecycle policies are one of the most effective ways to optimize S3 costs. You can apply rules to the entire bucket or filter by prefix and/or tags. Transitions only move in one direction (Standard -> IA -> Glacier). You can also expire (delete) objects or incomplete multipart uploads.</aside>
-            </section>
-
-            <!-- Slide 17: S3 Versioning -->
-            <section>
-                <h2>S3 Versioning</h2>
-                <div class="two-columns">
-                    <div>
-                        <h3>How It Works</h3>
-                        <ul>
-                            <li class="fragment fade-up">Enabled at the <strong>bucket level</strong></li>
-                            <li class="fragment fade-up">Each PUT creates a new Version ID</li>
-                            <li class="fragment fade-up">DELETE inserts a <strong>delete marker</strong></li>
-                            <li class="fragment fade-up">Cannot disable &mdash; only <em>suspend</em></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3>Benefits</h3>
-                        <ul>
-                            <li class="fragment fade-up">Protects against accidental deletes</li>
-                            <li class="fragment fade-up">Enables <strong>MFA Delete</strong></li>
-                            <li class="fragment fade-up">Required for Cross-Region Replication</li>
-                            <li class="fragment fade-up">Combine with lifecycle to expire old versions</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Cost impact: Every version is a separate object that incurs storage charges. Use lifecycle rules to expire noncurrent versions (e.g., keep only the last 3). MFA Delete requires multi-factor authentication to permanently delete a version or change versioning state.</aside>
-            </section>
-
-            <!-- Slide 18: S3 Access Control -->
-            <section>
-                <h2>S3 Access Control</h2>
-                <div class="three-columns">
-                    <div class="card">
-                        <h4>&#128220; Bucket Policies</h4>
-                        <ul>
-                            <li class="fragment fade-up">JSON resource policy on bucket</li>
-                            <li class="fragment fade-up">Cross-account access</li>
-                            <li class="fragment fade-up">Condition keys (IP, VPC, MFA)</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#128101; IAM Policies</h4>
-                        <ul>
-                            <li class="fragment fade-up">Identity-based, centralized</li>
-                            <li class="fragment fade-up">Fine-grained per-action control</li>
-                            <li class="fragment fade-up">Recommended primary method</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#128683; Block Public Access</h4>
-                        <ul>
-                            <li class="fragment fade-up">Account and bucket-level guardrail</li>
-                            <li class="fragment fade-up">Overrides ACLs and policies</li>
-                            <li class="fragment fade-up"><strong>Enabled by default</strong></li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">ACLs are legacy. AWS recommends disabling ACLs (Bucket Owner Enforced) and using bucket policies + IAM policies for all access control. Block Public Access acts as a safety net. The final effective permission is the union of IAM policy and bucket policy, restricted by Block Public Access.</aside>
-            </section>
-
-            <!-- Slide 19: S3 Bucket Policy Example -->
-            <section>
-                <h2>S3 Bucket Policy &mdash; Example</h2>
-                <pre><code class="language-json">{
-  "Version": "2012-10-17",
-  "Statement": [{
-    "Sid": "AllowReadFromVPC",
-    "Effect": "Allow",
-    "Principal": "*",
-    "Action": ["s3:GetObject"],
-    "Resource": "arn:aws:s3:::my-app-data/*",
-    "Condition": {
-      "StringEquals": { "aws:SourceVpc": "vpc-0a1b2c3d4e5f" }
-    }
-  }]
-}</code></pre>
-                <aside class="notes">This example restricts access to a specific VPC. Bucket policies support the full range of IAM condition keys. You can also add Deny statements to enforce encryption on uploads (e.g., deny PutObject unless SSE-KMS header is present).</aside>
-            </section>
-
-            <!-- Slide 20: S3 Encryption -->
-            <section>
-                <h2>S3 Encryption</h2>
-                <table>
-                    <thead>
-                        <tr><th>Method</th><th>Key Management</th><th>When to Use</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr class="fragment fade-up">
-                            <td><strong>SSE-S3</strong></td>
-                            <td>AWS manages keys</td>
-                            <td>Default; simplest option</td>
-                        </tr>
-                        <tr class="fragment fade-up">
-                            <td><strong>SSE-KMS</strong></td>
-                            <td>AWS KMS (CMK or managed)</td>
-                            <td>Audit trail, key rotation, compliance</td>
-                        </tr>
-                        <tr class="fragment fade-up">
-                            <td><strong>SSE-C</strong></td>
-                            <td>Customer provides key per request</td>
-                            <td>Full key control, HTTPS required</td>
-                        </tr>
-                        <tr class="fragment fade-up">
-                            <td><strong>Client-side</strong></td>
-                            <td>Customer encrypts before upload</td>
-                            <td>End-to-end encryption requirements</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="highlight-box fragment fade-up">
-                    <strong>Since Jan 2023:</strong> All new S3 objects encrypted with SSE-S3 by default.
-                </div>
-                <aside class="notes">SSE-KMS adds CloudTrail logging of key usage and separation of duties between data and key administrators. SSE-C is for organizations that must retain full control of encryption keys. Client-side encryption is the most secure but requires application changes.</aside>
-            </section>
-
-            <!-- Slide 21: S3 Use Cases -->
-            <section>
-                <h2>S3 Use Cases</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>&#128190; Backup &amp; DR</h4>
-                        <ul>
-                            <li class="fragment fade-up">Cross-region replication</li>
-                            <li class="fragment fade-up">EBS snapshot storage</li>
-                            <li class="fragment fade-up">Database backup target</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#127760; Static Website Hosting</h4>
-                        <ul>
-                            <li class="fragment fade-up">Host HTML/CSS/JS from S3</li>
-                            <li class="fragment fade-up">Pair with CloudFront CDN</li>
-                            <li class="fragment fade-up">Custom domain via Route 53</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#128202; Data Lake Foundation</h4>
-                        <ul>
-                            <li class="fragment fade-up">Central raw data repository</li>
-                            <li class="fragment fade-up">Query with Athena or Redshift Spectrum</li>
-                            <li class="fragment fade-up">Decouple storage from compute</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#128246; Content Distribution</h4>
-                        <ul>
-                            <li class="fragment fade-up">Media files, software updates</li>
-                            <li class="fragment fade-up">Pre-signed URLs for secure sharing</li>
-                            <li class="fragment fade-up">Transfer Acceleration for uploads</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">S3 is often called the "storage backbone of AWS." It underpins many other services — EBS snapshots are stored in S3 (though not visible in your bucket), CloudTrail logs go to S3, and many analytics services read directly from S3.</aside>
-            </section>
-
-            <!-- Slide 22: S3 Pricing Model -->
-            <section>
-                <h2>S3 Pricing Model</h2>
-                <div class="concept-box">
-                    <h4>&#128176; Pay for What You Use</h4>
-                    <p>No minimum commitment. Three cost components:</p>
-                </div>
-                <div class="three-columns fragment fade-up">
-                    <div class="card">
-                        <h4>Storage</h4>
-                        <ul>
-                            <li>Per GB-month</li>
-                            <li>Varies by storage class</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Requests</h4>
-                        <ul>
-                            <li>PUT/GET per 1,000 requests</li>
-                            <li>LIST requests 5x more costly</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>Data Transfer</h4>
-                        <ul>
-                            <li>Data IN: free</li>
-                            <li>S3 to CloudFront: free</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Cost tip: Transferring data from S3 to CloudFront is free — use CloudFront to serve S3 content and save on data transfer. A common surprise is request pricing — millions of tiny GET requests can add up. For data transfer, the first 100 GB/month out to the internet is free (free tier). Cross-region replication incurs data transfer charges between regions. Lifecycle transitions also count as requests.</aside>
-            </section>
-
-            <!-- Slide 23: Section Divider — Choosing the Right Storage -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%)" class="section-divider">
-                <h2>&#129518; Choose the Right Storage Service</h2>
-                <h3>Decision Factors and Comparisons</h3>
-                <aside class="notes">Now that we've covered the details of EBS and S3, let's step back and talk about how to make the right choice for a given workload.</aside>
-            </section>
-
-            <!-- Slide 24: Storage Comparison (merged block + object/file) -->
-            <section>
-                <h2>AWS Storage Comparison</h2>
-                <table>
-                    <thead>
-                        <tr><th>Feature</th><th>Instance Store</th><th>EBS</th><th>S3</th><th>EFS</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr class="fragment fade-up"><td><strong>Type</strong></td><td>Block</td><td>Block</td><td>Object</td><td>File (NFS)</td></tr>
-                        <tr class="fragment fade-up"><td><strong>Persistence</strong></td><td>Ephemeral</td><td>Persistent</td><td>Persistent</td><td>Persistent</td></tr>
-                        <tr class="fragment fade-up"><td><strong>Scope</strong></td><td>Instance lifetime</td><td>Single AZ</td><td>Regional</td><td>Regional (multi-AZ)</td></tr>
-                        <tr class="fragment fade-up"><td><strong>Durability</strong></td><td>None</td><td>99.999%</td><td>11 nines</td><td>11 nines</td></tr>
-                        <tr class="fragment fade-up"><td><strong>Best For</strong></td><td>Caches, scratch</td><td>DBs, boot vols</td><td>Backups, data lakes</td><td>Shared app data</td></tr>
-                    </tbody>
-                </table>
-                <div class="key-point fragment fade-up">
-                    <strong>Most architectures combine services</strong> &mdash; EBS for the database, S3 for backups, EFS for shared config.
-                </div>
-                <aside class="notes">No single service fits all workloads. FSx is also available for SMB/Lustre/NetApp specialty filesystems. S3 and EFS both provide eleven nines durability. S3 is accessed via HTTPS/REST API while EFS provides a POSIX-compliant filesystem. EBS achieves durability through replication within the AZ; for cross-AZ durability, you need snapshots.</aside>
-            </section>
-
-            <!-- Slide 25: When to Use What -->
-            <section>
-                <h2>When to Use What</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>&#128425; Use EBS When...</h4>
-                        <ul>
-                            <li class="fragment fade-up">Running a self-managed database</li>
-                            <li class="fragment fade-up">EC2 boot volume needed</li>
-                            <li class="fragment fade-up">Sub-millisecond latency required</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#128230; Use S3 When...</h4>
-                        <ul>
-                            <li class="fragment fade-up">Storing backups, logs, or media</li>
-                            <li class="fragment fade-up">Building a data lake</li>
-                            <li class="fragment fade-up">Hosting static websites</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#128193; Use EFS When...</h4>
-                        <ul>
-                            <li class="fragment fade-up">Multiple instances need shared files</li>
-                            <li class="fragment fade-up">POSIX filesystem required</li>
-                            <li class="fragment fade-up">Unpredictable storage growth</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#9889; Use Instance Store When...</h4>
-                        <ul>
-                            <li class="fragment fade-up">Temporary scratch space or buffers</li>
-                            <li class="fragment fade-up">Regenerable caches</li>
-                            <li class="fragment fade-up">Maximum I/O performance needed</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">These are guidelines, not hard rules. Real architectures often combine multiple services. For example, a media processing pipeline might use S3 for source and destination files, EBS for the processing instance's OS and temp files, and EFS if multiple processing instances need to share intermediate results.</aside>
-            </section>
-
-            <!-- Slide 26: Lab Callout -->
-            <section data-background-color="#1a365d" class="lab-callout">
-                <h2>&#129489;&#8205;&#128187; Hands-On Lab</h2>
-                <h3>Create an Amazon S3 Bucket</h3>
-                <p>Apply what you've learned about S3 in a guided exercise.</p>
                 <ul>
-                    <li class="fragment fade-up">Create a bucket with a globally unique name</li>
-                    <li class="fragment fade-up">Configure versioning, encryption, Block Public Access</li>
-                    <li class="fragment fade-up">Upload objects and apply a bucket policy</li>
-                    <li class="fragment fade-up">Create a lifecycle rule for IA transitions</li>
+                    <li>Objects stored in buckets (globally unique name)</li>
+                    <li>11 nines (99.999999999%) durability</li>
+                    <li>Access via HTTPS / REST API</li>
+                    <li>Up to 5 TB per object</li>
                 </ul>
-                <aside class="notes">This lab gives participants hands-on experience with S3. They will create a bucket, configure security settings, upload files, and set up a lifecycle policy. Ensure everyone understands the bucket naming requirements before starting. Walk through the console together if time permits.</aside>
+                <aside class="notes">S3 stores objects (files + metadata) in buckets. Bucket names must be globally unique across all AWS accounts. Each object is identified by a key (like a file path). S3 automatically replicates objects across at least 3 AZs within a Region for 11 nines of durability. Access is via HTTPS, AWS SDKs, CLI, or the Console. Common use cases: static website hosting, backup and archive, data lakes, media distribution, and application assets.</aside>
             </section>
 
-            <!-- Slide 27: Module Summary -->
+            <!-- Slide 10: S3 Storage Classes -->
+            <section>
+                <h2>&#128176; S3 Storage Classes</h2>
+                <ul>
+                    <li><strong>S3 Standard:</strong> frequent access, lowest latency</li>
+                    <li><strong>S3 Intelligent-Tiering:</strong> auto-moves between tiers</li>
+                    <li><strong>S3 Standard-IA:</strong> infrequent access, lower cost</li>
+                    <li><strong>S3 Glacier / Deep Archive:</strong> archival, minutes to hours retrieval</li>
+                </ul>
+                <div class="key-point" style="margin-top: 15px;">
+                    <strong>Tip:</strong> Use lifecycle policies to automatically transition objects between classes.
+                </div>
+                <aside class="notes">S3 offers multiple storage classes to optimize cost based on access patterns. Standard is the default for frequently accessed data. Intelligent-Tiering automatically moves objects to the most cost-effective tier based on access patterns — great when you don't know the pattern. Standard-IA costs less per GB but charges per retrieval. One Zone-IA stores in a single AZ for even lower cost. Glacier Instant Retrieval, Flexible Retrieval, and Deep Archive offer progressively cheaper storage for archival with varying retrieval times from milliseconds to 12 hours. Lifecycle policies automate transitions.</aside>
+            </section>
+
+            <!-- Slide 11: S3 Key Features -->
+            <section>
+                <h2>&#128274; S3 Features</h2>
+                <ul>
+                    <li><strong>Versioning:</strong> keep multiple versions of objects</li>
+                    <li><strong>Encryption:</strong> SSE-S3, SSE-KMS, or client-side</li>
+                    <li><strong>Access control:</strong> IAM policies, bucket policies, ACLs</li>
+                    <li><strong>Block Public Access:</strong> account-level safety net</li>
+                </ul>
+                <aside class="notes">Versioning protects against accidental deletion and overwrites — once enabled, every object change creates a new version. Encryption at rest is available with S3-managed keys (SSE-S3, free), KMS-managed keys (SSE-KMS, for audit trails), or client-side encryption. Access control uses IAM policies (identity-based), bucket policies (resource-based), and Block Public Access settings (account or bucket-level). Best practice: enable versioning, enable default encryption, and turn on Block Public Access unless you explicitly need public objects.</aside>
+            </section>
+
+            <!-- Slide 12: Choosing Storage -->
+            <section>
+                <h2>&#127919; Choosing the Right Storage</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>Use EBS when...</h4>
+                        <ul>
+                            <li>Databases need low latency</li>
+                            <li>Boot volumes for EC2</li>
+                            <li>Single-instance block access</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Use S3 when...</h4>
+                        <ul>
+                            <li>Storing files, images, backups</li>
+                            <li>Data lakes and analytics</li>
+                            <li>Static website hosting</li>
+                        </ul>
+                    </div>
+                </div>
+                <aside class="notes">The general rule: EBS for data that needs to be accessed as a mounted drive by a single instance (databases, application files). S3 for data accessed over HTTP by many consumers (images, documents, backups, logs). EFS when you need a shared filesystem across multiple instances. The decision comes down to access pattern, performance needs, and whether the data needs to look like a filesystem or can be accessed as objects via API.</aside>
+            </section>
+
+            <!-- Slide 13: Module Summary -->
             <section>
                 <h2>&#128203; Module 4 Summary</h2>
-                <div class="two-columns">
-                    <div>
-                        <h4>Key Takeaways</h4>
-                        <ul>
-                            <li class="fragment fade-up">Block, file, and object storage paradigms</li>
-                            <li class="fragment fade-up">Instance store: ephemeral; EBS: persistent</li>
-                            <li class="fragment fade-up">EBS types: gp3 default, io2 high-perf, st1/sc1 HDD</li>
-                            <li class="fragment fade-up">S3: 11 nines durability, 7 storage classes</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4>Best Practices</h4>
-                        <ul>
-                            <li class="fragment fade-up">Use gp3 over gp2 for cost savings</li>
-                            <li class="fragment fade-up">Enable S3 versioning + lifecycle policies</li>
-                            <li class="fragment fade-up">Enable encryption by default (EBS + S3)</li>
-                            <li class="fragment fade-up">Block Public Access at account level</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Review these takeaways before moving to questions. Reinforce that there is no single "best" storage service — the right choice depends on the workload. Encourage participants to think about their current infrastructure and what AWS storage services would be appropriate replacements.</aside>
+                <ul>
+                    <li>Block, file, object: three storage paradigms</li>
+                    <li>EBS: persistent block storage for EC2</li>
+                    <li>S3: scalable object storage (11 nines durability)</li>
+                    <li>Storage classes optimize cost by access pattern</li>
+                </ul>
+                <aside class="notes">Recap: AWS offers storage across three paradigms. Instance store is ephemeral but fast; EBS is persistent block storage within an AZ. S3 provides virtually unlimited object storage with 11 nines of durability and multiple storage classes. Versioning, encryption, and access control are built-in S3 features. Choose based on access patterns and performance requirements.</aside>
             </section>
 
-            <!-- Slide 28: Questions -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="questions-slide" style="text-align: center;">
+            <!-- Slide 14: Lab Callout -->
+            <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="lab-callout" style="text-align: center !important;">
+                <h2>&#128736;&#65039; Lab Time</h2>
+                <h3>Create an S3 Bucket for the App</h3>
+                <ul>
+                    <li>Create an S3 bucket for employee photos</li>
+                    <li>Configure bucket policy and permissions</li>
+                    <li>Upload objects and verify access</li>
+                </ul>
+                <aside class="notes">In this lab, students create an S3 bucket to store employee profile photos. They'll configure a bucket policy, upload test images, and integrate the bucket with the employee directory application running on EC2. Remind students that bucket names must be globally unique and to enable Block Public Access settings appropriately.</aside>
+            </section>
+
+            <!-- Slide 15: Questions -->
+            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Module 4: AWS Storage</p>
-                <div class="module-progress" style="margin-top: 40px;">
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step active"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                </div>
-                <aside class="notes">Open the floor for questions. Common questions at this point: "When would I use EFS over S3?" (shared POSIX filesystem vs. object API), "Is S3 really unlimited?" (yes, in practice), "Can I mount S3 as a filesystem?" (not natively, but tools like Mountpoint for Amazon S3 exist). Next module covers databases.</aside>
+                <aside class="notes">Open the floor for questions about EBS, S3, storage classes, or choosing the right storage service. Common questions: When to use EFS vs S3? How does S3 pricing work? What happens to EBS when an instance terminates?</aside>
             </section>
 
         </div>

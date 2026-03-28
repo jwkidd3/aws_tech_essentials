@@ -53,10 +53,10 @@
     <div class="reveal">
         <div class="slides">
 
-            <!-- Title Slide -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 60%, #3182ce 100%)" class="title-slide">
-                <h1>&#128218; Lab 3</h1>
-                <h2>Create a VPC and Relaunch the Employee Directory Application in Amazon EC2</h2>
+            <!-- Slide 1: Title -->
+            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%)" class="title-slide">
+                <h1>&#127760; Lab 3</h1>
+                <h2>Create a Custom VPC and Deploy EC2</h2>
                 <h3>AWS Technical Essentials &bull; Lab 3 of 6</h3>
                 <div class="module-progress">
                     <div class="step completed"></div>
@@ -66,663 +66,256 @@
                     <div class="step"></div>
                     <div class="step"></div>
                 </div>
-                <aside class="notes">Lab 3 focuses on Amazon VPC. Students will create a custom VPC with public and private subnets, then relaunch the application from Lab 2 inside the new VPC. </aside>
+                <aside class="notes">Welcome to Lab 3. Students will create a custom VPC using the wizard and launch an EC2 instance inside it. This VPC will be used in Lab 6 for the load balancer and Auto Scaling Group.</aside>
             </section>
 
-            <!-- Lab Overview -->
+            <!-- Slide 2: Overview -->
             <section>
-                <h2>&#127919; Lab Overview</h2>
+                <h2>&#128203; Lab Overview</h2>
+                <div class="two-columns">
+                    <div class="card">
+                        <h4>&#127919; Objectives</h4>
+                        <ul>
+                            <li>Create a VPC with public subnets using the wizard</li>
+                            <li>Create a security group in the new VPC</li>
+                            <li>Launch an EC2 instance in the custom VPC</li>
+                            <li>Verify the web application works</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>&#128221; Lab Details</h4>
+                        <ul>
+                            <li><strong>Duration:</strong> ~20 minutes</li>
+                            <li><strong>Region:</strong> Same as previous labs</li>
+                            <li><strong>Prerequisite:</strong> Lab 2 instance running</li>
+                        </ul>
+                        <div class="highlight-box warning" style="margin-top: 15px;">
+                            <strong>&#9888;&#65039;</strong> Keep this VPC — it is needed for Lab 6.
+                        </div>
+                    </div>
+                </div>
+                <aside class="notes">This VPC and its subnets will be reused in Lab 6 for the ALB and Auto Scaling Group. Ensure all students have their Lab 2 instance running.</aside>
+            </section>
+
+            <!-- Slide 3: Create VPC — Settings -->
+            <section>
+                <h2>&#128295; Create VPC — Settings</h2>
+                <ol>
+                    <li>Navigate to <strong>VPC</strong> in the console</li>
+                    <li>Click <strong>Create VPC</strong></li>
+                    <li>Select <strong>"VPC and more"</strong></li>
+                </ol>
+                <table>
+                    <tr><th>Setting</th><th>Value</th></tr>
+                    <tr><td>Name tag auto-generation</td><td><code>employee-directory</code></td></tr>
+                    <tr><td>IPv4 CIDR block</td><td><code>10.1.0.0/16</code></td></tr>
+                    <tr><td>Number of Availability Zones</td><td><strong>2</strong></td></tr>
+                    <tr><td>Number of public subnets</td><td><strong>2</strong></td></tr>
+                    <tr><td>Number of private subnets</td><td><strong>0</strong></td></tr>
+                    <tr><td>NAT gateways</td><td><strong>None</strong></td></tr>
+                </table>
+                <aside class="notes">
+                    The "VPC and more" wizard creates the VPC, subnets, internet gateway, and route tables in one step. Two public subnets in different AZs are required for the ALB in Lab 6. No private subnets or NAT gateways needed for this course.
+                </aside>
+            </section>
+
+            <!-- Slide 4: Create VPC — Execute -->
+            <section>
+                <h2>&#128295; Create VPC — Execute</h2>
+                <ol>
+                    <li>Review the <strong>Preview</strong> panel on the right</li>
+                    <li>Click <strong>Create VPC</strong></li>
+                    <li>Wait for all resources to show <strong>green checkmarks</strong></li>
+                    <li>Click <strong>View VPC</strong></li>
+                </ol>
+                <div class="highlight-box success">
+                    <strong>&#9989; Expected:</strong> VPC created with 2 public subnets, an internet gateway, and route tables — all auto-configured.
+                </div>
+                <aside class="notes">
+                    The wizard creates: VPC, 2 public subnets in different AZs, an internet gateway, and a route table with a 0.0.0.0/0 route to the IGW. This takes about 30 seconds.
+                </aside>
+            </section>
+
+            <!-- Slide 5: Create Security Group -->
+            <section>
+                <h2>&#128274; Create Security Group</h2>
+                <ol>
+                    <li>In the VPC console left nav, click <strong>Security groups</strong></li>
+                    <li>Click <strong>Create security group</strong></li>
+                    <li>Name: <code>employee-directory-app-sg</code></li>
+                    <li>Description: <em>Allow HTTP access for Employee Directory</em></li>
+                    <li>VPC: Select <strong>employee-directory-vpc</strong></li>
+                </ol>
+                <table>
+                    <tr><th>Type</th><th>Port</th><th>Source</th></tr>
+                    <tr><td>HTTP</td><td>80</td><td>0.0.0.0/0</td></tr>
+                    <tr><td>SSH</td><td>22</td><td>My IP</td></tr>
+                </table>
+                <ol start="6">
+                    <li>Click <strong>Create security group</strong></li>
+                </ol>
+                <aside class="notes">
+                    This security group must be in the new VPC (not the default VPC). Students often miss the VPC dropdown — make sure they select employee-directory-vpc. This SG will also be used by the Auto Scaling Group in Lab 6.
+                </aside>
+            </section>
+
+            <!-- Slide 6: Launch EC2 in New VPC — Part 1 -->
+            <section>
+                <h2>&#128640; Launch EC2 in the New VPC</h2>
+                <ol>
+                    <li>Navigate to <strong>EC2</strong> &rarr; <strong>Launch instance</strong></li>
+                    <li>Name: <code>employee-directory-app-vpc</code></li>
+                    <li>AMI: <strong>Amazon Linux 2023</strong></li>
+                    <li>Instance type: <strong>t2.micro</strong></li>
+                    <li>Key pair: <strong>employee-dir-key</strong> (from Lab 2)</li>
+                    <li>Under <strong>Network settings</strong>, click <strong>Edit</strong>:
+                        <ul>
+                            <li>VPC: <strong>employee-directory-vpc</strong></li>
+                            <li>Subnet: Choose any <strong>public</strong> subnet</li>
+                            <li>Auto-assign public IP: <strong>Enable</strong></li>
+                            <li>Select existing security group: <strong>employee-directory-app-sg</strong></li>
+                        </ul>
+                    </li>
+                </ol>
+                <aside class="notes">
+                    Critical: students must select the new VPC, not the default. Auto-assign public IP must be enabled. If they select a subnet without checking auto-assign, the instance will not get a public IP.
+                </aside>
+            </section>
+
+            <!-- Slide 7: Launch EC2 — User Data and Launch -->
+            <section>
+                <h2>&#128640; Add User Data and Launch</h2>
+                <ol>
+                    <li>Under <strong>Advanced details</strong>, set IAM instance profile to <code>EmployeeDirectoryAppRole</code> (if available)</li>
+                    <li>Scroll to <strong>User data</strong> and paste:</li>
+                </ol>
+                <pre><code class="bash">#!/bin/bash -ex
+yum update -y
+yum install -y httpd
+systemctl start httpd
+systemctl enable httpd
+echo '&lt;!DOCTYPE html&gt;
+&lt;html&gt;&lt;head&gt;&lt;title&gt;Employee Directory&lt;/title&gt;
+&lt;style&gt;body{font-family:Arial,sans-serif;max-width:800px;margin:50px auto;padding:20px}
+h1{color:#1a365d}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:12px;text-align:left}
+th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/style&gt;&lt;/head&gt;
+&lt;body&gt;&lt;h1&gt;Employee Directory&lt;/h1&gt;
+&lt;p&gt;Welcome to the Employee Directory Application&lt;/p&gt;
+&lt;table&gt;&lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Department&lt;/th&gt;&lt;th&gt;Location&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;John Smith&lt;/td&gt;&lt;td&gt;Engineering&lt;/td&gt;&lt;td&gt;Seattle&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Jane Doe&lt;/td&gt;&lt;td&gt;Marketing&lt;/td&gt;&lt;td&gt;New York&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Bob Johnson&lt;/td&gt;&lt;td&gt;Sales&lt;/td&gt;&lt;td&gt;Austin&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/body&gt;&lt;/html&gt;' &gt; /var/www/html/index.html</code></pre>
+                <ol start="3">
+                    <li>Click <strong>Launch instance</strong></li>
+                </ol>
+                <aside class="notes">
+                    Same user data script as Lab 2. No placeholders or edits needed.
+                </aside>
+            </section>
+
+            <!-- Slide 8: Test -->
+            <section>
+                <h2>&#127760; Test the Web Server</h2>
+                <ol>
+                    <li>Wait for the new instance to reach <strong>Running</strong> with <strong>2/2 checks passed</strong></li>
+                    <li>Copy the <strong>Public IPv4 address</strong></li>
+                    <li>Open a browser tab: <code>http://&lt;PUBLIC_IP&gt;</code></li>
+                </ol>
+                <div class="highlight-box success">
+                    <strong>&#9989; Expected:</strong> The Employee Directory page loads — now running inside your custom VPC.
+                </div>
+                <div class="highlight-box warning">
+                    <strong>&#9202; Note:</strong> Allow 1-2 minutes after "Running" for Apache to finish installing.
+                </div>
+                <aside class="notes">
+                    If the page does not load: verify using HTTP not HTTPS, check security group allows port 80, confirm a public subnet was selected, and that auto-assign public IP is enabled.
+                </aside>
+            </section>
+
+            <!-- Slide 9: Stop Old Instance -->
+            <section>
+                <h2>&#128721; Stop the Lab 2 Instance</h2>
+                <ol>
+                    <li>In the EC2 console, find your original <strong>employee-directory-app</strong> instance (from Lab 2)</li>
+                    <li>Select it, click <strong>Instance state</strong> &rarr; <strong>Stop instance</strong></li>
+                </ol>
                 <div class="highlight-box">
-                    <p><strong>Objective:</strong> Create a custom Amazon VPC with public and private subnets across two Availability Zones, then launch the Employee Directory application in the new VPC.</p>
+                    <strong>&#128161; Why?</strong> The Lab 2 instance was in the default VPC. Now that you have a working instance in your custom VPC, you no longer need the old one running. Stopping saves cost.
+                </div>
+                <aside class="notes">
+                    Students should now have two instances: the old one (stopped, default VPC) and the new one (running, custom VPC). Do NOT terminate either instance yet.
+                </aside>
+            </section>
+
+            <!-- Slide 10: Clean Up Note -->
+            <section>
+                <h2>&#9888;&#65039; Resources to Keep</h2>
+                <div class="highlight-box warning">
+                    <strong>Do NOT delete these resources</strong> — they are needed for Lab 6:
                 </div>
                 <ul>
-                    <li class="fragment"><strong>Duration:</strong> ~30 minutes</li>
-                    <li class="fragment"><strong>Services used:</strong> Amazon VPC, EC2, Internet Gateway, NAT Gateway</li>
-                    <li class="fragment"><strong>Prerequisite:</strong> Lab 2 completed (IAM role and key pair created)</li>
+                    <li><strong>VPC:</strong> employee-directory-vpc (with subnets, IGW, route tables)</li>
+                    <li><strong>Security Group:</strong> employee-directory-app-sg</li>
+                    <li><strong>Key Pair:</strong> employee-dir-key</li>
+                    <li><strong>IAM Role:</strong> EmployeeDirectoryAppRole (if created)</li>
                 </ul>
-                <div class="highlight-box warning fragment">
-                    <p>&#9888;&#65039; <strong>Important:</strong> You will need the IAM role (<code>EmployeeDirectoryAppRole</code>) and key pair (<code>employee-dir-key</code>) from Lab 2.</p>
+                <p>You may terminate the EC2 instance from this lab — Lab 6 will create new instances via Auto Scaling.</p>
+                <aside class="notes">
+                    The VPC and its networking components are critical for Lab 6. Students can optionally terminate the EC2 instance since Lab 6 creates instances automatically through the Auto Scaling Group.
+                </aside>
+            </section>
+
+            <!-- Slide 11: Lab Complete -->
+            <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="title-slide">
+                <h1>&#127881; Lab 3 Complete!</h1>
+                <h2>Custom VPC with EC2 Deployed</h2>
+                <div class="module-progress" style="margin-top: 30px;">
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step completed"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
+                    <div class="step"></div>
                 </div>
-                <aside class="notes">Review the objectives with students. Emphasize that this lab demonstrates network isolation, a fundamental security concept. The app itself is the same as Lab 2 -- the difference is where it runs.</aside>
+                <aside class="notes">Congratulate students. They now have a custom VPC with subnets, internet gateway, and a working web application.</aside>
             </section>
 
-            <!-- What You Will Build -->
+            <!-- Slide 12: Summary -->
             <section>
-                <h2>&#128736;&#65039; What You Will Build</h2>
-                <div class="concept-box">
-                    <h4>VPC Architecture</h4>
-                    <ul>
-                        <li class="fragment">A custom VPC with CIDR <code>10.1.0.0/16</code></li>
-                        <li class="fragment">2 public subnets across 2 Availability Zones</li>
-                        <li class="fragment">2 private subnets across 2 Availability Zones</li>
-                        <li class="fragment">An Internet Gateway for public subnet internet access</li>
-                        <li class="fragment">A NAT Gateway for private subnet outbound access</li>
-                        <li class="fragment">Appropriate route tables for each subnet type</li>
-                    </ul>
-                </div>
-                <aside class="notes">Walk through the architecture before students start building. Make sure they understand the difference between public and private subnets and the role of each gateway type. Key Concept: Public subnets route to the Internet Gateway. Private subnets route to the NAT Gateway. This separation is the foundation of secure AWS architectures.</aside>
-            </section>
-
-            <!-- Step 1 Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
-                <h2>Step 1</h2>
-                <h3>Create a Custom VPC</h3>
-                <aside class="notes">This step uses the "VPC and more" wizard, which creates the VPC along with subnets, route tables, gateways, and associations in a single operation.</aside>
-            </section>
-
-            <!-- Step 1: Navigate to VPC -->
-            <section>
-                <h2>&#128640; Navigate to the VPC Dashboard</h2>
-                <ol>
-                    <li class="fragment">Sign in to the <strong>AWS Management Console</strong></li>
-                    <li class="fragment">In the top search bar, type <code>VPC</code></li>
-                    <li class="fragment">Click <strong>VPC</strong> under Services to open the VPC Dashboard</li>
-                </ol>
-                <div class="highlight-box fragment">
-                    <p>&#128270; <strong>Observe:</strong> The dashboard shows your existing <strong>default VPC</strong> and its associated resources. You are about to create a brand-new custom VPC alongside it.</p>
-                </div>
-                <aside class="notes">Point out that every AWS account comes with a default VPC in each region. The default VPC is fine for quick experiments, but production workloads should use a custom VPC with deliberate CIDR planning.</aside>
-            </section>
-
-            <!-- Step 1: Create VPC -->
-            <section>
-                <h2>&#128221; Create VPC &mdash; Settings</h2>
-                <ol>
-                    <li class="fragment">Click the <strong>"Create VPC"</strong> button (orange button, top right)</li>
-                    <li class="fragment">Under <em>Resources to create</em>, select <strong>"VPC and more"</strong></li>
-                    <li class="fragment">In <strong>Name tag auto-generation</strong>, enter: <code>employee-directory-vpc</code></li>
-                    <li class="fragment">Set <strong>IPv4 CIDR block</strong> to: <code>10.1.0.0/16</code></li>
-                </ol>
-                <div class="highlight-box warning fragment">
-                    <p>&#9888;&#65039; <strong>Why "VPC and more"?</strong> This option automatically creates subnets, route tables, an Internet Gateway, and NAT Gateway &mdash; saving you many manual steps.</p>
-                </div>
-                <aside class="notes">The /16 CIDR gives us 65,536 IP addresses. The "VPC and more" wizard is relatively new and dramatically simplifies VPC creation. Make sure students select this option and not "VPC only."</aside>
-            </section>
-
-            <!-- Step 1: Subnet and Gateway Settings -->
-            <section>
-                <h2>&#128221; Create VPC &mdash; Subnets &amp; Gateways</h2>
-                <p>Continue configuring the remaining settings:</p>
-                <ol>
-                    <li class="fragment"><strong>Number of Availability Zones:</strong> <code>2</code></li>
-                    <li class="fragment"><strong>Number of public subnets:</strong> <code>2</code></li>
-                    <li class="fragment"><strong>Number of private subnets:</strong> <code>2</code></li>
-                    <li class="fragment"><strong>NAT gateways:</strong> <code>In 1 AZ</code></li>
-                    <li class="fragment"><strong>VPC endpoints:</strong> <code>None</code></li>
-                </ol>
-                <div class="highlight-box fragment">
-                    <p>&#128176; <strong>Cost note:</strong> We select NAT gateway in only 1 AZ to reduce costs during the lab. In production, you would typically deploy a NAT gateway in each AZ for high availability.</p>
-                </div>
-                <aside class="notes">NAT Gateways are billed per hour and per GB of data processed. For a lab environment, one NAT Gateway is sufficient. In production, each AZ should have its own NAT Gateway to avoid cross-AZ traffic and provide redundancy.</aside>
-            </section>
-
-            <!-- Step 1: Create and Wait -->
-            <section>
-                <h2>&#9989; Create and Wait</h2>
-                <ol>
-                    <li class="fragment">Review the <strong>Preview panel</strong> on the right side &mdash; it shows a visual map of all resources that will be created</li>
-                    <li class="fragment">Click <strong>"Create VPC"</strong></li>
-                    <li class="fragment">Wait for all resources to show a <strong>green &#10004; Success</strong> status</li>
-                </ol>
-                <div class="highlight-box success fragment">
-                    <p>&#9989; <strong>Expected result:</strong> You should see green checkmarks next to: VPC, Subnets (4), Route Tables (3), Internet Gateway, and NAT Gateway. This may take 1&ndash;2 minutes.</p>
-                </div>
-                <div class="highlight-box danger fragment">
-                    <p>&#128680; <strong>Do not proceed</strong> until all resources show a green checkmark. The NAT Gateway typically takes the longest to provision.</p>
-                </div>
-                <aside class="notes">The NAT Gateway can take up to 2 minutes to become active. Students should wait for all green checkmarks before moving on. If any resource fails, they should delete the VPC and retry.</aside>
-            </section>
-
-            <!-- Step 2 Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
-                <h2>Step 2</h2>
-                <h3>Explore the Created VPC Resources</h3>
-                <aside class="notes">This exploration step is critical for understanding. Students should examine each resource type to understand how they interconnect.</aside>
-            </section>
-
-            <!-- Step 2: VPC Resource Map -->
-            <section>
-                <h2>&#128506;&#65039; Review the VPC Resource Map</h2>
-                <ol>
-                    <li class="fragment">Click <strong>"View VPC"</strong> after creation completes</li>
-                    <li class="fragment">In the VPC details, scroll down to find the <strong>Resource map</strong> section</li>
-                    <li class="fragment">Observe the visual layout showing how subnets, route tables, and gateways connect</li>
-                </ol>
-                <aside class="notes">Walk through each resource type and its purpose. Emphasize that the resource map is a powerful visualization tool for understanding VPC architecture at a glance.</aside>
-            </section>
-
-            <section>
-                <h2>&#128506;&#65039; Resources Created</h2>
-                <table>
-                    <thead>
-                        <tr><th>Resource</th><th>Count</th><th>Purpose</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>VPC</td><td>1</td><td>Isolated network (10.1.0.0/16)</td></tr>
-                        <tr><td>Public Subnets</td><td>2</td><td>Internet-accessible resources</td></tr>
-                        <tr><td>Private Subnets</td><td>2</td><td>Backend/internal resources</td></tr>
-                        <tr><td>Internet Gateway</td><td>1</td><td>Public internet access</td></tr>
-                        <tr><td>NAT Gateway</td><td>1</td><td>Outbound-only internet for private subnets</td></tr>
-                        <tr><td>Route Tables</td><td>3</td><td>Traffic routing rules</td></tr>
-                    </tbody>
-                </table>
-                <aside class="notes">Review the table with students. The VPC wizard created all these resources in a single operation. In a manual setup, each would need to be created and associated individually.</aside>
-            </section>
-
-            <!-- Step 2: Examine Subnets -->
-            <section>
-                <h2>&#128220; Examine the Subnets</h2>
-                <ol>
-                    <li class="fragment">In the left navigation, click <strong>Subnets</strong></li>
-                    <li class="fragment">Filter by VPC: select <strong>employee-directory-vpc</strong></li>
-                    <li class="fragment">You should see <strong>4 subnets</strong> &mdash; 2 public and 2 private</li>
-                </ol>
-                <div class="two-columns fragment">
-                    <div class="card">
-                        <h4>&#127760; Public Subnets</h4>
-                        <ul>
-                            <li>Public subnet in AZ 1</li>
-                            <li>Public subnet in AZ 2</li>
-                            <li>Routed to Internet Gateway</li>
-                            <li>For web servers, load balancers</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#128274; Private Subnets</h4>
-                        <ul>
-                            <li>Private subnet in AZ 1</li>
-                            <li>Private subnet in AZ 2</li>
-                            <li>Routed to NAT Gateway</li>
-                            <li>For databases, app servers</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="highlight-box fragment">
-                    <p>&#128270; <strong>Note the CIDR ranges:</strong> Each subnet has its own CIDR block (a subset of the VPC's 10.1.0.0/16). Write these down &mdash; you will reference them later.</p>
-                </div>
-                <aside class="notes">Have students click on each subnet to see its CIDR block and Availability Zone. Common CIDR assignments are /20 or /24 per subnet. The wizard typically assigns /20 blocks.</aside>
-            </section>
-
-            <!-- Step 2: Check Route Tables -->
-            <section>
-                <h2>&#128736;&#65039; Check the Route Tables</h2>
-                <ol>
-                    <li class="fragment">In the left navigation, click <strong>Route tables</strong></li>
-                    <li class="fragment">Filter by VPC: <strong>employee-directory-vpc</strong></li>
-                    <li class="fragment">Click on the <strong>public route table</strong> and select the <strong>Routes</strong> tab</li>
-                </ol>
-                <div class="two-columns fragment">
-                    <div class="card">
-                        <h4>Public Route Table</h4>
-                        <table>
-                            <thead><tr><th>Destination</th><th>Target</th></tr></thead>
-                            <tbody>
-                                <tr><td>10.1.0.0/16</td><td>local</td></tr>
-                                <tr><td>0.0.0.0/0</td><td>igw-xxxxx</td></tr>
-                            </tbody>
-                        </table>
-                        <p><small>Routes to Internet Gateway</small></p>
-                    </div>
-                    <div class="card">
-                        <h4>Private Route Table</h4>
-                        <table>
-                            <thead><tr><th>Destination</th><th>Target</th></tr></thead>
-                            <tbody>
-                                <tr><td>10.1.0.0/16</td><td>local</td></tr>
-                                <tr><td>0.0.0.0/0</td><td>nat-xxxxx</td></tr>
-                            </tbody>
-                        </table>
-                        <p><small>Routes to NAT Gateway</small></p>
-                    </div>
-                </div>
-                <aside class="notes">Key difference: The public route table sends internet-bound traffic (0.0.0.0/0) to the Internet Gateway. The private route table sends it to the NAT Gateway. This is the most important concept in VPC networking. The route table determines whether a subnet is public or private. A subnet is public only if its route table has a route to an Internet Gateway. Emphasize this distinction clearly.</aside>
-            </section>
-
-            <!-- Step 2: Verify Gateways -->
-            <section>
-                <h2>&#128270; Verify the Gateways</h2>
+                <h2>&#127919; Key Takeaways</h2>
                 <div class="two-columns">
-                    <div class="card fragment">
-                        <h4>&#127760; Internet Gateway</h4>
-                        <ol>
-                            <li>Click <strong>Internet gateways</strong> in the left nav</li>
-                            <li>Find the gateway associated with your VPC</li>
-                            <li>Verify the <strong>State</strong> column shows <code>Attached</code></li>
-                            <li>Verify it is attached to <strong>employee-directory-vpc</strong></li>
-                        </ol>
-                    </div>
-                    <div class="card fragment">
-                        <h4>&#128274; NAT Gateway</h4>
-                        <ol>
-                            <li>Click <strong>NAT gateways</strong> in the left nav</li>
-                            <li>Find the NAT gateway in your VPC</li>
-                            <li>Verify the <strong>State</strong> column shows <code>Available</code></li>
-                            <li>Note it is deployed in a <strong>public subnet</strong></li>
-                        </ol>
-                    </div>
-                </div>
-                <div class="highlight-box success fragment">
-                    <p>&#9989; <strong>Checkpoint:</strong> Internet Gateway is <strong>Attached</strong> and NAT Gateway is <strong>Available</strong>. Your VPC networking is ready.</p>
-                </div>
-                <aside class="notes">The NAT Gateway itself must reside in a public subnet because it needs to reach the internet via the Internet Gateway. It then provides outbound-only internet access to resources in private subnets.</aside>
-            </section>
-
-            <!-- Step 3 Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
-                <h2>Step 3</h2>
-                <h3>Create a Security Group for the Application</h3>
-                <aside class="notes">Security groups act as virtual firewalls at the instance level. We need a new security group in the new VPC because security groups are VPC-specific.</aside>
-            </section>
-
-            <!-- Step 3: Create Security Group -->
-            <section>
-                <h2>&#128737;&#65039; Create a New Security Group</h2>
-                <ol>
-                    <li class="fragment">In the left navigation, click <strong>Security groups</strong> (under Security)</li>
-                    <li class="fragment">Click <strong>"Create security group"</strong></li>
-                    <li class="fragment">Configure the basic details:
-                        <ul>
-                            <li><strong>Security group name:</strong> <code>employee-directory-app-sg</code></li>
-                            <li><strong>Description:</strong> <code>Security group for Employee Directory App</code></li>
-                            <li><strong>VPC:</strong> Select <code>employee-directory-vpc</code> from the dropdown</li>
-                        </ul>
-                    </li>
-                </ol>
-                <div class="highlight-box warning fragment">
-                    <p>&#9888;&#65039; <strong>Important:</strong> Make sure you select the correct VPC! Security groups are tied to a specific VPC and cannot be used across VPCs.</p>
-                </div>
-                <aside class="notes">A common mistake is leaving the default VPC selected. Have students double-check that they select employee-directory-vpc. If they create the security group in the wrong VPC, they will not be able to use it with the EC2 instance later.</aside>
-            </section>
-
-            <!-- Step 3: Inbound Rules -->
-            <section>
-                <h2>&#128737;&#65039; Add Inbound Rules</h2>
-                <p>Under <strong>Inbound rules</strong>, click <strong>"Add rule"</strong> three times to create these rules:</p>
-                <table class="fragment">
-                    <thead>
-                        <tr><th>Type</th><th>Port</th><th>Source</th><th>Purpose</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>HTTP</td><td>80</td><td>0.0.0.0/0 (Anywhere-IPv4)</td><td>Web application traffic</td></tr>
-                        <tr><td>HTTPS</td><td>443</td><td>0.0.0.0/0 (Anywhere-IPv4)</td><td>Secure web traffic</td></tr>
-                        <tr><td>SSH</td><td>22</td><td>My IP</td><td>Remote administration</td></tr>
-                    </tbody>
-                </table>
-                <div class="highlight-box fragment">
-                    <p>&#128274; <strong>Security best practice:</strong> SSH access is restricted to <strong>"My IP"</strong> only. Selecting "My IP" auto-fills your current public IP address. Never open SSH to 0.0.0.0/0 in any environment.</p>
-                </div>
-                <div class="highlight-box success fragment">
-                    <p><strong>Outbound rules:</strong> Leave the default outbound rule as-is. It allows <strong>all outbound traffic</strong>, which the application needs to reach DynamoDB and S3.</p>
-                </div>
-                <aside class="notes">Review each rule with students. HTTP on port 80 is required because the Flask app listens on port 80. HTTPS is included for completeness. SSH is restricted to the student's IP only. Outbound rules default to allow all.</aside>
-            </section>
-
-            <!-- Step 3: Finalize SG -->
-            <section>
-                <h2>&#9989; Finalize the Security Group</h2>
-                <ol>
-                    <li class="fragment">Scroll down and review all your settings</li>
-                    <li class="fragment">Click <strong>"Create security group"</strong></li>
-                </ol>
-                <div class="highlight-box success fragment">
-                    <p>&#9989; <strong>Expected result:</strong> You should see a success banner: <em>"Security group sg-xxxxxxxx was created successfully."</em></p>
-                </div>
-                <div class="concept-box fragment">
-                    <h4>Security Group Summary</h4>
-                    <ul>
-                        <li><strong>Name:</strong> employee-directory-app-sg</li>
-                        <li><strong>VPC:</strong> employee-directory-vpc</li>
-                        <li><strong>Inbound:</strong> HTTP (80), HTTPS (443), SSH (22 &mdash; My IP only)</li>
-                        <li><strong>Outbound:</strong> All traffic (default)</li>
-                    </ul>
-                </div>
-                <aside class="notes">Security groups are stateful -- if you allow inbound traffic on a port, the response traffic is automatically allowed outbound regardless of outbound rules. This is different from network ACLs, which are stateless.</aside>
-            </section>
-
-            <!-- Step 4 Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
-                <h2>Step 4</h2>
-                <h3>Launch EC2 Instance in the New VPC</h3>
-                <aside class="notes">Now we launch a new EC2 instance in the custom VPC. The configuration is similar to Lab 2, but with the critical difference of placing it in our new VPC.</aside>
-            </section>
-
-            <!-- Step 4: Basic Settings -->
-            <section>
-                <h2>&#128640; Launch Instance &mdash; Basic Settings</h2>
-                <ol>
-                    <li class="fragment">Navigate to <strong>EC2</strong> &gt; <strong>Instances</strong> &gt; <strong>"Launch instances"</strong></li>
-                    <li class="fragment">Set the <strong>Name:</strong> <code>employee-directory-app-v2</code></li>
-                    <li class="fragment">Under <strong>Application and OS Images (AMI):</strong>
-                        <ul>
-                            <li>Select <strong>Amazon Linux 2023</strong> (should be pre-selected)</li>
-                        </ul>
-                    </li>
-                    <li class="fragment">Under <strong>Instance type:</strong>
-                        <ul>
-                            <li>Select <strong>t2.micro</strong> (Free Tier eligible)</li>
-                        </ul>
-                    </li>
-                    <li class="fragment">Under <strong>Key pair:</strong>
-                        <ul>
-                            <li>Select the existing key pair: <strong>employee-dir-key</strong></li>
-                        </ul>
-                    </li>
-                </ol>
-                <aside class="notes">These settings mirror Lab 2. The key difference is in the network settings on the next slide. Make sure students select the existing key pair from Lab 2 rather than creating a new one.</aside>
-            </section>
-
-            <!-- Step 4: Network Settings -->
-            <section>
-                <h2>&#128423;&#65039; Launch Instance &mdash; Network Settings</h2>
-                <p>Click <strong>"Edit"</strong> next to Network settings, then configure:</p>
-                <ol>
-                    <li class="fragment"><strong>VPC:</strong> Select <code>employee-directory-vpc</code></li>
-                    <li class="fragment"><strong>Subnet:</strong> Select one of the <strong>public</strong> subnets
-                        <ul><li>Look for a subnet name containing <code>public</code></li></ul>
-                    </li>
-                    <li class="fragment"><strong>Auto-assign public IP:</strong> Select <code>Enable</code></li>
-                    <li class="fragment"><strong>Firewall (security groups):</strong> Select <strong>"Select existing security group"</strong></li>
-                    <li class="fragment">Choose: <code>employee-directory-app-sg</code></li>
-                </ol>
-                <div class="highlight-box danger fragment">
-                    <p>&#128680; <strong>Critical:</strong> You <strong>must</strong> select a <strong>public</strong> subnet and <strong>enable</strong> Auto-assign public IP. Without both, the instance will not be reachable from the internet.</p>
-                </div>
-                <aside class="notes">This is the most error-prone step. Common mistakes: selecting a private subnet, forgetting to enable auto-assign public IP, or using the wrong security group. Verify each setting with students before proceeding.</aside>
-            </section>
-
-            <!-- Step 4: Advanced Details -->
-            <section>
-                <h2>&#128736;&#65039; Launch Instance &mdash; Advanced Details</h2>
-                <p>Expand <strong>"Advanced details"</strong> at the bottom of the page:</p>
-                <ol>
-                    <li class="fragment"><strong>IAM instance profile:</strong> Select <code>EmployeeDirectoryAppRole</code></li>
-                    <li class="fragment">Scroll all the way down to <strong>User data</strong></li>
-                    <li class="fragment">Paste the following bootstrap script:</li>
-                </ol>
-                <pre class="fragment"><code class="bash">#!/bin/bash -ex
-wget https://aws-tc-largeobjects.s3-us-west-2.amazonaws.com/DEV-AWS-MO-GCNv2/FlaskApp.zip
-unzip FlaskApp.zip
-cd FlaskApp/
-yum -y install python3-pip
-pip install -r requirements.txt
-yum -y install stress
-export PHOTOS_BUCKET=${SUB_PHOTOS_BUCKET}
-export AWS_DEFAULT_REGION=&lt;REGION&gt;
-export DYNAMO_MODE=on
-FLASK_APP=application.py /usr/local/bin/flask run --host=0.0.0.0 --port=80</code></pre>
-                <aside class="notes">This is the same user data script from Lab 2. Remind students to replace SUB_PHOTOS_BUCKET with their actual S3 bucket name and REGION with their current region (e.g., us-east-1). The IAM role provides the instance with permissions to access DynamoDB and S3.</aside>
-            </section>
-
-            <!-- Step 4: User Data Reminders -->
-            <section>
-                <h2>&#9888;&#65039; User Data &mdash; Replacements</h2>
-                <div class="highlight-box warning">
-                    <p><strong>Before launching</strong>, update these placeholders in the User data script:</p>
-                </div>
-                <div class="two-columns fragment">
                     <div class="card">
-                        <h4>&#128196; ${SUB_PHOTOS_BUCKET}</h4>
-                        <p>Replace with your actual S3 bucket name from the earlier labs.</p>
-                        <p>Example: <code>employee-directory-app-bucket-abc123</code></p>
+                        <h4>&#128736;&#65039; What You Did</h4>
+                        <ul>
+                            <li>Created a VPC with the "VPC and more" wizard</li>
+                            <li>Configured 2 public subnets across 2 AZs</li>
+                            <li>Created a security group in the new VPC</li>
+                            <li>Launched and tested an EC2 instance</li>
+                        </ul>
                     </div>
                     <div class="card">
-                        <h4>&#127758; &lt;REGION&gt;</h4>
-                        <p>Replace with your current AWS region.</p>
-                        <p>Example: <code>us-east-1</code></p>
-                    </div>
-                </div>
-                <div class="highlight-box success fragment">
-                    <p>Once the replacements are made, click <strong>"Launch instance"</strong>. &#9989; <strong>Expected result:</strong> A success message: <em>"Successfully initiated launch of instance i-xxxxxxxx."</em></p>
-                </div>
-                <aside class="notes">This is where students commonly make mistakes. Walk the room and verify that each student has correctly replaced both placeholders. If the region or bucket name is wrong, the app will launch but will not function properly.</aside>
-            </section>
-
-            <!-- Step 5 Divider -->
-            <section data-background="linear-gradient(135deg, #2f855a 0%, #38a169 100%)" class="section-divider">
-                <h2>Step 5</h2>
-                <h3>Test the Application</h3>
-                <aside class="notes">Time to verify the deployment. The instance needs a few minutes to boot and run the user data script.</aside>
-            </section>
-
-            <!-- Step 5: Test -->
-            <section>
-                <h2>&#128270; Test the Application</h2>
-                <ol>
-                    <li class="fragment">Navigate to <strong>EC2</strong> &gt; <strong>Instances</strong></li>
-                    <li class="fragment">Wait for <strong>employee-directory-app-v2</strong> to show:
+                        <h4>&#128218; Key Concepts</h4>
                         <ul>
-                            <li><strong>Instance state:</strong> <code>Running</code></li>
-                            <li><strong>Status check:</strong> <code>2/2 checks passed</code></li>
-                        </ul>
-                    </li>
-                    <li class="fragment">Select the instance and copy the <strong>Public IPv4 address</strong> from the Details tab</li>
-                    <li class="fragment">Open a new browser tab and navigate to: <code>http://&lt;PUBLIC_IP&gt;</code></li>
-                </ol>
-                <div class="highlight-box success fragment">
-                    <p>&#9989; <strong>Expected result:</strong> The Employee Directory application loads in your browser, just as it did in Lab 2 &mdash; but now it is running inside your custom VPC!</p>
-                </div>
-                <div class="highlight-box warning fragment">
-                    <p>&#9202; <strong>Note:</strong> It may take <strong>3&ndash;5 minutes</strong> after the instance reaches "Running" for the application to fully start. If the page does not load, wait and try again.</p>
-                </div>
-                <aside class="notes">The user data script takes time to download dependencies and start Flask. If students get a connection timeout, ask them to verify: (1) they are using HTTP not HTTPS, (2) the security group allows port 80, (3) they selected a public subnet, (4) auto-assign public IP is enabled.</aside>
-            </section>
-
-            <!-- Step 6 Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
-                <h2>Step 6</h2>
-                <h3>Verify Network Isolation</h3>
-                <aside class="notes">This is a conceptual step to reinforce the value of VPC isolation. Guide students through comparing the two instances.</aside>
-            </section>
-
-            <!-- Step 6: Network Isolation -->
-            <section>
-                <h2>&#128274; Verify Network Isolation</h2>
-                <ol>
-                    <li class="fragment">Go to <strong>EC2</strong> &gt; <strong>Instances</strong></li>
-                    <li class="fragment">You should see both instances:
-                        <ul>
-                            <li><strong>employee-directory-app</strong> (Lab 2 &mdash; default VPC)</li>
-                            <li><strong>employee-directory-app-v2</strong> (Lab 3 &mdash; custom VPC)</li>
-                        </ul>
-                    </li>
-                    <li class="fragment">Click each instance and compare the <strong>VPC ID</strong> in the Details tab</li>
-                </ol>
-                <div class="key-point fragment">
-                    <strong>&#128161; Network Isolation:</strong> These two instances are in <strong>different VPCs</strong>. They cannot communicate with each other directly &mdash; even though they are in the same AWS account and region. This is network isolation in action.
-                </div>
-                <aside class="notes">This is a fundamental concept. VPCs are logically isolated. To connect two VPCs, you would need VPC Peering or Transit Gateway. This isolation is the foundation of multi-tenant architectures and defense-in-depth security strategies.</aside>
-            </section>
-
-            <!-- Step 6: Route Table Comparison -->
-            <section>
-                <h2>&#128736;&#65039; Compare Route Tables</h2>
-                <p>Navigate back to <strong>VPC</strong> &gt; <strong>Route tables</strong> and review:</p>
-                <div class="two-columns fragment">
-                    <div class="card">
-                        <h4>&#127760; Public Subnet Route Table</h4>
-                        <ul>
-                            <li><code>10.1.0.0/16</code> &rarr; local</li>
-                            <li><code>0.0.0.0/0</code> &rarr; <strong>Internet Gateway</strong></li>
-                        </ul>
-                        <p><small>Allows inbound and outbound internet traffic</small></p>
-                    </div>
-                    <div class="card">
-                        <h4>&#128274; Private Subnet Route Table</h4>
-                        <ul>
-                            <li><code>10.1.0.0/16</code> &rarr; local</li>
-                            <li><code>0.0.0.0/0</code> &rarr; <strong>NAT Gateway</strong></li>
-                        </ul>
-                        <p><small>Allows outbound-only internet traffic</small></p>
-                    </div>
-                </div>
-                <div class="concept-box fragment">
-                    <h4>Why This Matters</h4>
-                    <p>The route table is what makes a subnet "public" or "private." A subnet associated with a route table that has a route to an Internet Gateway is a public subnet. Everything else is private.</p>
-                </div>
-                <aside class="notes">Spend time on this slide. The route table concept is tested on the AWS Cloud Practitioner and Solutions Architect exams. Make sure students understand that it is the route table, not the subnet name, that determines public vs. private behavior.</aside>
-            </section>
-
-            <!-- Step 7 Divider -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
-                <h2>Step 7</h2>
-                <h3>Understand Private Subnet Behavior</h3>
-                <aside class="notes">This is a discussion-oriented step. No hands-on changes are required, but it reinforces architectural best practices.</aside>
-            </section>
-
-            <!-- Step 7: Private Subnet Discussion -->
-            <section>
-                <h2>&#128274; Private Subnet Behavior</h2>
-                <div class="concept-box">
-                    <h4>Instances in Private Subnets</h4>
-                    <ul>
-                        <li class="fragment"><strong>Cannot</strong> be reached directly from the internet (no inbound access)</li>
-                        <li class="fragment"><strong>Can</strong> reach the internet via the NAT Gateway (for updates, patches, API calls)</li>
-                        <li class="fragment"><strong>Can</strong> communicate with other resources in the same VPC</li>
-                    </ul>
-                </div>
-                <div class="highlight-box fragment">
-                    <p>&#128161; <strong>Architectural best practice:</strong> Place only resources that need direct internet access (web servers, load balancers) in public subnets. Everything else &mdash; databases, application servers, caches &mdash; belongs in private subnets.</p>
-                </div>
-                <aside class="notes">This is a discussion-oriented slide. Ask students: "If you had a database for this application, which subnet type would you place it in?" (Answer: private). "Why?" (Answer: databases should not be directly accessible from the internet. They only need to communicate with the application tier.)</aside>
-            </section>
-
-            <!-- Step 7: Architecture Best Practices -->
-            <section>
-                <h2>&#127959;&#65039; Architectural Best Practices</h2>
-                <div class="three-columns">
-                    <div class="card fragment">
-                        <h4>&#127760; Public Tier</h4>
-                        <ul>
-                            <li>Load balancers</li>
-                            <li>Bastion hosts</li>
-                            <li>NAT Gateways</li>
-                            <li>Web servers (if no ALB)</li>
-                        </ul>
-                    </div>
-                    <div class="card fragment">
-                        <h4>&#128187; Application Tier</h4>
-                        <ul>
-                            <li>App servers</li>
-                            <li>Container tasks</li>
-                            <li>Lambda (VPC-connected)</li>
-                            <li>Internal APIs</li>
-                        </ul>
-                    </div>
-                    <div class="card fragment">
-                        <h4>&#128451;&#65039; Data Tier</h4>
-                        <ul>
-                            <li>RDS databases</li>
-                            <li>ElastiCache</li>
-                            <li>OpenSearch Service</li>
-                            <li>Redshift</li>
+                            <li><strong>VPC</strong> = isolated network in the cloud</li>
+                            <li><strong>Public subnets</strong> have routes to an IGW</li>
+                            <li><strong>Multi-AZ</strong> enables high availability</li>
+                            <li><strong>Security groups</strong> are VPC-specific</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Multi-AZ: Deploy across multiple Availability Zones for high availability. Our VPC is already set up with subnets in 2 AZs, ready for a highly available architecture. This three-tier architecture is the standard pattern for AWS deployments. The public tier faces the internet, the application tier handles business logic, and the data tier stores persistent data. Each tier should be in its own subnet group with appropriate security groups.</aside>
+                <aside class="notes">
+                    Review key takeaways. The multi-AZ setup will be essential for Lab 6 when creating the ALB and Auto Scaling Group.
+                </aside>
             </section>
 
-            <!-- Step 8 Divider -->
-            <section data-background="linear-gradient(135deg, #c05621 0%, #dd6b20 100%)" class="section-divider">
-                <h2>Step 8</h2>
-                <h3>Stop the Old EC2 Instance</h3>
-                <aside class="notes">Cleanup step. We stop the old instance from Lab 2 to avoid unnecessary charges and to keep the environment tidy.</aside>
-            </section>
-
-            <!-- Step 8: Stop Old Instance -->
-            <section>
-                <h2>&#128683; Stop the Old EC2 Instance</h2>
-                <ol>
-                    <li class="fragment">Navigate to <strong>EC2</strong> &gt; <strong>Instances</strong></li>
-                    <li class="fragment">Select the <strong>employee-directory-app</strong> instance (from Lab 2)</li>
-                    <li class="fragment">Click <strong>Instance state</strong> &gt; <strong>Stop instance</strong></li>
-                    <li class="fragment">In the confirmation dialog, click <strong>"Stop"</strong></li>
-                </ol>
-                <div class="highlight-box warning fragment">
-                    <p>&#9888;&#65039; <strong>Stop vs. Terminate:</strong> <strong>Stopping</strong> preserves the instance and its EBS volume (you can restart it later). <strong>Terminating</strong> permanently deletes it. For this lab, <strong>stop</strong> is sufficient.</p>
-                </div>
-                <div class="highlight-box success fragment">
-                    <p>&#9989; <strong>Expected result:</strong> The old instance state changes to <code>Stopping</code> and then <code>Stopped</code>. The new <strong>employee-directory-app-v2</strong> remains <code>Running</code>.</p>
-                </div>
-                <aside class="notes">Stopping the old instance prevents additional charges for compute time. The EBS volume will still incur a small charge. If students want to fully clean up, they can terminate instead, but stopping is safer in case they need to reference it later.</aside>
-            </section>
-
-            <!-- Lab Summary -->
-            <section>
-                <h2>&#128203; Lab Summary</h2>
-                <div class="concept-box">
-                    <h4>What You Accomplished</h4>
-                    <ul>
-                        <li class="fragment">&#9989; Created a custom VPC with subnets, gateways, and route tables</li>
-                        <li class="fragment">&#9989; Provisioned 2 public and 2 private subnets across 2 AZs</li>
-                        <li class="fragment">&#9989; Created a security group and launched the app in the custom VPC</li>
-                        <li class="fragment">&#9989; Verified network isolation between VPCs</li>
-                        <li class="fragment">&#9989; Understood public vs. private subnet behavior</li>
-                        <li class="fragment">&#9989; Stopped the old instance from Lab 2</li>
-                    </ul>
-                </div>
-                <aside class="notes">Review each accomplishment. This lab covered a lot of networking fundamentals. Students should now understand VPCs, subnets, route tables, Internet Gateways, NAT Gateways, and security groups.</aside>
-            </section>
-
-            <!-- Key Takeaways -->
-            <section>
-                <h2>&#128272; Key Takeaways</h2>
-                <div class="two-columns">
-                    <div class="card fragment">
-                        <h4>Networking</h4>
-                        <ul>
-                            <li>VPCs provide network isolation</li>
-                            <li>Route tables define subnet behavior</li>
-                            <li>Internet Gateway = public access</li>
-                            <li>NAT Gateway = outbound-only access</li>
-                        </ul>
-                    </div>
-                    <div class="card fragment">
-                        <h4>Security</h4>
-                        <ul>
-                            <li>Security groups are VPC-specific</li>
-                            <li>Restrict SSH to specific IPs</li>
-                            <li>Place sensitive resources in private subnets</li>
-                            <li>Use multiple AZs for availability</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="key-point fragment">
-                    <strong>&#128161; Looking ahead:</strong> In the next lab, you will create a DynamoDB table to store employee data, replacing the in-memory storage with a fully managed database service.
-                </div>
-                <aside class="notes">Reinforce these takeaways. The VPC concepts covered in this lab are foundational for every AWS architecture. The next lab will add a persistence layer with DynamoDB.</aside>
-            </section>
-
-            <!-- Troubleshooting -->
-            <section>
-                <h2>&#128679; Troubleshooting</h2>
-                <table>
-                    <thead>
-                        <tr><th>Issue</th><th>Solution</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr class="fragment"><td>App does not load in browser</td><td>Verify: public subnet selected, auto-assign public IP enabled, security group allows port 80</td></tr>
-                        <tr class="fragment"><td>Instance has no public IP</td><td>Check subnet settings; re-launch in a public subnet with auto-assign enabled</td></tr>
-                        <tr class="fragment"><td>Security group not visible</td><td>Ensure you created it in the correct VPC (employee-directory-vpc)</td></tr>
-                        <tr class="fragment"><td>NAT Gateway stuck in "Pending"</td><td>Wait up to 5 minutes; check that an Elastic IP was allocated</td></tr>
-                        <tr class="fragment"><td>User data script not running</td><td>Check instance system log (Actions &gt; Monitor and troubleshoot &gt; Get system log)</td></tr>
-                    </tbody>
-                </table>
-                <aside class="notes">Walk through common issues. The most frequent problem is selecting a private subnet instead of a public subnet. The second most common is forgetting to enable auto-assign public IP. Both result in the app being unreachable.</aside>
-            </section>
-
-            <!-- Questions Slide -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 60%, #3182ce 100%)" class="questions-slide">
+            <!-- Slide 13: Questions -->
+            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
-                <p>Ask about VPCs, subnets, route tables, security groups, or any step in this lab.</p>
-                <div class="module-progress">
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step completed"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                    <div class="step"></div>
-                </div>
-                <aside class="notes">Open the floor for questions. Common questions include: how VPC Peering works, the difference between security groups and NACLs, and how to connect on-premises networks to a VPC (VPN or Direct Connect).</aside>
+                <p>Ask your instructor before proceeding to the next module</p>
+                <aside class="notes">
+                    Common questions: What is the difference between public and private subnets? (Route to IGW.) Can instances in private subnets access the internet? (Yes, via NAT gateway.) Why 2 AZs? (High availability — required for ALB.)
+                </aside>
             </section>
 
         </div>
