@@ -69,7 +69,26 @@
                 <aside class="notes">Welcome to Lab 3. Students will create a custom VPC using the wizard and launch an EC2 instance inside it. This VPC will be used in Lab 6 for the load balancer and Auto Scaling Group.</aside>
             </section>
 
-            <!-- Slide 2: Overview -->
+            <!-- Slide 2: Resource Names -->
+            <section>
+                <h2>&#127991;&#65039; Resource Names for This Lab</h2>
+                <p>Replace <code>&lt;ID&gt;</code> with your assigned student ID (for example <code>user7</code>).</p>
+                <table>
+                    <tr><th>Resource</th><th>Name</th></tr>
+                    <tr><td>VPC wizard &mdash; name tag auto-generation</td><td><code>employee-directory-&lt;ID&gt;</code></td></tr>
+                    <tr><td>Resulting VPC</td><td><code>employee-directory-&lt;ID&gt;-vpc</code></td></tr>
+                    <tr><td>Security group</td><td><code>employee-directory-app-sg-&lt;ID&gt;</code></td></tr>
+                    <tr><td>EC2 instance (Name tag)</td><td><code>employee-directory-app-vpc-&lt;ID&gt;</code></td></tr>
+                </table>
+                <div class="highlight-box">
+                    <strong>&#128161; Nice side effect:</strong> the wizard applies your name tag to every resource it creates &mdash; subnets, route tables and the internet gateway all pick up your ID automatically.
+                </div>
+                <aside class="notes">
+                    The "VPC and more" wizard propagates the auto-generation value to every child resource, so getting the ID into that one field labels the whole stack. Warn students that the security group dropdown will show every student's SG with the same base name &mdash; they must pick the one ending in their own ID.
+                </aside>
+            </section>
+
+            <!-- Slide 3: Overview -->
             <section>
                 <h2>&#128203; Lab Overview</h2>
                 <div class="two-columns">
@@ -97,7 +116,7 @@
                 <aside class="notes">This VPC and its subnets will be reused in Lab 6 for the ALB and Auto Scaling Group. Ensure all students have their Lab 2 instance running.</aside>
             </section>
 
-            <!-- Slide 3: Create VPC — Settings -->
+            <!-- Slide 4: Create VPC — Settings -->
             <section>
                 <h2>&#128295; Create VPC — Settings</h2>
                 <ol>
@@ -107,7 +126,7 @@
                 </ol>
                 <table>
                     <tr><th>Setting</th><th>Value</th></tr>
-                    <tr><td>Name tag auto-generation</td><td><code>employee-directory</code></td></tr>
+                    <tr><td>Name tag auto-generation</td><td><code>employee-directory-&lt;ID&gt;</code></td></tr>
                     <tr><td>IPv4 CIDR block</td><td><code>10.1.0.0/16</code></td></tr>
                     <tr><td>Number of Availability Zones</td><td><strong>2</strong></td></tr>
                     <tr><td>Number of public subnets</td><td><strong>2</strong></td></tr>
@@ -119,7 +138,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 4: Create VPC — Execute -->
+            <!-- Slide 5: Create VPC — Execute -->
             <section>
                 <h2>&#128295; Create VPC — Execute</h2>
                 <ol>
@@ -136,15 +155,15 @@
                 </aside>
             </section>
 
-            <!-- Slide 5: Create Security Group -->
+            <!-- Slide 6: Create Security Group -->
             <section>
                 <h2>&#128274; Create Security Group</h2>
                 <ol>
                     <li>In the VPC console left nav, click <strong>Security groups</strong></li>
                     <li>Click <strong>Create security group</strong></li>
-                    <li>Name: <code>employee-directory-app-sg</code></li>
+                    <li>Name: <code>employee-directory-app-sg-&lt;ID&gt;</code></li>
                     <li>Description: <em>Allow HTTP access for Employee Directory</em></li>
-                    <li>VPC: Select <strong>employee-directory-vpc</strong></li>
+                    <li>VPC: Select <strong>employee-directory-&lt;ID&gt;-vpc</strong></li>
                 </ol>
                 <table>
                     <tr><th>Type</th><th>Port</th><th>Source</th></tr>
@@ -155,25 +174,25 @@
                     <li>Click <strong>Create security group</strong></li>
                 </ol>
                 <aside class="notes">
-                    This security group must be in the new VPC (not the default VPC). Students often miss the VPC dropdown — make sure they select employee-directory-vpc. This SG will also be used by the Auto Scaling Group in Lab 6.
+                    This security group must be in the new VPC (not the default VPC). Students often miss the VPC dropdown — make sure they select employee-directory-&lt;ID&gt;-vpc. This SG will also be used by the Auto Scaling Group in Lab 6.
                 </aside>
             </section>
 
-            <!-- Slide 6: Launch EC2 in New VPC — Part 1 -->
+            <!-- Slide 7: Launch EC2 in New VPC — Part 1 -->
             <section>
                 <h2>&#128640; Launch EC2 in the New VPC</h2>
                 <ol>
                     <li>Navigate to <strong>EC2</strong> &rarr; <strong>Launch instance</strong></li>
-                    <li>Name: <code>employee-directory-app-vpc</code></li>
+                    <li>Name: <code>employee-directory-app-vpc-&lt;ID&gt;</code></li>
                     <li>AMI: <strong>Amazon Linux 2023</strong></li>
                     <li>Instance type: <strong>t2.micro</strong></li>
-                    <li>Key pair: <strong>employee-dir-key</strong> (from Lab 2)</li>
+                    <li>Key pair: <strong>employee-dir-key-&lt;ID&gt;</strong> (from Lab 2)</li>
                     <li>Under <strong>Network settings</strong>, click <strong>Edit</strong>:
                         <ul>
-                            <li>VPC: <strong>employee-directory-vpc</strong></li>
+                            <li>VPC: <strong>employee-directory-&lt;ID&gt;-vpc</strong></li>
                             <li>Subnet: Choose any <strong>public</strong> subnet</li>
                             <li>Auto-assign public IP: <strong>Enable</strong></li>
-                            <li>Select existing security group: <strong>employee-directory-app-sg</strong></li>
+                            <li>Select existing security group: <strong>employee-directory-app-sg-&lt;ID&gt;</strong></li>
                         </ul>
                     </li>
                 </ol>
@@ -182,7 +201,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 7: Launch EC2 — User Data and Launch -->
+            <!-- Slide 8: Launch EC2 — User Data and Launch -->
             <section>
                 <h2>&#128640; Add User Data and Launch</h2>
                 <ol>
@@ -214,7 +233,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 8: Test -->
+            <!-- Slide 9: Test -->
             <section>
                 <h2>&#127760; Test the Web Server</h2>
                 <ol>
@@ -233,11 +252,11 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 9: Stop Old Instance -->
+            <!-- Slide 10: Stop Old Instance -->
             <section>
                 <h2>&#128721; Stop the Lab 2 Instance</h2>
                 <ol>
-                    <li>In the EC2 console, find your original <strong>employee-directory-app</strong> instance (from Lab 2)</li>
+                    <li>In the EC2 console, find your original <strong>employee-directory-app-&lt;ID&gt;</strong> instance (from Lab 2)</li>
                     <li>Select it, click <strong>Instance state</strong> &rarr; <strong>Stop instance</strong></li>
                 </ol>
                 <div class="highlight-box">
@@ -248,16 +267,16 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 10: Clean Up Note -->
+            <!-- Slide 11: Clean Up Note -->
             <section>
                 <h2>&#9888;&#65039; Resources to Keep</h2>
                 <div class="highlight-box warning">
                     <strong>Do NOT delete these resources</strong> — they are needed for Lab 6:
                 </div>
                 <ul>
-                    <li><strong>VPC:</strong> employee-directory-vpc (with subnets, IGW, route tables)</li>
-                    <li><strong>Security Group:</strong> employee-directory-app-sg</li>
-                    <li><strong>Key Pair:</strong> employee-dir-key</li>
+                    <li><strong>VPC:</strong> employee-directory-&lt;ID&gt;-vpc (with subnets, IGW, route tables)</li>
+                    <li><strong>Security Group:</strong> employee-directory-app-sg-&lt;ID&gt;</li>
+                    <li><strong>Key Pair:</strong> employee-dir-key-&lt;ID&gt;</li>
                     <li><strong>IAM Role:</strong> EmployeeDirectoryAppRole (if created)</li>
                 </ul>
                 <p>You may terminate the EC2 instance from this lab — Lab 6 will create new instances via Auto Scaling.</p>
@@ -266,7 +285,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 11: Lab Complete -->
+            <!-- Slide 12: Lab Complete -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="title-slide">
                 <h1>&#127881; Lab 3 Complete!</h1>
                 <h2>Custom VPC with EC2 Deployed</h2>
@@ -281,7 +300,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 <aside class="notes">Congratulate students. They now have a custom VPC with subnets, internet gateway, and a working web application.</aside>
             </section>
 
-            <!-- Slide 12: Summary -->
+            <!-- Slide 13: Summary -->
             <section>
                 <h2>&#127919; Key Takeaways</h2>
                 <div class="two-columns">
@@ -309,7 +328,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 13: Questions -->
+            <!-- Slide 14: Questions -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Ask your instructor before proceeding to the next module</p>

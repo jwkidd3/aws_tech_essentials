@@ -92,13 +92,61 @@ AWS Technical Essentials introduces you to essential AWS services and common sol
 | 7 — Course Summary | `presentations/module-07-course-summary.html` |
 
 ### Labs
-| Lab | File |
-|-----|------|
-| 1 — IAM | `labs/lab-01-iam.html` |
-| 2 — EC2 | `labs/lab-02-ec2.html` |
-| 3 — VPC | `labs/lab-03-vpc.html` |
-| 4 — S3 | `labs/lab-04-s3.html` |
-| 5 — DynamoDB | `labs/lab-05-dynamodb.html` |
-| 6 — High Availability | `labs/lab-06-high-availability.html` |
+Each lab ships in two formats: a Reveal.js deck for projecting, and a Markdown copy for handouts, printing, or the LMS.
+
+| Lab | Deck | Markdown |
+|-----|------|----------|
+| 1 — IAM | `labs/lab-01-iam.html` | `labs/lab-01-iam.md` |
+| 2 — EC2 | `labs/lab-02-ec2.html` | `labs/lab-02-ec2.md` |
+| 3 — VPC | `labs/lab-03-vpc.html` | `labs/lab-03-vpc.md` |
+| 4 — S3 | `labs/lab-04-s3.html` | `labs/lab-04-s3.md` |
+| 5 — DynamoDB | `labs/lab-05-dynamodb.html` | `labs/lab-05-dynamodb.md` |
+| 6 — High Availability | `labs/lab-06-high-availability.html` | `labs/lab-06-high-availability.md` |
 
 All presentations and labs are Reveal.js single-file HTML — open directly in a browser.
+
+**The HTML decks are the source of truth.** After editing a lab deck, regenerate its Markdown copy so the two do not drift:
+
+```bash
+python3 tools/html2md.py      # requires: pip install beautifulsoup4
+```
+
+## Shared AWS Account — Resource Naming
+
+All students in a delivery share one AWS account, so every resource a student creates must carry a unique suffix. Assign each student a short ID on day one — `user1` through `userN` — and have them substitute it wherever the labs show `<ID>`.
+
+| Lab | Resource | Name |
+|-----|----------|------|
+| 1 | IAM user | `lab-user-<ID>` |
+| 1 | IAM group | `EC2-Admins-<ID>` |
+| 1 | IAM policy | `S3ScopedReadPolicy-<ID>` |
+| 2 | EC2 instance | `employee-directory-app-<ID>` |
+| 2 | Key pair | `employee-dir-key-<ID>` |
+| 2 | Security group | `employee-directory-app-sg-<ID>` |
+| 3 | VPC wizard name tag | `employee-directory-<ID>` → creates `employee-directory-<ID>-vpc` |
+| 3 | EC2 instance | `employee-directory-app-vpc-<ID>` |
+| 4 | S3 bucket | `employee-directory-app-bucket-<ID>-<RANDOM>` |
+| 5 | DynamoDB table | `Employees-<ID>` |
+| 6 | Load balancer | `employee-directory-alb-<ID>` |
+| 6 | ALB security group | `employee-directory-alb-sg-<ID>` |
+| 6 | Target group | `employee-directory-tg-<ID>` |
+| 6 | Launch template | `employee-directory-lt-<ID>` |
+| 6 | Auto Scaling group | `employee-directory-asg-<ID>` |
+
+Notes:
+
+- **`EmployeeDirectoryAppRole` is deliberately unsuffixed.** It is a single shared IAM role you pre-create in the lab account; students attach it but never create or rename it.
+- **Keep IDs to six characters or fewer.** AWS caps load balancer and target group names at 32 characters, and `employee-directory-alb-` already consumes 23.
+- **S3 needs two layers.** Bucket names are unique across all of AWS, so Lab 4 keeps a random component on top of the student ID.
+- **Lab 3's VPC wizard does the heavy lifting.** The name-tag auto-generation value propagates to the subnets, route tables, and internet gateway, so one field labels the whole network stack with the student's ID.
+- **Lab 1's custom policy is scoped per student.** The resource ARN embeds `<ID>`, so a student's policy cannot read a classmate's bucket.
+
+### Instructor pre-flight for a shared account
+
+Raise these before class — naming alone will not cover them:
+
+- **VPCs per Region defaults to 5.** Every student creates one in Lab 3. Request a quota increase for *VPCs per Region* well ahead of delivery, or split the class across Regions.
+- **Internet gateways and Elastic IPs** carry matching per-Region defaults and scale with the VPC count.
+- **Running On-Demand vCPUs.** Lab 6 runs two `t2.micro` instances per student on top of the Lab 2 and Lab 3 instances.
+- **Pre-create `EmployeeDirectoryAppRole`** with the SSM managed policy before the first lab.
+- **Clean-up is per student.** Have each student filter the console by their own ID at the end of every lab; sweep for orphans by ID after class.

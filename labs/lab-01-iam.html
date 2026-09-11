@@ -71,7 +71,27 @@
                 </aside>
             </section>
 
-            <!-- Slide 2: Overview -->
+            <!-- Slide 2: Your Student ID -->
+            <section>
+                <h2>&#127991;&#65039; Your Student ID &mdash; Read This First</h2>
+                <div class="highlight-box warning">
+                    <strong>&#9888;&#65039; Everyone in this class shares one AWS account.</strong> Every resource you create must carry your assigned student ID, or it will collide with someone else's.
+                </div>
+                <p>Your instructor has assigned you an ID such as <code>user7</code>. In every lab, wherever you see <code>&lt;ID&gt;</code>, type your own ID instead.</p>
+                <table>
+                    <tr><th>The lab shows</th><th>You type (if your ID is <code>user7</code>)</th></tr>
+                    <tr><td><code>lab-user-&lt;ID&gt;</code></td><td><code>lab-user-user7</code></td></tr>
+                    <tr><td><code>employee-directory-app-sg-&lt;ID&gt;</code></td><td><code>employee-directory-app-sg-user7</code></td></tr>
+                </table>
+                <div class="highlight-box">
+                    <strong>&#128161; Two exceptions:</strong> the IAM role <code>EmployeeDirectoryAppRole</code> is pre-created by your instructor and shared &mdash; use it as-is, do not rename it. S3 bucket names must be unique across <em>all</em> of AWS, so Lab 4 adds a random suffix on top of your ID.
+                </div>
+                <aside class="notes">
+                    Hand out student IDs before starting. Keep them short (user1 through userN) &mdash; load balancer and target group names are capped at 32 characters in Lab 6. Tell students to write their ID on a sticky note; they will use it in every lab. Emphasise that if they skip the suffix, the console will either throw a duplicate-name error or, worse, hand them someone else's resource.
+                </aside>
+            </section>
+
+            <!-- Slide 3: Overview -->
             <section>
                 <h2>&#128203; Lab Overview</h2>
                 <div class="two-columns">
@@ -104,7 +124,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 3: Explore IAM Dashboard -->
+            <!-- Slide 4: Explore IAM Dashboard -->
             <section>
                 <h2>&#128200; Explore the IAM Dashboard</h2>
                 <ol>
@@ -123,12 +143,12 @@
                 </aside>
             </section>
 
-            <!-- Slide 4: Create IAM User -->
+            <!-- Slide 5: Create IAM User -->
             <section>
                 <h2>&#128221; Create an IAM User</h2>
                 <ol>
                     <li>Click <strong>Users</strong> in the left nav, then <strong>Create user</strong></li>
-                    <li>User name: <code>lab-user</code></li>
+                    <li>User name: <code>lab-user-&lt;ID&gt;</code></li>
                     <li>Check <strong>Provide user access to the AWS Management Console</strong></li>
                     <li>Select <strong>I want to create an IAM user</strong></li>
                     <li>Set a custom password (e.g., <code>Lab@User123!</code>), uncheck "require password reset"</li>
@@ -144,25 +164,25 @@
                 </aside>
             </section>
 
-            <!-- Slide 5: Create Group -->
+            <!-- Slide 6: Create Group -->
             <section>
                 <h2>&#128101; Create an IAM Group</h2>
                 <ol>
                     <li>Click <strong>User groups</strong> in the left nav, then <strong>Create group</strong></li>
-                    <li>Group name: <code>EC2-Admins</code></li>
-                    <li>Under <strong>Add users</strong>, check <strong>lab-user</strong></li>
+                    <li>Group name: <code>EC2-Admins-&lt;ID&gt;</code></li>
+                    <li>Under <strong>Add users</strong>, check <strong>lab-user-&lt;ID&gt;</strong></li>
                     <li>Under <strong>Attach permissions policies</strong>, search and select <strong>AmazonEC2FullAccess</strong></li>
                     <li>Click <strong>Create user group</strong></li>
                 </ol>
                 <div class="highlight-box success">
-                    <strong>&#9989; Expected:</strong> EC2-Admins group created with lab-user as a member and AmazonEC2FullAccess attached.
+                    <strong>&#9989; Expected:</strong> EC2-Admins-&lt;ID&gt; group created with lab-user-&lt;ID&gt; as a member and AmazonEC2FullAccess attached.
                 </div>
                 <aside class="notes">
-                    Explain that lab-user now has permissions from two sources: S3 read-only (direct) and EC2 full access (via group). IAM evaluates the union of all attached policies.
+                    Explain that lab-user-&lt;ID&gt; now has permissions from two sources: S3 read-only (direct) and EC2 full access (via group). IAM evaluates the union of all attached policies.
                 </aside>
             </section>
 
-            <!-- Slide 6: Create Custom Policy -->
+            <!-- Slide 7: Create Custom Policy -->
             <section>
                 <h2>&#128220; Create a Custom IAM Policy</h2>
                 <ol>
@@ -179,37 +199,37 @@
                 "s3:GetObject"
             ],
             "Resource": [
-                "arn:aws:s3:::employee-directory-*",
-                "arn:aws:s3:::employee-directory-*/*"
+                "arn:aws:s3:::employee-directory-app-bucket-&lt;ID&gt;-*",
+                "arn:aws:s3:::employee-directory-app-bucket-&lt;ID&gt;-*/*"
             ]
         }
     ]
 }</code></pre>
                 <ol start="3">
-                    <li>Click <strong>Next</strong>, name it <code>S3ScopedReadPolicy</code>, click <strong>Create policy</strong></li>
+                    <li>Click <strong>Next</strong>, name it <code>S3ScopedReadPolicy-&lt;ID&gt;</code>, click <strong>Create policy</strong></li>
                 </ol>
                 <aside class="notes">
-                    Walk through the JSON: Version is always 2012-10-17, Effect Allow, two Actions for list and get, two Resource ARNs because ListBucket operates on the bucket and GetObject operates on objects. The wildcard pattern scopes access to buckets starting with "employee-directory-".
+                    Walk through the JSON: Version is always 2012-10-17, Effect Allow, two Actions for list and get, two Resource ARNs because ListBucket operates on the bucket and GetObject operates on objects. The wildcard pattern scopes access to that student's own bucket only &mdash; their ID sits inside the ARN, so the policy cannot read a classmate's bucket. Remind them to substitute their ID in both Resource lines.
                 </aside>
             </section>
 
-            <!-- Slide 7: Test Permissions — Sign In -->
+            <!-- Slide 8: Test Permissions — Sign In -->
             <section>
-                <h2>&#128270; Test Permissions — Sign In as lab-user</h2>
+                <h2>&#128270; Test Permissions — Sign In as lab-user-&lt;ID&gt;</h2>
                 <ol>
                     <li>Open an <strong>incognito/private browser window</strong></li>
                     <li>Navigate to the <strong>IAM sign-in URL</strong> you saved earlier</li>
-                    <li>Sign in as <strong>lab-user</strong> with the password you set</li>
+                    <li>Sign in as <strong>lab-user-&lt;ID&gt;</strong> with the password you set</li>
                 </ol>
                 <div class="highlight-box success">
-                    <strong>&#9989; Expected:</strong> You sign in successfully. Confirm the user name in the top-right corner shows <strong>lab-user</strong>.
+                    <strong>&#9989; Expected:</strong> You sign in successfully. Confirm the user name in the top-right corner shows <strong>lab-user-&lt;ID&gt;</strong>.
                 </div>
                 <aside class="notes">
                     Use incognito to avoid session conflicts. If sign-in fails, verify the IAM sign-in URL (not root account URL). If the password was forgotten, return to admin session and reset it from the user's Security credentials tab.
                 </aside>
             </section>
 
-            <!-- Slide 8: Test Permissions — Verify -->
+            <!-- Slide 9: Test Permissions — Verify -->
             <section>
                 <h2>&#128270; Test Permissions — Verify Access</h2>
                 <ol>
@@ -218,35 +238,35 @@
                     <li>Navigate to <strong>EC2</strong> — you should have <strong>full access</strong> (via group)</li>
                 </ol>
                 <div class="highlight-box danger">
-                    <strong>&#10060; S3 write = denied:</strong> lab-user has read-only S3 access (direct policy).
+                    <strong>&#10060; S3 write = denied:</strong> lab-user-&lt;ID&gt; has read-only S3 access (direct policy).
                 </div>
                 <div class="highlight-box success">
-                    <strong>&#9989; EC2 = full access:</strong> lab-user inherits EC2FullAccess from the EC2-Admins group.
+                    <strong>&#9989; EC2 = full access:</strong> lab-user-&lt;ID&gt; inherits EC2FullAccess from the EC2-Admins-&lt;ID&gt; group.
                 </div>
                 <aside class="notes">
                     This clearly demonstrates how IAM policies control access from multiple sources. Ask students to try accessing another service like RDS — they should see access denied (default deny). Close the incognito window when done and return to the admin session.
                 </aside>
             </section>
 
-            <!-- Slide 9: Clean Up -->
+            <!-- Slide 10: Clean Up -->
             <section>
                 <h2>&#128465; Clean Up</h2>
                 <p>Return to your <strong>admin session</strong> and delete the following (in order):</p>
                 <ol>
-                    <li><strong>Policy:</strong> Policies &rarr; search <code>S3ScopedReadPolicy</code> &rarr; Delete</li>
-                    <li><strong>Remove user from group:</strong> User groups &rarr; EC2-Admins &rarr; remove lab-user</li>
-                    <li><strong>Group:</strong> User groups &rarr; delete EC2-Admins</li>
-                    <li><strong>User:</strong> Users &rarr; delete lab-user</li>
+                    <li><strong>Policy:</strong> Policies &rarr; search <code>S3ScopedReadPolicy-&lt;ID&gt;</code> &rarr; Delete</li>
+                    <li><strong>Remove user from group:</strong> User groups &rarr; EC2-Admins-&lt;ID&gt; &rarr; remove lab-user-&lt;ID&gt;</li>
+                    <li><strong>Group:</strong> User groups &rarr; delete EC2-Admins-&lt;ID&gt;</li>
+                    <li><strong>User:</strong> Users &rarr; delete lab-user-&lt;ID&gt;</li>
                 </ol>
                 <div class="highlight-box success">
-                    <strong>&#9989; Verify:</strong> lab-user, EC2-Admins, and S3ScopedReadPolicy are all removed.
+                    <strong>&#9989; Verify:</strong> lab-user-&lt;ID&gt;, EC2-Admins-&lt;ID&gt;, and S3ScopedReadPolicy-&lt;ID&gt; are all removed.
                 </div>
                 <aside class="notes">
                     Order matters: delete the policy first, remove the user from the group, then delete the group, then the user. Give students a moment to verify cleanup is complete.
                 </aside>
             </section>
 
-            <!-- Slide 10: Lab Complete -->
+            <!-- Slide 11: Lab Complete -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="title-slide">
                 <h1>&#127881; Lab 1 Complete!</h1>
                 <h2>Introduction to AWS IAM</h2>
@@ -263,7 +283,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 11: Summary -->
+            <!-- Slide 12: Summary -->
             <section>
                 <h2>&#127919; Key Takeaways</h2>
                 <div class="two-columns">
@@ -292,7 +312,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 12: Questions -->
+            <!-- Slide 13: Questions -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Ask your instructor before proceeding to the next module</p>

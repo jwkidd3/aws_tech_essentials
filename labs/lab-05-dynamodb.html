@@ -69,7 +69,23 @@
                 <aside class="notes">Lab 5 of 6. Students will create a DynamoDB table, add items, query data, and observe schema flexibility.</aside>
             </section>
 
-            <!-- Slide 2: Overview -->
+            <!-- Slide 2: Resource Names -->
+            <section>
+                <h2>&#127991;&#65039; Resource Names for This Lab</h2>
+                <p>Replace <code>&lt;ID&gt;</code> with your assigned student ID (for example <code>user7</code>).</p>
+                <table>
+                    <tr><th>Resource</th><th>Name</th></tr>
+                    <tr><td>DynamoDB table</td><td><code>Employees-&lt;ID&gt;</code></td></tr>
+                </table>
+                <div class="highlight-box">
+                    <strong>&#128161; Note:</strong> table names are unique per Region per account, so every student needs their own. Item keys (<code>E001</code>, <code>E002</code>, <code>E003</code>) live inside your table and do not need a suffix.
+                </div>
+                <aside class="notes">
+                    Only the table name needs the ID &mdash; the items inside it are scoped to the table. The Tables list will show one row per student; point out that they should only ever select the table ending in their own ID, especially at clean-up time.
+                </aside>
+            </section>
+
+            <!-- Slide 3: Overview -->
             <section>
                 <h2>&#127919; Lab Overview</h2>
                 <div class="two-columns">
@@ -94,13 +110,13 @@
                 <aside class="notes">Review objectives. DynamoDB is a fully managed NoSQL database. This lab focuses on core CRUD operations and the schema-flexible nature of the service. Ensure everyone has console access.</aside>
             </section>
 
-            <!-- Slide 3: Create Table -->
+            <!-- Slide 4: Create Table -->
             <section>
-                <h2>&#128202; Create the Employees Table</h2>
+                <h2>&#128202; Create the Employees-&lt;ID&gt; Table</h2>
                 <ol>
                     <li>Navigate to <strong>DynamoDB</strong> in the console</li>
                     <li>Click <strong>Create table</strong></li>
-                    <li>Table name: <code>Employees</code></li>
+                    <li>Table name: <code>Employees-&lt;ID&gt;</code></li>
                     <li>Partition key: <code>id</code> (String)</li>
                     <li>Table settings: <strong>Customize settings</strong></li>
                     <li>Capacity mode: <strong>On-demand</strong></li>
@@ -115,11 +131,11 @@
                 </aside>
             </section>
 
-            <!-- Slide 4: Add Items -->
+            <!-- Slide 5: Add Items -->
             <section>
                 <h2>&#128221; Add Employee Items</h2>
                 <ol>
-                    <li>Click on the <strong>Employees</strong> table, then <strong>Explore table items</strong></li>
+                    <li>Click on the <strong>Employees-&lt;ID&gt;</strong> table, then <strong>Explore table items</strong></li>
                     <li>Click <strong>Create item</strong></li>
                 </ol>
                 <p>Add these three items (click <strong>Add new attribute</strong> for each extra field):</p>
@@ -137,7 +153,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 5: Scan and Query -->
+            <!-- Slide 6: Scan and Query -->
             <section>
                 <h2>&#128269; Scan and Query the Table</h2>
                 <h4>Scan (returns all items):</h4>
@@ -159,7 +175,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 6: Edit Item — Schema Flexibility -->
+            <!-- Slide 7: Edit Item — Schema Flexibility -->
             <section>
                 <h2>&#128260; Edit an Item — Schema Flexibility</h2>
                 <ol>
@@ -177,24 +193,24 @@
                 </aside>
             </section>
 
-            <!-- Slide 7: Clean Up -->
+            <!-- Slide 8: Clean Up -->
             <section>
                 <h2>&#128465; Clean Up</h2>
                 <ol>
                     <li>Go to <strong>DynamoDB</strong> &rarr; <strong>Tables</strong></li>
-                    <li>Select the <strong>Employees</strong> table</li>
+                    <li>Select the <strong>Employees-&lt;ID&gt;</strong> table</li>
                     <li>Click <strong>Delete</strong></li>
                     <li>Type <code>confirm</code> and click <strong>Delete table</strong></li>
                 </ol>
                 <div class="highlight-box success">
-                    <strong>&#9989; Expected:</strong> The Employees table is deleted. DynamoDB deletes all items and indexes with the table.
+                    <strong>&#9989; Expected:</strong> The Employees-&lt;ID&gt; table is deleted. DynamoDB deletes all items and indexes with the table.
                 </div>
                 <aside class="notes">
                     Deleting the table removes all data permanently. In production, you would enable Point-in-Time Recovery or take on-demand backups before deletion. On-demand tables do not incur charges when idle.
                 </aside>
             </section>
 
-            <!-- Slide 8: Lab Complete -->
+            <!-- Slide 9: Lab Complete -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="title-slide">
                 <h1>&#127881; Lab 5 Complete!</h1>
                 <h2>DynamoDB Table Created and Queried</h2>
@@ -209,7 +225,7 @@
                 <aside class="notes">Congratulate students. They created a table, added items, queried data, and saw schema flexibility in action.</aside>
             </section>
 
-            <!-- Slide 9: Summary -->
+            <!-- Slide 10: Summary -->
             <section>
                 <h2>&#127919; Key Takeaways</h2>
                 <div class="two-columns">
@@ -237,7 +253,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 10: Questions -->
+            <!-- Slide 11: Questions -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Ask your instructor before proceeding to the next module</p>

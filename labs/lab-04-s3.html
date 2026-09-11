@@ -69,7 +69,23 @@
                 <aside class="notes">Lab 4 of 6. Students will create an S3 bucket, upload objects, test presigned URLs, and configure static website hosting.</aside>
             </section>
 
-            <!-- Slide 2: Overview -->
+            <!-- Slide 2: Resource Names -->
+            <section>
+                <h2>&#127991;&#65039; Resource Names for This Lab</h2>
+                <p>Replace <code>&lt;ID&gt;</code> with your assigned student ID (for example <code>user7</code>).</p>
+                <table>
+                    <tr><th>Resource</th><th>Name</th></tr>
+                    <tr><td>S3 bucket</td><td><code>employee-directory-app-bucket-&lt;ID&gt;-&lt;RANDOM&gt;</code></td></tr>
+                </table>
+                <div class="highlight-box warning">
+                    <strong>&#9888;&#65039; Two layers of uniqueness:</strong> your <code>&lt;ID&gt;</code> keeps you apart from your classmates, and <code>&lt;RANDOM&gt;</code> (any 4-6 digits or letters) keeps the name unique across every AWS account on earth.
+                </div>
+                <aside class="notes">
+                    Bucket names are globally unique, lowercase, 3-63 characters, DNS-compliant. Have students write their full bucket name down &mdash; they need it again for the bucket policy later in this lab. If a name is rejected as taken, changing the random portion is enough.
+                </aside>
+            </section>
+
+            <!-- Slide 3: Overview -->
             <section>
                 <h2>&#127919; Lab Overview</h2>
                 <div class="two-columns">
@@ -97,13 +113,13 @@
                 <aside class="notes">Give students an overview. S3 is one of the most foundational AWS services. This lab covers the core operations they need to understand.</aside>
             </section>
 
-            <!-- Slide 3: Create Bucket -->
+            <!-- Slide 4: Create Bucket -->
             <section>
                 <h2>&#128230; Create a Bucket with Versioning</h2>
                 <ol>
                     <li>Navigate to <strong>S3</strong> in the console</li>
                     <li>Click <strong>Create bucket</strong></li>
-                    <li>Bucket name: <code>employee-directory-app-bucket-&lt;YOUR_INITIALS&gt;-&lt;RANDOM&gt;</code></li>
+                    <li>Bucket name: <code>employee-directory-app-bucket-&lt;ID&gt;-&lt;RANDOM&gt;</code></li>
                     <li>Region: Same as previous labs</li>
                     <li>Block Public Access: <strong>Keep all checked</strong> (for now)</li>
                     <li>Bucket Versioning: <strong>Enable</strong></li>
@@ -118,7 +134,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 4: Upload Objects -->
+            <!-- Slide 5: Upload Objects -->
             <section>
                 <h2>&#128228; Upload Objects</h2>
                 <ol>
@@ -135,7 +151,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 5: Test Object URL + Presigned URL -->
+            <!-- Slide 6: Test Object URL + Presigned URL -->
             <section>
                 <h2>&#128279; Test Access: Object URL vs Presigned URL</h2>
                 <ol>
@@ -159,7 +175,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 6: Enable Static Website Hosting -->
+            <!-- Slide 7: Enable Static Website Hosting -->
             <section>
                 <h2>&#127760; Enable Static Website Hosting</h2>
                 <ol>
@@ -188,7 +204,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 7: Add Bucket Policy -->
+            <!-- Slide 8: Add Bucket Policy -->
             <section>
                 <h2>&#128275; Add Bucket Policy for Public Access</h2>
                 <ol>
@@ -220,7 +236,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 8: Test Website -->
+            <!-- Slide 9: Test Website -->
             <section>
                 <h2>&#127760; Test the Website Endpoint</h2>
                 <ol>
@@ -236,7 +252,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 9: Clean Up -->
+            <!-- Slide 10: Clean Up -->
             <section>
                 <h2>&#128465; Clean Up</h2>
                 <p>Delete the S3 bucket and its contents:</p>
@@ -253,7 +269,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 10: Lab Complete -->
+            <!-- Slide 11: Lab Complete -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="title-slide">
                 <h1>&#127881; Lab 4 Complete!</h1>
                 <h2>Amazon S3 Bucket with Static Website</h2>
@@ -268,7 +284,7 @@
                 <aside class="notes">Congratulate students. They created a bucket, tested access controls, and hosted a static website.</aside>
             </section>
 
-            <!-- Slide 11: Summary -->
+            <!-- Slide 12: Summary -->
             <section>
                 <h2>&#127919; Key Takeaways</h2>
                 <div class="two-columns">
@@ -296,7 +312,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 12: Questions -->
+            <!-- Slide 13: Questions -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Ask your instructor before proceeding to the next module</p>

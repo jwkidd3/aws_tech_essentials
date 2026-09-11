@@ -71,7 +71,28 @@
                 </aside>
             </section>
 
-            <!-- Slide 2: Overview -->
+            <!-- Slide 2: Resource Names -->
+            <section>
+                <h2>&#127991;&#65039; Resource Names for This Lab</h2>
+                <p>Replace <code>&lt;ID&gt;</code> with your assigned student ID (for example <code>user7</code>).</p>
+                <table>
+                    <tr><th>Resource</th><th>Name</th></tr>
+                    <tr><td>Application Load Balancer</td><td><code>employee-directory-alb-&lt;ID&gt;</code></td></tr>
+                    <tr><td>ALB security group</td><td><code>employee-directory-alb-sg-&lt;ID&gt;</code></td></tr>
+                    <tr><td>Target group</td><td><code>employee-directory-tg-&lt;ID&gt;</code></td></tr>
+                    <tr><td>Launch template</td><td><code>employee-directory-lt-&lt;ID&gt;</code></td></tr>
+                    <tr><td>Auto Scaling group</td><td><code>employee-directory-asg-&lt;ID&gt;</code></td></tr>
+                    <tr><td><em>Reused from earlier labs</em></td><td><code>employee-directory-&lt;ID&gt;-vpc</code>, <code>employee-directory-app-sg-&lt;ID&gt;</code>, <code>employee-dir-key-&lt;ID&gt;</code></td></tr>
+                </table>
+                <div class="highlight-box warning">
+                    <strong>&#9888;&#65039; 32-character limit:</strong> AWS caps load balancer and target group names at 32 characters. Keep your ID to six characters or fewer.
+                </div>
+                <aside class="notes">
+                    This lab creates the most resources, and the ALB, target group and ASG dropdowns will be crowded with every student's entries. Stress that they select by their own ID at every step &mdash; attaching your ASG to a classmate's target group is the classic failure here, and it is hard to spot because the app still loads.
+                </aside>
+            </section>
+
+            <!-- Slide 3: Overview -->
             <section>
                 <h2>&#128203; Lab Overview</h2>
                 <div class="two-columns">
@@ -98,17 +119,17 @@
                 </aside>
             </section>
 
-            <!-- Slide 3: Prerequisites -->
+            <!-- Slide 4: Prerequisites -->
             <section>
                 <h2>&#9989; Prerequisites</h2>
                 <div class="highlight-box warning">
                     <strong>Before starting:</strong> Verify these resources from previous labs exist.
                 </div>
                 <ul>
-                    <li><strong>VPC:</strong> employee-directory-vpc with 2 public subnets in different AZs</li>
-                    <li><strong>Security Group:</strong> employee-directory-app-sg</li>
+                    <li><strong>VPC:</strong> employee-directory-&lt;ID&gt;-vpc with 2 public subnets in different AZs</li>
+                    <li><strong>Security Group:</strong> employee-directory-app-sg-&lt;ID&gt;</li>
                     <li><strong>IAM Role:</strong> EmployeeDirectoryAppRole</li>
-                    <li><strong>Key Pair:</strong> employee-dir-key</li>
+                    <li><strong>Key Pair:</strong> employee-dir-key-&lt;ID&gt;</li>
                 </ul>
                 <div class="highlight-box">
                     <strong>&#128161; Tip:</strong> Terminate any running EC2 instances from earlier labs to stay within limits.
@@ -118,7 +139,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 4: Create ALB — Basic Settings -->
+            <!-- Slide 5: Create ALB — Basic Settings -->
             <section>
                 <h2>&#128295; Create the Application Load Balancer</h2>
                 <ol>
@@ -127,14 +148,14 @@
                 </ol>
                 <table>
                     <tr><th>Setting</th><th>Value</th></tr>
-                    <tr><td>Name</td><td><code>employee-directory-alb</code></td></tr>
+                    <tr><td>Name</td><td><code>employee-directory-alb-&lt;ID&gt;</code></td></tr>
                     <tr><td>Scheme</td><td><strong>Internet-facing</strong></td></tr>
-                    <tr><td>VPC</td><td><strong>employee-directory-vpc</strong></td></tr>
+                    <tr><td>VPC</td><td><strong>employee-directory-&lt;ID&gt;-vpc</strong></td></tr>
                     <tr><td>Availability Zones</td><td>Check <strong>both</strong> public subnets</td></tr>
                 </table>
                 <p>Create a <strong>new security group</strong> for the ALB:</p>
                 <ul>
-                    <li>Name: <code>employee-directory-alb-sg</code></li>
+                    <li>Name: <code>employee-directory-alb-sg-&lt;ID&gt;</code></li>
                     <li>Inbound rule: <strong>HTTP / 80</strong> from <code>0.0.0.0/0</code></li>
                 </ul>
                 <aside class="notes">
@@ -142,21 +163,21 @@
                 </aside>
             </section>
 
-            <!-- Slide 5: Create Target Group + Health Check -->
+            <!-- Slide 6: Create Target Group + Health Check -->
             <section>
                 <h2>&#128295; Create Target Group and Finish ALB</h2>
                 <p>Under <strong>Listeners and routing</strong>, click <strong>Create target group</strong>:</p>
                 <table>
                     <tr><th>Setting</th><th>Value</th></tr>
                     <tr><td>Target type</td><td><strong>Instances</strong></td></tr>
-                    <tr><td>Name</td><td><code>employee-directory-tg</code></td></tr>
+                    <tr><td>Name</td><td><code>employee-directory-tg-&lt;ID&gt;</code></td></tr>
                     <tr><td>Protocol / Port</td><td>HTTP / 80</td></tr>
-                    <tr><td>VPC</td><td>employee-directory-vpc</td></tr>
+                    <tr><td>VPC</td><td>employee-directory-&lt;ID&gt;-vpc</td></tr>
                     <tr><td>Health check path</td><td><code>/</code></td></tr>
                 </table>
                 <ol>
                     <li>Click <strong>Next</strong>, skip registering targets, click <strong>Create target group</strong></li>
-                    <li>Return to the ALB tab, <strong>refresh</strong>, select <strong>employee-directory-tg</strong></li>
+                    <li>Return to the ALB tab, <strong>refresh</strong>, select <strong>employee-directory-tg-&lt;ID&gt;</strong></li>
                     <li>Click <strong>Create load balancer</strong></li>
                 </ol>
                 <div class="highlight-box success">
@@ -167,7 +188,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 6: Create Launch Template -->
+            <!-- Slide 7: Create Launch Template -->
             <section>
                 <h2>&#128196; Create a Launch Template</h2>
                 <ol>
@@ -176,11 +197,11 @@
                 </ol>
                 <table>
                     <tr><th>Setting</th><th>Value</th></tr>
-                    <tr><td>Name</td><td><code>employee-directory-lt</code></td></tr>
+                    <tr><td>Name</td><td><code>employee-directory-lt-&lt;ID&gt;</code></td></tr>
                     <tr><td>AMI</td><td><strong>Amazon Linux 2023</strong></td></tr>
                     <tr><td>Instance type</td><td><strong>t2.micro</strong></td></tr>
-                    <tr><td>Key pair</td><td><strong>employee-dir-key</strong></td></tr>
-                    <tr><td>Security group</td><td><strong>employee-directory-app-sg</strong></td></tr>
+                    <tr><td>Key pair</td><td><strong>employee-dir-key-&lt;ID&gt;</strong></td></tr>
+                    <tr><td>Security group</td><td><strong>employee-directory-app-sg-&lt;ID&gt;</strong></td></tr>
                 </table>
                 <p>Under <strong>Advanced details</strong>:</p>
                 <ul>
@@ -192,7 +213,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 7: Launch Template User Data -->
+            <!-- Slide 8: Launch Template User Data -->
             <section>
                 <h2>&#128196; Launch Template — User Data</h2>
                 <p>Paste into the <strong>User data</strong> field:</p>
@@ -223,16 +244,16 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 8: Create Auto Scaling Group — Part 1 -->
+            <!-- Slide 9: Create Auto Scaling Group — Part 1 -->
             <section>
                 <h2>&#128202; Create Auto Scaling Group</h2>
                 <ol>
                     <li>Navigate to <strong>EC2</strong> &rarr; <strong>Auto Scaling Groups</strong></li>
                     <li>Click <strong>Create Auto Scaling group</strong></li>
-                    <li>Name: <code>employee-directory-asg</code></li>
-                    <li>Launch template: <strong>employee-directory-lt</strong></li>
+                    <li>Name: <code>employee-directory-asg-&lt;ID&gt;</code></li>
+                    <li>Launch template: <strong>employee-directory-lt-&lt;ID&gt;</strong></li>
                     <li>Click <strong>Next</strong></li>
-                    <li>VPC: <strong>employee-directory-vpc</strong></li>
+                    <li>VPC: <strong>employee-directory-&lt;ID&gt;-vpc</strong></li>
                     <li>Subnets: Select <strong>both</strong> public subnets</li>
                     <li>Click <strong>Next</strong></li>
                 </ol>
@@ -241,13 +262,13 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 9: Create Auto Scaling Group — Part 2 -->
+            <!-- Slide 10: Create Auto Scaling Group — Part 2 -->
             <section>
                 <h2>&#128202; ASG — Attach to ALB</h2>
                 <ol>
                     <li>Select <strong>Attach to an existing load balancer</strong></li>
                     <li>Choose <strong>Choose from your load balancer target groups</strong></li>
-                    <li>Select <strong>employee-directory-tg</strong></li>
+                    <li>Select <strong>employee-directory-tg-&lt;ID&gt;</strong></li>
                     <li>Health check type: Check <strong>Turn on Elastic Load Balancing health checks</strong></li>
                     <li>Click <strong>Next</strong></li>
                 </ol>
@@ -265,7 +286,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 10: Verify -->
+            <!-- Slide 11: Verify -->
             <section>
                 <h2>&#127760; Verify — Test the ALB</h2>
                 <ol>
@@ -283,7 +304,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 11: Test Self-Healing -->
+            <!-- Slide 12: Test Self-Healing -->
             <section>
                 <h2>&#128296; Test Self-Healing</h2>
                 <ol>
@@ -300,7 +321,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 12: CloudWatch Metrics -->
+            <!-- Slide 13: CloudWatch Metrics -->
             <section>
                 <h2>&#128202; View CloudWatch Metrics</h2>
                 <ol>
@@ -317,7 +338,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 13: Clean Up — Part 1 -->
+            <!-- Slide 14: Clean Up — Part 1 -->
             <section>
                 <h2>&#128465; Clean Up — Step 1</h2>
                 <div class="highlight-box danger">
@@ -334,14 +355,14 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 14: Clean Up — Part 2 -->
+            <!-- Slide 15: Clean Up — Part 2 -->
             <section>
                 <h2>&#128465; Clean Up — Step 2</h2>
                 <ol start="5">
                     <li><strong>Launch Template:</strong> EC2 &rarr; Launch Templates &rarr; select &rarr; Delete</li>
-                    <li><strong>Security Groups:</strong> Delete <code>employee-directory-alb-sg</code> and <code>employee-directory-app-sg</code></li>
-                    <li><strong>VPC:</strong> VPC &rarr; Your VPCs &rarr; select employee-directory-vpc &rarr; Delete (this removes subnets, route tables, and IGW)</li>
-                    <li><strong>Key Pair:</strong> EC2 &rarr; Key Pairs &rarr; delete <code>employee-dir-key</code></li>
+                    <li><strong>Security Groups:</strong> Delete <code>employee-directory-alb-sg-&lt;ID&gt;</code> and <code>employee-directory-app-sg-&lt;ID&gt;</code></li>
+                    <li><strong>VPC:</strong> VPC &rarr; Your VPCs &rarr; select employee-directory-&lt;ID&gt;-vpc &rarr; Delete (this removes subnets, route tables, and IGW)</li>
+                    <li><strong>Key Pair:</strong> EC2 &rarr; Key Pairs &rarr; delete <code>employee-dir-key-&lt;ID&gt;</code></li>
                     <li><strong>Any remaining EC2 instances</strong> from earlier labs &rarr; Terminate</li>
                 </ol>
                 <div class="highlight-box warning">
@@ -352,7 +373,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 15: Lab Complete -->
+            <!-- Slide 16: Lab Complete -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="title-slide">
                 <h1>&#127881; Lab 6 Complete!</h1>
                 <h2>High Availability Architecture Deployed</h2>
@@ -367,7 +388,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 <aside class="notes">Congratulate students on completing the capstone lab and the entire course lab series.</aside>
             </section>
 
-            <!-- Slide 16: Summary -->
+            <!-- Slide 17: Summary -->
             <section>
                 <h2>&#127919; Key Takeaways</h2>
                 <div class="two-columns">
@@ -395,7 +416,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 17: Course Complete -->
+            <!-- Slide 18: Course Complete -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="title-slide">
                 <h1>&#127942; All Labs Complete!</h1>
                 <h2>AWS Technical Essentials</h2>
@@ -413,7 +434,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 18: Questions -->
+            <!-- Slide 19: Questions -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Final questions before we wrap up the course</p>

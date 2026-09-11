@@ -69,7 +69,26 @@
                 <aside class="notes">Welcome to Lab 2. Students will launch an EC2 instance running Apache with the Employee Directory web page. This instance will be used in later labs.</aside>
             </section>
 
-            <!-- Slide 2: Overview -->
+            <!-- Slide 2: Resource Names -->
+            <section>
+                <h2>&#127991;&#65039; Resource Names for This Lab</h2>
+                <p>Replace <code>&lt;ID&gt;</code> with your assigned student ID (for example <code>user7</code>).</p>
+                <table>
+                    <tr><th>Resource</th><th>Name</th></tr>
+                    <tr><td>EC2 instance (Name tag)</td><td><code>employee-directory-app-&lt;ID&gt;</code></td></tr>
+                    <tr><td>Key pair</td><td><code>employee-dir-key-&lt;ID&gt;</code></td></tr>
+                    <tr><td>Security group</td><td><code>employee-directory-app-sg-&lt;ID&gt;</code></td></tr>
+                    <tr><td>IAM instance profile</td><td><code>EmployeeDirectoryAppRole</code> &mdash; shared, do not rename</td></tr>
+                </table>
+                <div class="highlight-box warning">
+                    <strong>&#9888;&#65039; Shared account:</strong> the console lists every student's instances, key pairs and security groups together. Filter or sort by your ID so you only touch your own.
+                </div>
+                <aside class="notes">
+                    Remind students of their ID before they start the launch wizard. The key pair and security group created here are reused in Labs 3 and 6, so the suffix has to be right the first time. Show them the EC2 console search bar &mdash; typing their ID filters the instance list to just theirs.
+                </aside>
+            </section>
+
+            <!-- Slide 3: Overview -->
             <section>
                 <h2>&#128203; Lab Overview</h2>
                 <div class="two-columns">
@@ -98,15 +117,15 @@
                 <aside class="notes">Review objectives. Emphasize this instance persists across multiple labs. Make sure everyone knows their region.</aside>
             </section>
 
-            <!-- Slide 3: Launch Instance — AMI, Type, Key Pair -->
+            <!-- Slide 4: Launch Instance — AMI, Type, Key Pair -->
             <section>
                 <h2>&#128640; Launch an Instance</h2>
                 <ol>
                     <li>Navigate to <strong>EC2</strong>, click <strong>Launch instance</strong></li>
-                    <li>Name: <code>employee-directory-app</code></li>
+                    <li>Name: <code>employee-directory-app-&lt;ID&gt;</code></li>
                     <li>AMI: <strong>Amazon Linux 2023</strong> (default)</li>
                     <li>Instance type: <strong>t2.micro</strong></li>
-                    <li>Key pair: <strong>Create new key pair</strong> named <code>employee-dir-key</code>, download the .pem file</li>
+                    <li>Key pair: <strong>Create new key pair</strong> named <code>employee-dir-key-&lt;ID&gt;</code>, download the .pem file</li>
                 </ol>
                 <div class="highlight-box">
                     <strong>&#128161; Tip:</strong> Save the key pair file — you cannot download it again.
@@ -116,12 +135,12 @@
                 </aside>
             </section>
 
-            <!-- Slide 4: Security Group -->
+            <!-- Slide 5: Security Group -->
             <section>
                 <h2>&#128274; Configure Security Group</h2>
                 <p>Under <strong>Network settings</strong>, click <strong>Edit</strong>:</p>
                 <ol>
-                    <li>Security group name: <code>employee-directory-app-sg</code></li>
+                    <li>Security group name: <code>employee-directory-app-sg-&lt;ID&gt;</code></li>
                     <li>Description: <em>Allow HTTP access</em></li>
                 </ol>
                 <table>
@@ -135,7 +154,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 5: User Data Script -->
+            <!-- Slide 6: User Data Script -->
             <section>
                 <h2>&#128220; Add User Data Script</h2>
                 <p>In <strong>Advanced details</strong>, scroll to <strong>User data</strong> and paste:</p>
@@ -161,7 +180,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 6: Launch and Wait -->
+            <!-- Slide 7: Launch and Wait -->
             <section>
                 <h2>&#128640; Launch and Wait</h2>
                 <ol>
@@ -178,7 +197,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 7: Test -->
+            <!-- Slide 8: Test -->
             <section>
                 <h2>&#127760; Test — Browse to Public IP</h2>
                 <ol>
@@ -196,7 +215,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 8: Explore Instance Details -->
+            <!-- Slide 9: Explore Instance Details -->
             <section>
                 <h2>&#128269; Explore Instance Details</h2>
                 <p>With your instance selected, review these tabs:</p>
@@ -224,7 +243,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 9: Stop and Start -->
+            <!-- Slide 10: Stop and Start -->
             <section>
                 <h2>&#128260; Stop and Start — Note IP Change</h2>
                 <ol>
@@ -243,7 +262,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 10: Keep Running -->
+            <!-- Slide 11: Keep Running -->
             <section>
                 <h2>&#9888;&#65039; Keep This Instance Running</h2>
                 <div class="highlight-box warning">
@@ -256,7 +275,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 11: Lab Complete -->
+            <!-- Slide 12: Lab Complete -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="title-slide">
                 <h1>&#127881; Lab 2 Complete!</h1>
                 <h2>Employee Directory Running on EC2</h2>
@@ -271,7 +290,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 <aside class="notes">Congratulate students. Recap: launched an instance, bootstrapped Apache with user data, tested the app, observed IP behavior.</aside>
             </section>
 
-            <!-- Slide 12: Summary -->
+            <!-- Slide 13: Summary -->
             <section>
                 <h2>&#127919; Key Takeaways</h2>
                 <div class="two-columns">
@@ -299,7 +318,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 13: Questions -->
+            <!-- Slide 14: Questions -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Ask your instructor before proceeding to the next module</p>
