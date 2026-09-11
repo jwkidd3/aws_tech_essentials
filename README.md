@@ -135,7 +135,6 @@ All students in a delivery share one AWS account, so every resource a student cr
 
 Notes:
 
-- **`EmployeeDirectoryAppRole` is deliberately unsuffixed.** It is a single shared IAM role you pre-create in the lab account; students attach it but never create or rename it.
 - **Keep IDs to six characters or fewer.** AWS caps load balancer and target group names at 32 characters, and `employee-directory-alb-` already consumes 23.
 - **S3 needs two layers.** Bucket names are unique across all of AWS, so Lab 4 keeps a random component on top of the student ID.
 - **Lab 3's VPC wizard does the heavy lifting.** The name-tag auto-generation value propagates to the subnets, route tables, and internet gateway, so one field labels the whole network stack with the student's ID.
@@ -148,5 +147,4 @@ Raise these before class — naming alone will not cover them:
 - **VPCs per Region defaults to 5.** Every student creates one in Lab 3. Request a quota increase for *VPCs per Region* well ahead of delivery, or split the class across Regions.
 - **Internet gateways and Elastic IPs** carry matching per-Region defaults and scale with the VPC count.
 - **Running On-Demand vCPUs.** Lab 6 runs two `t2.micro` instances per student on top of the Lab 2 and Lab 3 instances.
-- **Pre-create `EmployeeDirectoryAppRole`** with the SSM managed policy before the first lab.
 - **Clean-up is per student.** Have each student filter the console by their own ID at the end of every lab; sweep for orphans by ID after class.

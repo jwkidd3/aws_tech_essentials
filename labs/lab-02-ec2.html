@@ -78,7 +78,6 @@
                     <tr><td>EC2 instance (Name tag)</td><td><code>employee-directory-app-&lt;ID&gt;</code></td></tr>
                     <tr><td>Key pair</td><td><code>employee-dir-key-&lt;ID&gt;</code></td></tr>
                     <tr><td>Security group</td><td><code>employee-directory-app-sg-&lt;ID&gt;</code></td></tr>
-                    <tr><td>IAM instance profile</td><td><code>EmployeeDirectoryAppRole</code> &mdash; shared, do not rename</td></tr>
                 </table>
                 <div class="highlight-box warning">
                     <strong>&#9888;&#65039; Shared account:</strong> the console lists every student's instances, key pairs and security groups together. Filter or sort by your ID so you only touch your own.
@@ -131,7 +130,7 @@
                     <strong>&#128161; Tip:</strong> Save the key pair file — you cannot download it again.
                 </div>
                 <aside class="notes">
-                    Walk through the launch wizard. Amazon Linux 2023 is the default AMI. t2.micro is Free Tier eligible. The key pair is needed for SSH but we will primarily use Session Manager via the IAM role.
+                    Walk through the launch wizard. Amazon Linux 2023 is the default AMI. t2.micro is Free Tier eligible. The key pair is needed only if students want to SSH in; the lab itself does not require it.
                 </aside>
             </section>
 
@@ -148,9 +147,8 @@
                     <tr><td>SSH</td><td>22</td><td>My IP</td></tr>
                     <tr><td>HTTP</td><td>80</td><td>0.0.0.0/0</td></tr>
                 </table>
-                <p>Under <strong>Advanced details</strong>, set <strong>IAM instance profile</strong> to <code>EmployeeDirectoryAppRole</code> (if available).</p>
                 <aside class="notes">
-                    HTTP from anywhere allows browser access to the web app. SSH from My IP restricts remote access. The IAM role provides SSM Session Manager access as an alternative to SSH.
+                    HTTP from anywhere allows browser access to the web app. SSH from My IP restricts remote access.
                 </aside>
             </section>
 
@@ -211,7 +209,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                     <strong>Not loading?</strong> Verify: (1) using <code>http://</code> not <code>https://</code>, (2) security group allows port 80, (3) public IP is correct.
                 </div>
                 <aside class="notes">
-                    If the page still does not load, have students check the system log: Actions > Monitor and troubleshoot > Get system log. Look for httpd errors. You can also use Session Manager to run 'systemctl status httpd'.
+                    If the page still does not load, have students check the system log: Actions > Monitor and troubleshoot > Get system log. Look for httpd errors.
                 </aside>
             </section>
 
@@ -233,7 +231,6 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                         <h4>Security Tab</h4>
                         <ul>
                             <li>Security group rules</li>
-                            <li>IAM Role attached</li>
                             <li>Inbound / Outbound rules</li>
                         </ul>
                     </div>
@@ -298,7 +295,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                         <h4>&#128736;&#65039; What You Did</h4>
                         <ul>
                             <li>Launched an EC2 instance with Amazon Linux 2023</li>
-                            <li>Configured security group and IAM role</li>
+                            <li>Configured a security group</li>
                             <li>Bootstrapped Apache via user data</li>
                             <li>Observed public IP change on stop/start</li>
                         </ul>

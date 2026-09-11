@@ -150,8 +150,8 @@ def convert(path):
     sections = soup.select("div.slides > section")
     for sec in sections:
         cls = sec.get("class") or []
-        note = sec.find("aside", class_="notes")
-        if note:
+        # Speaker notes are for the instructor only - never emit them.
+        for note in sec.find_all("aside", class_="notes"):
             note.extract()
         if "title-slide" in cls or "questions-slide" in cls:
             h = sec.find(["h1", "h2"])
@@ -168,10 +168,6 @@ def convert(path):
             if h:
                 h.extract()
             lines += blocks(sec, level=3)
-        if note:
-            txt = tidy(note.get_text())
-            if txt:
-                lines += ["**Instructor notes:** " + txt, ""]
         lines += ["---", ""]
     md = "\n".join(lines)
     md = re.sub(r"\n{3,}", "\n\n", md)

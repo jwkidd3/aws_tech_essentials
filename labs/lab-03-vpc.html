@@ -205,8 +205,7 @@
             <section>
                 <h2>&#128640; Add User Data and Launch</h2>
                 <ol>
-                    <li>Under <strong>Advanced details</strong>, set IAM instance profile to <code>EmployeeDirectoryAppRole</code> (if available)</li>
-                    <li>Scroll to <strong>User data</strong> and paste:</li>
+                    <li>Under <strong>Advanced details</strong>, scroll to <strong>User data</strong> and paste:</li>
                 </ol>
                 <pre><code class="bash">#!/bin/bash -ex
 yum update -y
@@ -277,7 +276,6 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                     <li><strong>VPC:</strong> employee-directory-&lt;ID&gt;-vpc (with subnets, IGW, route tables)</li>
                     <li><strong>Security Group:</strong> employee-directory-app-sg-&lt;ID&gt;</li>
                     <li><strong>Key Pair:</strong> employee-dir-key-&lt;ID&gt;</li>
-                    <li><strong>IAM Role:</strong> EmployeeDirectoryAppRole (if created)</li>
                 </ul>
                 <p>You may terminate the EC2 instance from this lab — Lab 6 will create new instances via Auto Scaling.</p>
                 <aside class="notes">

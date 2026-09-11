@@ -10,8 +10,6 @@
 
 *AWS Technical Essentials — Duration: ~15 minutes*
 
-**Instructor notes:** Lab 4 of 6. Students will create an S3 bucket, upload objects, test presigned URLs, and configure static website hosting.
-
 ---
 
 ## 🏷️ Resource Names for This Lab
@@ -23,8 +21,6 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 | S3 bucket | `employee-directory-app-bucket-<ID>-<RANDOM>` |
 
 > **⚠️ Two layers of uniqueness:** your `<ID>` keeps you apart from your classmates, and `<RANDOM>` (any 4-6 digits or letters) keeps the name unique across every AWS account on earth.
-
-**Instructor notes:** Bucket names are globally unique, lowercase, 3-63 characters, DNS-compliant. Have students write their full bucket name down — they need it again for the bucket policy later in this lab. If a name is rejected as taken, changing the random portion is enough.
 
 ---
 
@@ -45,8 +41,6 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 
 > **⚠️** Bucket names must be **globally unique** across all AWS accounts.
 
-**Instructor notes:** Give students an overview. S3 is one of the most foundational AWS services. This lab covers the core operations they need to understand.
-
 ---
 
 ## 📦 Create a Bucket with Versioning
@@ -62,8 +56,6 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 
 > **✅ Expected:** Green success banner confirming bucket creation.
 
-**Instructor notes:** Bucket names must be globally unique, DNS-compliant, 3-63 characters, lowercase. If the name is taken, try a different combination. Versioning protects against accidental deletes. SSE-S3 is free encryption at rest.
-
 ---
 
 ## 📤 Upload Objects
@@ -74,8 +66,6 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 4. Click **Upload**, then **Close**
 
 > **✅ Expected:** Files appear in the objects list with their size and storage class (Standard).
-
-**Instructor notes:** Any files work — images, text files, etc. If students do not have files handy, they can create a simple text file. The file type does not matter for this exercise.
 
 ---
 
@@ -92,8 +82,6 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 6. Open the presigned URL in a new tab
 
 > **✅ Expected:** The object loads. Presigned URLs include temporary credentials in the query string.
-
-**Instructor notes:** This demonstrates the difference between direct object URLs (blocked) and presigned URLs (temporary authenticated access). Presigned URLs are commonly used for file downloads, image previews, and upload workflows. They expire after the specified duration.
 
 ---
 
@@ -121,8 +109,6 @@ Create a file named `index.html` on your computer with:
 ```
 
 7. Upload `index.html` to your bucket
-
-**Instructor notes:** If students try the website endpoint now, they will get a 403 Forbidden because Block Public Access is still on. This is intentional — the next slide adds the bucket policy to enable public access.
 
 ---
 
@@ -152,8 +138,6 @@ Create a file named `index.html` on your computer with:
 
 > **⚠️ Production note:** Only disable Block Public Access for intentionally public content. Use CloudFront + OAC in production.
 
-**Instructor notes:** Two things are required: (1) disable Block Public Access and (2) add the bucket policy. Both are necessary. The policy only allows GetObject — no listing, writing, or deleting. Common mistake: forgetting the /* at the end of the Resource ARN.
-
 ---
 
 ## 🌐 Test the Website Endpoint
@@ -163,8 +147,6 @@ Create a file named `index.html` on your computer with:
 3. Click the **Bucket website endpoint** URL
 
 > **✅ Expected:** Your browser displays the "Employee Directory Application" page. You are hosting a static website on S3.
-
-**Instructor notes:** Make sure every student can see their website. If anyone gets errors, check: bucket policy has correct bucket name, Block Public Access is disabled, index.html is uploaded to root of bucket (not inside a folder). The website endpoint URL format is: http://BUCKET-NAME.s3-website-REGION.amazonaws.com
 
 ---
 
@@ -178,15 +160,11 @@ Delete the S3 bucket and its contents:
 
 > **⚠️ Note:** You must empty a bucket before you can delete it. With versioning enabled, "Empty" removes all object versions and delete markers.
 
-**Instructor notes:** Emptying the bucket removes all current and previous versions. This is required before deletion. If students skip the empty step, the delete will fail.
-
 ---
 
 ## 🎉 Lab 4 Complete!
 
 *Amazon S3 Bucket with Static Website*
-
-**Instructor notes:** Congratulate students. They created a bucket, tested access controls, and hosted a static website.
 
 ---
 
@@ -206,14 +184,10 @@ Delete the S3 bucket and its contents:
 - **Bucket policies** control resource-level access
 - **Static hosting** serves web content from S3
 
-**Instructor notes:** Review key takeaways. Next module covers databases, where students will work with DynamoDB.
-
 ---
 
 ## ❓ Questions?
 
 *Ask your instructor before proceeding to the next module*
-
-**Instructor notes:** Common questions: How is S3 pricing calculated? (Storage, requests, data transfer.) What are storage classes? (Standard, IA, Glacier — different cost/access tradeoffs.) What is the max object size? (5 TB, but multipart upload required above 5 GB.)
 
 ---

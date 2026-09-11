@@ -10,8 +10,6 @@
 
 *Create a Custom VPC and Deploy EC2 — AWS Technical Essentials • Lab 3 of 6*
 
-**Instructor notes:** Welcome to Lab 3. Students will create a custom VPC using the wizard and launch an EC2 instance inside it. This VPC will be used in Lab 6 for the load balancer and Auto Scaling Group.
-
 ---
 
 ## 🏷️ Resource Names for This Lab
@@ -26,8 +24,6 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 | EC2 instance (Name tag) | `employee-directory-app-vpc-<ID>` |
 
 > **💡 Nice side effect:** the wizard applies your name tag to every resource it creates — subnets, route tables and the internet gateway all pick up your ID automatically.
-
-**Instructor notes:** The "VPC and more" wizard propagates the auto-generation value to every child resource, so getting the ID into that one field labels the whole stack. Warn students that the security group dropdown will show every student's SG with the same base name — they must pick the one ending in their own ID.
 
 ---
 
@@ -48,8 +44,6 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 
 > **⚠️** Keep this VPC — it is needed for Lab 6.
 
-**Instructor notes:** This VPC and its subnets will be reused in Lab 6 for the ALB and Auto Scaling Group. Ensure all students have their Lab 2 instance running.
-
 ---
 
 ## 🔧 Create VPC — Settings
@@ -67,8 +61,6 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 | Number of private subnets | **0** |
 | NAT gateways | **None** |
 
-**Instructor notes:** The "VPC and more" wizard creates the VPC, subnets, internet gateway, and route tables in one step. Two public subnets in different AZs are required for the ALB in Lab 6. No private subnets or NAT gateways needed for this course.
-
 ---
 
 ## 🔧 Create VPC — Execute
@@ -79,8 +71,6 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 4. Click **View VPC**
 
 > **✅ Expected:** VPC created with 2 public subnets, an internet gateway, and route tables — all auto-configured.
-
-**Instructor notes:** The wizard creates: VPC, 2 public subnets in different AZs, an internet gateway, and a route table with a 0.0.0.0/0 route to the IGW. This takes about 30 seconds.
 
 ---
 
@@ -99,8 +89,6 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 
 6. Click **Create security group**
 
-**Instructor notes:** This security group must be in the new VPC (not the default VPC). Students often miss the VPC dropdown — make sure they select `employee-directory-<ID>-vpc.` This SG will also be used by the Auto Scaling Group in Lab 6.
-
 ---
 
 ## 🚀 Launch EC2 in the New VPC
@@ -116,14 +104,11 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
     - Auto-assign public IP: **Enable**
     - Select existing security group: **`employee-directory-app-sg-<ID>`**
 
-**Instructor notes:** Critical: students must select the new VPC, not the default. Auto-assign public IP must be enabled. If they select a subnet without checking auto-assign, the instance will not get a public IP.
-
 ---
 
 ## 🚀 Add User Data and Launch
 
-1. Under **Advanced details**, set IAM instance profile to `EmployeeDirectoryAppRole` (if available)
-2. Scroll to **User data** and paste:
+1. Under **Advanced details**, scroll to **User data** and paste:
 
 ```bash
 #!/bin/bash -ex
@@ -147,8 +132,6 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}</style>
 
 3. Click **Launch instance**
 
-**Instructor notes:** Same user data script as Lab 2. No placeholders or edits needed.
-
 ---
 
 ## 🌐 Test the Web Server
@@ -161,8 +144,6 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}</style>
 
 > **⏲ Note:** Allow 1-2 minutes after "Running" for Apache to finish installing.
 
-**Instructor notes:** If the page does not load: verify using HTTP not HTTPS, check security group allows port 80, confirm a public subnet was selected, and that auto-assign public IP is enabled.
-
 ---
 
 ## 🛑 Stop the Lab 2 Instance
@@ -171,8 +152,6 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}</style>
 2. Select it, click **Instance state** → **Stop instance**
 
 > **💡 Why?** The Lab 2 instance was in the default VPC. Now that you have a working instance in your custom VPC, you no longer need the old one running. Stopping saves cost.
-
-**Instructor notes:** Students should now have two instances: the old one (stopped, default VPC) and the new one (running, custom VPC). Do NOT terminate either instance yet.
 
 ---
 
@@ -183,19 +162,14 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}</style>
 - **VPC:** `employee-directory-<ID>-vpc` (with subnets, IGW, route tables)
 - **Security Group:** `employee-directory-app-sg-<ID>`
 - **Key Pair:** `employee-dir-key-<ID>`
-- **IAM Role:** EmployeeDirectoryAppRole (if created)
 
 You may terminate the EC2 instance from this lab — Lab 6 will create new instances via Auto Scaling.
-
-**Instructor notes:** The VPC and its networking components are critical for Lab 6. Students can optionally terminate the EC2 instance since Lab 6 creates instances automatically through the Auto Scaling Group.
 
 ---
 
 ## 🎉 Lab 3 Complete!
 
 *Custom VPC with EC2 Deployed*
-
-**Instructor notes:** Congratulate students. They now have a custom VPC with subnets, internet gateway, and a working web application.
 
 ---
 
@@ -215,14 +189,10 @@ You may terminate the EC2 instance from this lab — Lab 6 will create new insta
 - **Multi-AZ** enables high availability
 - **Security groups** are VPC-specific
 
-**Instructor notes:** Review key takeaways. The multi-AZ setup will be essential for Lab 6 when creating the ALB and Auto Scaling Group.
-
 ---
 
 ## ❓ Questions?
 
 *Ask your instructor before proceeding to the next module*
-
-**Instructor notes:** Common questions: What is the difference between public and private subnets? (Route to IGW.) Can instances in private subnets access the internet? (Yes, via NAT gateway.) Why 2 AZs? (High availability — required for ALB.)
 
 ---

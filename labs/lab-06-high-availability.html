@@ -67,7 +67,7 @@
                     <div class="step active"></div>
                 </div>
                 <aside class="notes">
-                    Welcome to Lab 6 — the capstone lab. This ties together VPC, EC2, IAM roles, load balancing, and Auto Scaling. Ensure all students have the VPC and security group from Lab 3.
+                    Welcome to Lab 6 — the capstone lab. This ties together VPC, EC2, load balancing, and Auto Scaling. Ensure all students have the VPC and security group from Lab 3.
                 </aside>
             </section>
 
@@ -128,7 +128,6 @@
                 <ul>
                     <li><strong>VPC:</strong> employee-directory-&lt;ID&gt;-vpc with 2 public subnets in different AZs</li>
                     <li><strong>Security Group:</strong> employee-directory-app-sg-&lt;ID&gt;</li>
-                    <li><strong>IAM Role:</strong> EmployeeDirectoryAppRole</li>
                     <li><strong>Key Pair:</strong> employee-dir-key-&lt;ID&gt;</li>
                 </ul>
                 <div class="highlight-box">
@@ -136,6 +135,25 @@
                 </div>
                 <aside class="notes">
                     Have students verify each resource exists. If anything is missing, they need to recreate it. This lab creates its own instances via the Launch Template and ASG. Previous EC2 instances are not needed.
+                </aside>
+            </section>
+
+            <!-- Slide 4b: Enable public IPs on the subnets -->
+            <section>
+                <h2>&#127760; Enable Public IPs on the Subnets</h2>
+                <p>The VPC wizard leaves <strong>auto-assign public IPv4</strong> off. Auto Scaling instances inherit the subnet setting, and without a public IP they cannot reach the internet to install Apache.</p>
+                <ol>
+                    <li>Navigate to <strong>VPC</strong> &rarr; <strong>Subnets</strong></li>
+                    <li>Filter by your ID and select the first <strong>public</strong> subnet</li>
+                    <li>Click <strong>Actions</strong> &rarr; <strong>Edit subnet settings</strong></li>
+                    <li>Check <strong>Enable auto-assign public IPv4 address</strong>, then <strong>Save</strong></li>
+                    <li>Repeat for the second public subnet</li>
+                </ol>
+                <div class="highlight-box success">
+                    <strong>&#9989; Expected:</strong> Both public subnets show <strong>Auto-assign public IPv4: Yes</strong>.
+                </div>
+                <aside class="notes">
+                    This is the step students most often miss. In Lab 3 they enabled the public IP per instance in the launch wizard; a launch template does not do that, so the subnet default must be on. Without it the ASG instances never pass the ALB health check and are replaced in a loop.
                 </aside>
             </section>
 
@@ -203,13 +221,9 @@
                     <tr><td>Key pair</td><td><strong>employee-dir-key-&lt;ID&gt;</strong></td></tr>
                     <tr><td>Security group</td><td><strong>employee-directory-app-sg-&lt;ID&gt;</strong></td></tr>
                 </table>
-                <p>Under <strong>Advanced details</strong>:</p>
-                <ul>
-                    <li>IAM instance profile: <strong>EmployeeDirectoryAppRole</strong></li>
-                    <li>User data — paste the script on the next slide</li>
-                </ul>
+                <p>Under <strong>Advanced details</strong>, scroll to <strong>User data</strong> and paste the script on the next slide.</p>
                 <aside class="notes">
-                    The launch template defines the blueprint for all instances created by Auto Scaling. Same security group and IAM role as before. The user data script includes the stress tool for later testing.
+                    The launch template defines the blueprint for all instances created by Auto Scaling. Same security group as before. Auto-assign public IP is left at the subnet default, which is why the previous slide enables it on the subnets.
                 </aside>
             </section>
 
@@ -219,7 +233,7 @@
                 <p>Paste into the <strong>User data</strong> field:</p>
                 <pre><code class="bash">#!/bin/bash -ex
 yum update -y
-yum install -y httpd stress
+yum install -y httpd
 systemctl start httpd
 systemctl enable httpd
 EC2_INSTANCE_ID=$(ec2-metadata -i | cut -d" " -f2)
@@ -240,7 +254,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                     <li>Click <strong>Create launch template</strong></li>
                 </ol>
                 <aside class="notes">
-                    This script is similar to Lab 2 but adds the stress tool and embeds the Instance ID and AZ in the page. When students refresh the ALB DNS, they will see different instance IDs, proving load balancing works. No manual edits needed — the script detects instance metadata automatically.
+                    This script is similar to Lab 2 but embeds the Instance ID and AZ in the page. When students refresh the ALB DNS, they will see different instance IDs, proving load balancing works. No manual edits needed — the script detects instance metadata automatically.
                 </aside>
             </section>
 

@@ -10,8 +10,6 @@
 
 *Launch the Employee Directory Application on Amazon EC2 — AWS Technical Essentials • Lab 2 of 6*
 
-**Instructor notes:** Welcome to Lab 2. Students will launch an EC2 instance running Apache with the Employee Directory web page. This instance will be used in later labs.
-
 ---
 
 ## 🏷️ Resource Names for This Lab
@@ -23,11 +21,8 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 | EC2 instance (Name tag) | `employee-directory-app-<ID>` |
 | Key pair | `employee-dir-key-<ID>` |
 | Security group | `employee-directory-app-sg-<ID>` |
-| IAM instance profile | `EmployeeDirectoryAppRole` — shared, do not rename |
 
 > **⚠️ Shared account:** the console lists every student's instances, key pairs and security groups together. Filter or sort by your ID so you only touch your own.
-
-**Instructor notes:** Remind students of their ID before they start the launch wizard. The key pair and security group created here are reused in Labs 3 and 6, so the suffix has to be right the first time. Show them the EC2 console search bar — typing their ID filters the instance list to just theirs.
 
 ---
 
@@ -49,8 +44,6 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 
 > **⚠️ Important:** Do NOT terminate this instance — it will be used in later labs.
 
-**Instructor notes:** Review objectives. Emphasize this instance persists across multiple labs. Make sure everyone knows their region.
-
 ---
 
 ## 🚀 Launch an Instance
@@ -62,8 +55,6 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 5. Key pair: **Create new key pair** named `employee-dir-key-<ID>`, download the.pem file
 
 > **💡 Tip:** Save the key pair file — you cannot download it again.
-
-**Instructor notes:** Walk through the launch wizard. Amazon Linux 2023 is the default AMI. t2.micro is Free Tier eligible. The key pair is needed for SSH but we will primarily use Session Manager via the IAM role.
 
 ---
 
@@ -78,10 +69,6 @@ Under **Network settings**, click **Edit**:
 | --- | --- | --- |
 | SSH | 22 | My IP |
 | HTTP | 80 | 0.0.0.0/0 |
-
-Under **Advanced details**, set **IAM instance profile** to `EmployeeDirectoryAppRole` (if available).
-
-**Instructor notes:** HTTP from anywhere allows browser access to the web app. SSH from My IP restricts remote access. The IAM role provides SSM Session Manager access as an alternative to SSH.
 
 ---
 
@@ -109,8 +96,6 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}</style>
 </body></html>' > /var/www/html/index.html
 ```
 
-**Instructor notes:** This script installs Apache httpd, starts and enables the service, then writes a static Employee Directory HTML page. No placeholders needed — works as-is. User data runs only once at first boot.
-
 ---
 
 ## 🚀 Launch and Wait
@@ -122,8 +107,6 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}</style>
 
 > **⏲ Note:** The user data script takes 1-2 minutes after "Running" to finish installing Apache.
 
-**Instructor notes:** Status checks confirm the instance is reachable and the OS is healthy. The user data script runs during this time. If the web page does not load after several minutes, check: security group allows port 80, using http:// not https://, correct public IP.
-
 ---
 
 ## 🌐 Test — Browse to Public IP
@@ -134,8 +117,6 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}</style>
 > **✅ Expected:** The Employee Directory page displays with the employee table.
 
 > **Not loading?** Verify: (1) using `http://` not `https://`, (2) security group allows port 80, (3) public IP is correct.
-
-**Instructor notes:** If the page still does not load, have students check the system log: Actions > Monitor and troubleshoot > Get system log. Look for httpd errors. You can also use Session Manager to run 'systemctl status httpd'.
 
 ---
 
@@ -153,10 +134,7 @@ With your instance selected, review these tabs:
 ### Security Tab
 
 - Security group rules
-- IAM Role attached
 - Inbound / Outbound rules
-
-**Instructor notes:** Give students 1-2 minutes to browse the tabs. Point out the Monitoring tab with basic CloudWatch metrics. The Networking tab shows the VPC and subnet. No need to go deep here — just awareness.
 
 ---
 
@@ -171,8 +149,6 @@ With your instance selected, review these tabs:
 
 > **✅ Expected:** The app loads at the new IP. Apache starts automatically because we used `systemctl enable`.
 
-**Instructor notes:** This demonstrates dynamic public IPs. To keep a fixed IP, use an Elastic IP or place a load balancer in front (which students will do in Lab 6). Apache restarts automatically without re-running user data.
-
 ---
 
 ## ⚠️ Keep This Instance Running
@@ -181,15 +157,11 @@ With your instance selected, review these tabs:
 
 Make sure your instance is in the **Running** state before proceeding.
 
-**Instructor notes:** Verify all students have a running instance with a working Employee Directory page before moving on. They will stop this instance in Lab 3 after launching a new one in the custom VPC.
-
 ---
 
 ## 🎉 Lab 2 Complete!
 
 *Employee Directory Running on EC2*
-
-**Instructor notes:** Congratulate students. Recap: launched an instance, bootstrapped Apache with user data, tested the app, observed IP behavior.
 
 ---
 
@@ -198,7 +170,7 @@ Make sure your instance is in the **Running** state before proceeding.
 ### 🛠️ What You Did
 
 - Launched an EC2 instance with Amazon Linux 2023
-- Configured security group and IAM role
+- Configured a security group
 - Bootstrapped Apache via user data
 - Observed public IP change on stop/start
 
@@ -209,14 +181,10 @@ Make sure your instance is in the **Running** state before proceeding.
 - **Public IPs** change on stop/start
 - **systemctl enable** persists across reboots
 
-**Instructor notes:** Review key takeaways. Next module covers VPC networking, where students will build a custom VPC and launch a new instance inside it.
-
 ---
 
 ## ❓ Questions?
 
 *Ask your instructor before proceeding to the next module*
-
-**Instructor notes:** Common questions: How do I get a static IP? (Elastic IP or load balancer.) What if user data fails? (Check system log.) Can I change instance type later? (Yes — stop, change type, start.)
 
 ---
