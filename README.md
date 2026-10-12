@@ -142,9 +142,24 @@ Notes:
 
 ### Instructor pre-flight for a shared account
 
-Raise these before class — naming alone will not cover them:
+The course runs entirely in **us-east-1**. Set the console Region picker there and stay in it —
+every lab after Lab 1 builds on resources from the previous labs, and those are invisible from
+any other Region. No Cloud9 or CLI is needed; the labs are console-only plus EC2 user data.
 
-- **VPCs per Region defaults to 5.** Every student creates one in Lab 3. Request a quota increase for *VPCs per Region* well ahead of delivery, or split the class across Regions.
-- **Internet gateways and Elastic IPs** carry matching per-Region defaults and scale with the VPC count.
-- **Running On-Demand vCPUs.** Lab 6 runs two `t2.micro` instances per student on top of the Lab 2 and Lab 3 instances.
+#### Quota headroom in us-east-1
+
+Verified on the lab account; the per-student column is what each student consumes across all six labs.
+
+| Quota | Limit | Per student | Headroom |
+| --- | --- | --- | --- |
+| VPCs per Region | 35 | 1 (Lab 3) | ~35 students |
+| Internet gateways per Region | 35 | 1 (Lab 3 wizard) | ~35 students |
+| Elastic IPs per Region | 30 | 0 — no lab allocates one | n/a |
+| Running On-Demand Standard vCPUs | 2208 | 4 (Labs 2, 3, and 2 × Lab 6) | not a constraint |
+
+VPCs and internet gateways are the binding limits, so this account comfortably covers a class of
+30. Both are adjustable and already raised above the AWS defaults of 5 — re-check them with
+`aws service-quotas get-service-quota --service-code vpc --quota-code L-F678F1CE --region us-east-1`
+before a larger delivery, and request an increase well ahead of class if you need one.
+
 - **Clean-up is per student.** Have each student filter the console by their own ID at the end of every lab; sweep for orphans by ID after class.

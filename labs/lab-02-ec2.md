@@ -39,7 +39,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 ### 📝 Lab Details
 
 - **Duration:** ~20 minutes
-- **Region:** As assigned by instructor
+- **Region:** `us-east-1` (N. Virginia) — same for every lab
 - **Instance type:** t2.micro (Free Tier)
 
 > **⚠️ Important:** Do NOT terminate this instance — it will be used in later labs.

@@ -39,7 +39,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 ### 📝 Lab Details
 
 - **Duration:** ~20 minutes
-- **Region:** Same as previous labs
+- **Region:** `us-east-1` (N. Virginia) — same for every lab
 - **Prerequisite:** Lab 2 instance running
 
 > **⚠️** Keep this VPC — it is needed for Lab 6.

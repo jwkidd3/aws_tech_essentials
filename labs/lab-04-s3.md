@@ -37,7 +37,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 ### 📝 Lab Details
 
 - **Duration:** ~15 minutes
-- **Region:** Same as previous labs
+- **Region:** `us-east-1` (N. Virginia) — same for every lab
 
 > **⚠️** Bucket names must be **globally unique** across all AWS accounts.
 
@@ -48,7 +48,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 1. Navigate to **S3** in the console
 2. Click **Create bucket**
 3. Bucket name: `employee-directory-app-bucket-<ID>-<RANDOM>`
-4. Region: Same as previous labs
+4. Region: **US East (N. Virginia) `us-east-1`**
 5. Block Public Access: **Keep all checked** (for now)
 6. Bucket Versioning: **Enable**
 7. Encryption: **SSE-S3** (default)

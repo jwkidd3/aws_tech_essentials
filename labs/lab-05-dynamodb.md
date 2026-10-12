@@ -37,7 +37,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 
 - **Duration:** ~15 minutes
 - **Capacity mode:** On-demand
-- **Region:** Same as previous labs
+- **Region:** `us-east-1` (N. Virginia) — same for every lab
 
 ---
 

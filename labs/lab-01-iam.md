@@ -25,6 +25,8 @@ Your instructor has assigned you an ID such as `user7`. In every lab, wherever y
 
 > **💡 One exception:** S3 bucket names must be unique across *all* of AWS, so Lab 4 adds a random suffix on top of your ID.
 
+> **⚠️ One Region for the whole course:** set the Region picker (top right of the console) to **US East (N. Virginia) `us-east-1`** and do not change it. Every lab after this one builds on resources from the previous labs, and they are invisible from any other Region.
+
 ---
 
 ## 📋 Lab Overview
@@ -42,6 +44,7 @@ Your instructor has assigned you an ID such as `user7`. In every lab, wherever y
 - **Duration:** ~15 minutes
 - **Level:** Introductory
 - **Services:** IAM, S3, EC2
+- **Region:** `us-east-1` (N. Virginia) — stay in it all day
 
 ### ✅ Prerequisites
 
