@@ -125,39 +125,31 @@
                     <p><strong>Distribute traffic</strong> across multiple targets for availability and performance.</p>
                 </div>
                 <ul>
-                    <li>Automatically scales with traffic</li>
                     <li>Health checks remove unhealthy targets</li>
-                    <li>Distributes across multiple AZs</li>
-                    <li>Integrates with Auto Scaling groups</li>
+                    <li>Spans multiple AZs and registers Auto Scaling instances automatically</li>
                 </ul>
-                <aside class="notes">ELB is a managed load balancer that distributes incoming traffic across multiple targets (EC2 instances, containers, Lambda functions, IPs). It performs health checks and only routes to healthy targets. ELB is itself highly available — deployed across multiple AZs automatically. It integrates directly with Auto Scaling groups, so new instances are automatically registered and unhealthy ones are deregistered.</aside>
-            </section>
-
-            <!-- Slide 6: ALB vs NLB -->
-            <section>
-                <h2>&#128295; ALB vs NLB</h2>
                 <div class="two-columns">
                     <div class="card">
                         <h4>Application LB (ALB)</h4>
                         <ul>
                             <li>Layer 7 (HTTP/HTTPS)</li>
                             <li>Path and host-based routing</li>
-                            <li>Web apps and microservices</li>
+                            <li>Web apps and microservices &mdash; <strong>used in Lab 6</strong></li>
                         </ul>
                     </div>
                     <div class="card">
                         <h4>Network LB (NLB)</h4>
                         <ul>
                             <li>Layer 4 (TCP/UDP)</li>
-                            <li>Ultra-low latency</li>
+                            <li>Ultra-low latency, static IP</li>
                             <li>Gaming, IoT, high throughput</li>
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">ALB operates at Layer 7 and understands HTTP. It can route based on URL path (/api to one target group, /images to another) or hostname (api.example.com vs www.example.com). ALB is the default choice for web applications. NLB operates at Layer 4 and handles millions of requests per second with ultra-low latency. Use NLB for non-HTTP protocols, extreme performance needs, or when you need a static IP. There's also a Gateway Load Balancer (GWLB) for third-party network appliances, but that's an advanced use case.</aside>
+                <aside class="notes">ELB is a managed load balancer that distributes incoming traffic across multiple targets (EC2 instances, containers, Lambda functions, IPs). It performs health checks and only routes to healthy targets. ELB is itself highly available — deployed across multiple AZs automatically. It integrates directly with Auto Scaling groups, so new instances are automatically registered and unhealthy ones are deregistered. On the two types: ALB operates at Layer 7 and understands HTTP. It can route based on URL path (/api to one target group, /images to another) or hostname (api.example.com vs www.example.com). ALB is the default choice for web applications. NLB operates at Layer 4 and handles millions of requests per second with ultra-low latency. Use NLB for non-HTTP protocols, extreme performance needs, or when you need a static IP. There's also a Gateway Load Balancer (GWLB) for third-party network appliances, but that's an advanced use case.</aside>
             </section>
 
-            <!-- Slide 7: EC2 Auto Scaling -->
+            <!-- Slide 6: EC2 Auto Scaling -->
             <section>
                 <h2>&#128200; EC2 Auto Scaling</h2>
                 <div class="concept-box">
@@ -172,7 +164,7 @@
                 <aside class="notes">Auto Scaling groups (ASGs) maintain a fleet of EC2 instances. You define: minimum (never go below this), desired (target count), and maximum (never exceed this). Scaling policies determine when to add or remove instances — typically based on CloudWatch alarms (e.g., average CPU > 70%). Launch templates define the AMI, instance type, security groups, and user data for new instances. ASGs distribute instances across AZs and automatically replace unhealthy instances detected by ELB health checks.</aside>
             </section>
 
-            <!-- Slide 8: Auto Scaling + ELB -->
+            <!-- Slide 7: Auto Scaling + ELB -->
             <section>
                 <h2>&#128260; Auto Scaling + ELB</h2>
                 <div class="key-point">
@@ -187,7 +179,7 @@
                 <aside class="notes">This is the standard high-availability pattern on AWS. The ELB sits in front of an Auto Scaling group that spans multiple AZs. CloudWatch alarms trigger scaling policies to add or remove instances. When demand rises, Auto Scaling launches new instances which automatically register with the ELB. When demand drops, instances are terminated to save cost. If an instance fails health checks, ELB stops sending traffic and Auto Scaling replaces it. This pattern gives you fault tolerance, elasticity, and cost optimization simultaneously.</aside>
             </section>
 
-            <!-- Slide 9: Serverless on AWS -->
+            <!-- Slide 8: Serverless on AWS -->
             <section>
                 <h2>&#9889; Serverless on AWS</h2>
                 <div class="concept-box">
@@ -202,7 +194,7 @@
                 <aside class="notes">Serverless doesn't mean there are no servers — it means you don't manage them. AWS handles provisioning, scaling, patching, and high availability. You've already seen several serverless services in this course: S3 for storage, DynamoDB for database, Lambda for compute. API Gateway provides managed REST and WebSocket APIs. The serverless model shifts your focus entirely to business logic and data.</aside>
             </section>
 
-            <!-- Slide 10: API Gateway + Lambda -->
+            <!-- Slide 9: API Gateway + Lambda -->
             <section>
                 <h2>&#128279; API Gateway + Lambda</h2>
                 <div class="key-point">
@@ -217,7 +209,7 @@
                 <aside class="notes">This is the canonical serverless architecture. API Gateway receives HTTP requests, validates them, handles authentication, and routes to Lambda functions. Lambda executes your business logic and interacts with DynamoDB (or S3, or other services). When there's no traffic, you pay nothing — all three services scale to zero. When traffic spikes, they auto-scale without any intervention. This pattern eliminates EC2 instances, load balancers, and auto scaling groups entirely.</aside>
             </section>
 
-            <!-- Slide 11: Lab Callout -->
+            <!-- Slide 10: Lab Callout -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="lab-callout" style="text-align: center !important;">
                 <h2>&#128736;&#65039; Lab Time</h2>
                 <h3>Configure High Availability</h3>
@@ -230,7 +222,7 @@
                 <aside class="notes">In this lab, students configure the employee directory application for high availability. They'll create an ALB, set up an Auto Scaling group across two AZs, and test that the application survives instance termination. This is the capstone lab that brings together compute, networking, storage, and database concepts from previous modules. Help students troubleshoot health check failures and target group configurations.</aside>
             </section>
 
-            <!-- Slide 12: Questions? -->
+            <!-- Slide 11: Questions? -->
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Module 6: Monitoring, Optimization &amp; Serverless</p>
