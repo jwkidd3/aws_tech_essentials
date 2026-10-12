@@ -104,7 +104,7 @@ Each lab ships in two formats: a Reveal.js deck for projecting, and a Markdown c
 | 6 — High Availability | `labs/lab-06-high-availability.html` | `labs/lab-06-high-availability.md` |
 
 All presentations and labs are Reveal.js single-file HTML — open directly in a browser.
-PDF exports sit next to each lab deck in `labs/`, and the module exports are in `pdfs/`.
+PDF exports sit next to the deck they were rendered from, in `presentations/` and `labs/`.
 
 **The HTML decks are the source of truth.** After editing a lab deck, regenerate its Markdown copy so the two do not drift:
 
