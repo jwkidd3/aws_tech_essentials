@@ -41,7 +41,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 
 ### 📝 Lab Details
 
-- **Duration:** ~25 minutes
+- **Duration:** ~50 minutes
 - **Capstone:** Lab 6 of 6
 
 ---

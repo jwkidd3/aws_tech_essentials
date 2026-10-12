@@ -53,7 +53,7 @@
     <div class="reveal">
         <div class="slides">
 
-            <!-- Slide 1: Title -->
+            <!-- Slide 1: Lab 6: Configure High Availability -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="title-slide">
                 <h1>&#9889; Lab 6: Configure High Availability</h1>
                 <h2>AWS Technical Essentials</h2>
@@ -71,7 +71,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 2: Resource Names -->
+            <!-- Slide 2: Resource Names for This Lab -->
             <section>
                 <h2>&#127991;&#65039; Resource Names for This Lab</h2>
                 <p>Replace <code>&lt;ID&gt;</code> with your assigned student ID (for example <code>user7</code>).</p>
@@ -92,7 +92,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 3: Overview -->
+            <!-- Slide 3: Lab Overview -->
             <section>
                 <h2>&#128203; Lab Overview</h2>
                 <div class="two-columns">
@@ -109,7 +109,7 @@
                     <div class="card">
                         <h4>&#128221; Lab Details</h4>
                         <ul>
-                            <li><strong>Duration:</strong> ~25 minutes</li>
+                            <li><strong>Duration:</strong> ~50 minutes</li>
                             <li><strong>Capstone:</strong> Lab 6 of 6</li>
                         </ul>
                     </div>
@@ -138,7 +138,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 4b: Enable public IPs on the subnets -->
+            <!-- Slide 5: Enable Public IPs on the Subnets -->
             <section>
                 <h2>&#127760; Enable Public IPs on the Subnets</h2>
                 <p>The VPC wizard leaves <strong>auto-assign public IPv4</strong> off. Auto Scaling instances inherit the subnet setting, and without a public IP they cannot reach the internet to install Apache.</p>
@@ -157,7 +157,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 5: Create ALB — Basic Settings -->
+            <!-- Slide 6: Create the Application Load Balancer -->
             <section>
                 <h2>&#128295; Create the Application Load Balancer</h2>
                 <ol>
@@ -181,7 +181,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 6: Create Target Group + Health Check -->
+            <!-- Slide 7: Create Target Group and Finish ALB -->
             <section>
                 <h2>&#128295; Create Target Group and Finish ALB</h2>
                 <p>Under <strong>Listeners and routing</strong>, click <strong>Create target group</strong>:</p>
@@ -206,7 +206,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 7: Create Launch Template -->
+            <!-- Slide 8: Create a Launch Template -->
             <section>
                 <h2>&#128196; Create a Launch Template</h2>
                 <ol>
@@ -227,7 +227,7 @@
                 </aside>
             </section>
 
-            <!-- Slide 8: Launch Template User Data -->
+            <!-- Slide 9: Launch Template — User Data -->
             <section>
                 <h2>&#128196; Launch Template — User Data</h2>
                 <p>Paste into the <strong>User data</strong> field:</p>
@@ -258,7 +258,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 9: Create Auto Scaling Group — Part 1 -->
+            <!-- Slide 10: Create Auto Scaling Group -->
             <section>
                 <h2>&#128202; Create Auto Scaling Group</h2>
                 <ol>
@@ -276,7 +276,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 10: Create Auto Scaling Group — Part 2 -->
+            <!-- Slide 11: ASG — Attach to ALB -->
             <section>
                 <h2>&#128202; ASG — Attach to ALB</h2>
                 <ol>
@@ -300,7 +300,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 11: Verify -->
+            <!-- Slide 12: Verify — Test the ALB -->
             <section>
                 <h2>&#127760; Verify — Test the ALB</h2>
                 <ol>
@@ -318,7 +318,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 12: Test Self-Healing -->
+            <!-- Slide 13: Test Self-Healing -->
             <section>
                 <h2>&#128296; Test Self-Healing</h2>
                 <ol>
@@ -335,7 +335,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 13: CloudWatch Metrics -->
+            <!-- Slide 14: View CloudWatch Metrics -->
             <section>
                 <h2>&#128202; View CloudWatch Metrics</h2>
                 <ol>
@@ -352,7 +352,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 14: Clean Up — Part 1 -->
+            <!-- Slide 15: Clean Up — Step 1 -->
             <section>
                 <h2>&#128465; Clean Up — Step 1</h2>
                 <div class="highlight-box danger">
@@ -369,7 +369,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 15: Clean Up — Part 2 -->
+            <!-- Slide 16: Clean Up — Step 2 -->
             <section>
                 <h2>&#128465; Clean Up — Step 2</h2>
                 <ol start="5">
@@ -387,7 +387,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 16: Lab Complete -->
+            <!-- Slide 17: Lab 6 Complete! -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="title-slide">
                 <h1>&#127881; Lab 6 Complete!</h1>
                 <h2>High Availability Architecture Deployed</h2>
@@ -402,7 +402,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 <aside class="notes">Congratulate students on completing the capstone lab and the entire course lab series.</aside>
             </section>
 
-            <!-- Slide 17: Summary -->
+            <!-- Slide 18: Key Takeaways -->
             <section>
                 <h2>&#127919; Key Takeaways</h2>
                 <div class="two-columns">
@@ -430,7 +430,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 18: Course Complete -->
+            <!-- Slide 19: All Labs Complete! -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="title-slide">
                 <h1>&#127942; All Labs Complete!</h1>
                 <h2>AWS Technical Essentials</h2>
@@ -448,7 +448,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 19: Questions -->
+            <!-- Slide 20: Questions? -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Final questions before we wrap up the course</p>

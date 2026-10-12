@@ -57,7 +57,7 @@
     <div class="reveal">
         <div class="slides">
 
-            <!-- Slide 1: Title -->
+            <!-- Slide 1: AWS Networking -->
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="title-slide">
                 <h1>&#9729;&#65039; AWS Networking</h1>
                 <h2>Module 3 &mdash; AWS Technical Essentials</h2>
@@ -73,26 +73,7 @@
                 <aside class="notes">Module 3 covers AWS networking fundamentals, focusing on Amazon VPC, routing, and security layers. This is critical infrastructure knowledge — every AWS resource runs inside a network.</aside>
             </section>
 
-            <!-- Slide 2: Agenda -->
-            <section>
-                <h2>&#128203; Module 3 Agenda</h2>
-                <ul>
-                    <li>VPC and subnet fundamentals</li>
-                    <li>Gateways and route tables</li>
-                    <li>Security groups and NACLs</li>
-                    <li>Lab: Create a VPC for the app</li>
-                </ul>
-                <aside class="notes">This module covers how to create an isolated network in AWS and control traffic flow with routing and firewall rules. The lab at the end has students build the VPC that hosts the employee directory application.</aside>
-            </section>
-
-            <!-- Slide 3: Section Divider — Networking Basics -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%)" class="section-divider">
-                <h2>&#127760; Networking in AWS</h2>
-                <h3>Software-defined networking fundamentals</h3>
-                <aside class="notes">AWS networking is entirely software-defined. No physical hardware to manage. Everything is API-driven and can be automated. This is a paradigm shift from traditional networking.</aside>
-            </section>
-
-            <!-- Slide 4: Networking Basics -->
+            <!-- Slide 2: Networking Basics -->
             <section>
                 <h2>&#128197; Networking Basics</h2>
                 <ul>
@@ -104,14 +85,7 @@
                 <aside class="notes">Quick review of IP addressing. In AWS, every EC2 instance gets a private IP automatically. Public IPs are optional and assigned from AWS-owned pools. CIDR notation defines address ranges: /16 gives 65,536 addresses (typical VPC), /24 gives 256 addresses (typical subnet). AWS reserves 5 IPs per subnet for internal use. You don't need to be a networking expert, but understanding these basics helps when designing VPC architectures.</aside>
             </section>
 
-            <!-- Slide 5: Section Divider — VPC -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%)" class="section-divider">
-                <h2>&#128274; Amazon VPC</h2>
-                <h3>Your isolated network in the cloud</h3>
-                <aside class="notes">VPC is the networking foundation for nearly everything in AWS. Let's understand what it is and how its components work together.</aside>
-            </section>
-
-            <!-- Slide 6: What Is Amazon VPC? -->
+            <!-- Slide 3: What Is Amazon VPC? -->
             <section>
                 <h2>&#127760; What Is Amazon VPC?</h2>
                 <div class="concept-box">
@@ -126,7 +100,7 @@
                 <aside class="notes">Think of a VPC as your own private data center in the cloud. You define the network layout: IP ranges, subnets, route tables, and security rules. A VPC lives in one Region but spans all AZs in that Region. Each AWS account gets a default VPC per Region, but production workloads should use custom VPCs designed for your architecture. VPC CIDR blocks range from /16 (65,536 IPs) to /28 (16 IPs).</aside>
             </section>
 
-            <!-- Slide 7: Public and Private Subnets -->
+            <!-- Slide 4: Subnets: Public vs Private -->
             <section>
                 <h2>&#128451; Subnets: Public vs Private</h2>
                 <div class="two-columns">
@@ -150,7 +124,7 @@
                 <aside class="notes">Subnets partition your VPC into segments, each in a single AZ. A subnet is "public" if its route table has a route to an Internet Gateway. A subnet is "private" if it doesn't. Best practice is to place internet-facing resources (load balancers, bastion hosts) in public subnets and everything else (app servers, databases) in private subnets. Always deploy subnets across at least 2 AZs for high availability.</aside>
             </section>
 
-            <!-- Slide 8: Internet and NAT Gateways -->
+            <!-- Slide 5: Gateways -->
             <section>
                 <h2>&#128423; Gateways</h2>
                 <div class="two-columns">
@@ -174,7 +148,7 @@
                 <aside class="notes">The Internet Gateway is the front door to the internet for your VPC. It's free, highly available, and you attach one per VPC. The NAT Gateway lets private subnet resources reach the internet (for updates, API calls) without being directly reachable from the internet. NAT Gateways are managed by AWS and charged per hour plus per GB of data processed. Deploy NAT Gateways in public subnets, one per AZ for high availability.</aside>
             </section>
 
-            <!-- Slide 9: Route Tables -->
+            <!-- Slide 6: Route Tables -->
             <section>
                 <h2>&#128739;&#65039; Route Tables</h2>
                 <div class="concept-box">
@@ -189,14 +163,7 @@
                 <aside class="notes">Route tables are the traffic directors in your VPC. Every VPC gets a main route table with a local route that allows all subnets within the VPC to communicate. You create custom route tables to control traffic: public subnets get a 0.0.0.0/0 route to the Internet Gateway, private subnets get a 0.0.0.0/0 route to a NAT Gateway. The most specific matching route wins — so a /24 route takes precedence over a /16 route for matching traffic.</aside>
             </section>
 
-            <!-- Slide 10: Section Divider — Security -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%)" class="section-divider">
-                <h2>&#128274; Network Security</h2>
-                <h3>Layered defense for your VPC</h3>
-                <aside class="notes">AWS provides two layers of network security: security groups at the instance level and NACLs at the subnet level. Let's look at each.</aside>
-            </section>
-
-            <!-- Slide 11: Security Groups -->
+            <!-- Slide 7: Security Groups -->
             <section>
                 <h2>&#128737;&#65039; Security Groups</h2>
                 <div class="concept-box">
@@ -211,7 +178,7 @@
                 <aside class="notes">Security groups are the primary firewall in AWS. They're stateful — if you allow inbound HTTP on port 80, the response traffic is automatically allowed out. You can only create allow rules; anything not explicitly allowed is denied by default. A powerful feature is referencing other security groups as sources, e.g., "allow traffic from the web-tier security group" without specifying IPs. Each instance can have up to 5 security groups attached.</aside>
             </section>
 
-            <!-- Slide 12: Network ACLs -->
+            <!-- Slide 8: Network ACLs -->
             <section>
                 <h2>&#128219; Network ACLs</h2>
                 <div class="concept-box">
@@ -226,7 +193,7 @@
                 <aside class="notes">NACLs are evaluated before security groups for inbound traffic. They're stateless — you must create rules for both inbound and outbound traffic explicitly. Rules are numbered and evaluated in order — the first matching rule wins. The default NACL allows all traffic; custom NACLs deny all traffic by default. NACLs are useful for blocking specific IP ranges or adding a subnet-level defense layer. Most architectures rely primarily on security groups with NACLs as an additional safeguard.</aside>
             </section>
 
-            <!-- Slide 13: Security Groups vs NACLs -->
+            <!-- Slide 9: SGs vs NACLs -->
             <section>
                 <h2>&#128274; SGs vs NACLs</h2>
                 <div class="two-columns">
@@ -252,22 +219,11 @@
                 <aside class="notes">This is one of the most common exam and interview questions. Security groups are your primary defense — stateful, instance-level, allow-only. NACLs are your secondary defense — stateless, subnet-level, support both allow and deny. Think of it as defense in depth: NACLs are the outer wall (subnet boundary), security groups are the inner wall (instance boundary). In practice, most teams configure security groups carefully and leave NACLs at defaults unless they need to explicitly block specific IPs or ranges.</aside>
             </section>
 
-            <!-- Slide 14: Module Summary -->
-            <section>
-                <h2>&#128203; Module 3 Summary</h2>
-                <ul>
-                    <li>VPC: your isolated cloud network</li>
-                    <li>Subnets: public (internet) vs private (internal)</li>
-                    <li>Route tables direct traffic flow</li>
-                    <li>Security Groups + NACLs = layered defense</li>
-                </ul>
-                <aside class="notes">Recap: A VPC is your isolated network in AWS. Subnets partition the VPC across AZs. Internet Gateways and NAT Gateways control internet connectivity. Route tables direct traffic. Security groups (stateful, instance-level) and NACLs (stateless, subnet-level) provide layered security. These networking fundamentals underpin every AWS architecture.</aside>
-            </section>
-
-            <!-- Slide 15: Lab Callout -->
+            <!-- Slide 10: Lab Callout -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="lab-callout" style="text-align: center !important;">
                 <h2>&#128736;&#65039; Lab Time</h2>
                 <h3>Create a VPC and Launch the App</h3>
+                <p style="font-size: 1.1em; color: #ffffff;">&#9201; 25 minutes</p>
                 <ul>
                     <li>Build a VPC with public and private subnets</li>
                     <li>Configure route tables and gateways</li>
@@ -276,7 +232,7 @@
                 <aside class="notes">In this lab, students create a custom VPC with public and private subnets across two AZs. They'll configure an Internet Gateway, route tables, and security groups, then move the employee directory EC2 instance into this new VPC. Common issues: forgetting to attach the Internet Gateway, missing route table entries, or security group rules not allowing HTTP. Circulate and help troubleshoot.</aside>
             </section>
 
-            <!-- Slide 16: Questions -->
+            <!-- Slide 11: Questions? -->
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Module 3: AWS Networking</p>

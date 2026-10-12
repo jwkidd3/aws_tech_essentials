@@ -58,7 +58,7 @@
     <div class="reveal">
         <div class="slides">
 
-            <!-- Slide 1: Title -->
+            <!-- Slide 1: Introduction to Amazon Web Services -->
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="title-slide">
                 <h1>&#9729;&#65039; Introduction to Amazon Web Services</h1>
                 <h2>AWS Technical Essentials &mdash; Module 1 of 7</h2>
@@ -74,26 +74,7 @@
                 <aside class="notes">Welcome to Module 1. This module lays the foundation for everything we'll build in this course. We'll cover what cloud computing is, how AWS organizes its global infrastructure, security fundamentals including IAM, and introduce the employee directory application we'll build throughout the day.</aside>
             </section>
 
-            <!-- Slide 2: Agenda -->
-            <section>
-                <h2>&#128203; Module 1 Agenda</h2>
-                <ul>
-                    <li>Cloud computing fundamentals</li>
-                    <li>AWS global infrastructure</li>
-                    <li>Security and IAM essentials</li>
-                    <li>Lab: Introduction to IAM</li>
-                </ul>
-                <aside class="notes">Walk through the agenda. Emphasize that this module sets the stage for everything else. The lab at the end will give hands-on experience with IAM, which is arguably the most important service to understand before touching anything else in AWS.</aside>
-            </section>
-
-            <!-- Slide 3: Section Divider — Cloud Computing -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="section-divider">
-                <h2>&#9729;&#65039; Introduction to AWS Cloud</h2>
-                <h3>What is cloud computing and why does it matter?</h3>
-                <aside class="notes">Let's start with the fundamentals. Even if participants have experience with AWS, it's worth aligning on definitions and understanding the value proposition clearly.</aside>
-            </section>
-
-            <!-- Slide 4: What Is Cloud Computing? -->
+            <!-- Slide 2: What Is Cloud Computing? -->
             <section>
                 <h2>&#128421;&#65039; What Is Cloud Computing?</h2>
                 <div class="concept-box">
@@ -108,7 +89,7 @@
                 <aside class="notes">Stress the shift from CapEx to OpEx. In traditional environments, you had to guess capacity needs 3-6 months in advance. Cloud computing flips this: you provision what you need, when you need it, and pay only for what you consume. This is a fundamental shift in how IT operates. The NIST definition includes five characteristics: on-demand self-service, broad network access, resource pooling, rapid elasticity, and measured service.</aside>
             </section>
 
-            <!-- Slide 5: Six Advantages of Cloud Computing -->
+            <!-- Slide 3: Six Advantages of Cloud -->
             <section>
                 <h2>&#127919; Six Advantages of Cloud</h2>
                 <div class="two-columns">
@@ -130,7 +111,7 @@
                 <aside class="notes">Walk through each advantage. 1) CapEx to OpEx shift is fundamental. 2) AWS has reduced pricing 130+ times since 2006 thanks to aggregated usage. 3) Eliminates procurement lead times and idle hardware. 4) Prototype in an afternoon vs. weeks of hardware setup. 5) AWS handles racking, stacking, power, cooling, physical security. 6) Deploy worldwide for lower latency and better user experience.</aside>
             </section>
 
-            <!-- Slide 6: AWS Global Infrastructure -->
+            <!-- Slide 4: AWS Global Infrastructure -->
             <section>
                 <h2>&#127758; AWS Global Infrastructure</h2>
                 <div class="three-columns">
@@ -162,7 +143,7 @@
                 <aside class="notes">Draw the hierarchy: Region contains multiple AZs, each AZ contains one or more data centers. Regions are completely independent. AZs within a Region are connected by dedicated high-bandwidth, low-latency networking. Edge Locations are separate from Regions and serve cached content to reduce latency for end users. Data sovereignty is Region-level: your data stays in the Region you put it in unless you explicitly replicate it elsewhere. When choosing a Region, consider compliance, latency, service availability, and pricing.</aside>
             </section>
 
-            <!-- Slide 7: Interacting with AWS -->
+            <!-- Slide 5: Interacting with AWS -->
             <section>
                 <h2>&#128736;&#65039; Interacting with AWS</h2>
                 <div class="three-columns">
@@ -191,14 +172,7 @@
                 <aside class="notes">Everything in AWS is an API call. The Console is a web interface that makes API calls on your behalf. The CLI lets you script and automate those same calls from the command line. SDKs provide language bindings for Python (boto3), JavaScript, Java, Go, .NET, and more. Infrastructure as Code tools like CloudFormation and Terraform also use these APIs under the hood. All three methods use the same underlying APIs and IAM permissions.</aside>
             </section>
 
-            <!-- Slide 8: Section Divider — Security -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="section-divider">
-                <h2>&#128274; Security in the AWS Cloud</h2>
-                <h3>Shared responsibility and identity management</h3>
-                <aside class="notes">Security is the top priority at AWS. This section covers the shared responsibility model and IAM, which together form the foundation of cloud security.</aside>
-            </section>
-
-            <!-- Slide 9: Shared Responsibility Model -->
+            <!-- Slide 6: Shared Responsibility Model -->
             <section>
                 <h2>&#128274; Shared Responsibility Model</h2>
                 <div class="two-columns">
@@ -224,7 +198,7 @@
                 <aside class="notes">The shared responsibility model is crucial. AWS secures the underlying infrastructure (physical security, hypervisor, global network). Customers are responsible for what they put IN the cloud: data, identity management, application code, OS patching, and firewall rules. The responsibility boundary shifts depending on the service type — with Lambda (serverless), AWS manages more; with EC2, the customer manages more.</aside>
             </section>
 
-            <!-- Slide 10: What Is IAM? -->
+            <!-- Slide 7: AWS Identity and Access Management -->
             <section>
                 <h2>&#128100; AWS Identity and Access Management</h2>
                 <div class="concept-box">
@@ -239,7 +213,7 @@
                 <aside class="notes">IAM is the first service you should understand deeply. It is global — IAM users, roles, and policies work across all Regions. The principle of least privilege means granting only the permissions needed to perform a task, nothing more. MFA adds a second factor to authentication, strongly recommended for all human users, especially the root account. IAM is free — you're never charged for creating users, roles, or policies.</aside>
             </section>
 
-            <!-- Slide 11: IAM Users, Roles, and Policies -->
+            <!-- Slide 8: Users, Roles, and Policies -->
             <section>
                 <h2>&#128101; Users, Roles, and Policies</h2>
                 <div class="three-columns">
@@ -271,7 +245,7 @@
                 <aside class="notes">Users are for people or applications that need long-term credentials. Roles provide temporary credentials and are preferred — especially for EC2 instances, Lambda functions, and cross-account access. Policies are JSON documents that define permissions (which actions on which resources). Best practice: use groups to assign policies to users, and prefer roles over long-term access keys. An explicit deny in any policy always overrides an allow.</aside>
             </section>
 
-            <!-- Slide 12: Employee Directory App Introduction -->
+            <!-- Slide 9: Course Application -->
             <section>
                 <h2>&#128736;&#65039; Course Application</h2>
                 <div class="concept-box">
@@ -287,22 +261,11 @@
                 <aside class="notes">The employee directory app is the thread that ties all modules together. Each module adds a new layer to this application. By the end of the day, we'll have a fully architected application with compute, networking, storage, database, monitoring, and high availability. This module sets up IAM, which is the foundation for everything else.</aside>
             </section>
 
-            <!-- Slide 13: Module Summary -->
-            <section>
-                <h2>&#128203; Module 1 Summary</h2>
-                <ul>
-                    <li>Cloud = on-demand, pay-as-you-go IT</li>
-                    <li>AWS: Regions, AZs, Edge Locations</li>
-                    <li>Shared Responsibility Model</li>
-                    <li>IAM: users, roles, policies (least privilege)</li>
-                </ul>
-                <aside class="notes">Recap the key takeaways. Cloud computing fundamentally changes how organizations consume IT. AWS global infrastructure provides the foundation for high availability and low latency. The Shared Responsibility Model defines who secures what. IAM is the gatekeeper for every action in your AWS account. These concepts underpin every module that follows.</aside>
-            </section>
-
-            <!-- Slide 14: Lab Callout -->
+            <!-- Slide 10: Lab Callout -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="lab-callout" style="text-align: center !important;">
                 <h2>&#128736;&#65039; Lab Time</h2>
                 <h3>Introduction to AWS IAM</h3>
+                <p style="font-size: 1.1em; color: #ffffff;">&#9201; 20 minutes</p>
                 <ul>
                     <li>Explore IAM users, groups, and roles</li>
                     <li>Attach policies and test permissions</li>
@@ -311,7 +274,7 @@
                 <aside class="notes">This lab introduces IAM through the AWS Console. Students will create users, assign them to groups, attach policies, and verify that permissions work as expected. Emphasize reading policy documents to understand what is being allowed or denied. This is hands-on time — circulate and help as needed.</aside>
             </section>
 
-            <!-- Slide 15: Questions -->
+            <!-- Slide 11: Questions? -->
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Module 1: Introduction to AWS</p>

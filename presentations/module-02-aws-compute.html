@@ -58,7 +58,7 @@
     <div class="reveal">
         <div class="slides">
 
-            <!-- Slide 1: Title -->
+            <!-- Slide 1: AWS Compute -->
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="title-slide">
                 <h1>&#9881; AWS Compute</h1>
                 <h2>Module 2 &mdash; AWS Technical Essentials</h2>
@@ -74,26 +74,7 @@
                 <aside class="notes">Module 2 covers the full spectrum of AWS compute services: EC2, containers (ECS/EKS/Fargate), and serverless (Lambda). We'll end with a hands-on lab launching an EC2 instance for the employee directory application.</aside>
             </section>
 
-            <!-- Slide 2: Agenda -->
-            <section>
-                <h2>&#128203; Module 2 Agenda</h2>
-                <ul>
-                    <li>Amazon EC2 overview</li>
-                    <li>Instance types and pricing</li>
-                    <li>Containers on AWS</li>
-                    <li>Lab: Launch the Employee Directory App on EC2</li>
-                </ul>
-                <aside class="notes">This module walks through the compute spectrum from full VM control with EC2, through containers, to fully managed serverless with Lambda. The lab at the end has students launch an EC2 instance running the employee directory application.</aside>
-            </section>
-
-            <!-- Slide 3: Section Divider — EC2 -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="section-divider">
-                <h2>&#128187; Amazon EC2</h2>
-                <h3>Virtual servers in the cloud</h3>
-                <aside class="notes">EC2 is the foundational compute service in AWS. Understanding EC2 is essential because most AWS architectures include it in some form.</aside>
-            </section>
-
-            <!-- Slide 4: What Is Amazon EC2? -->
+            <!-- Slide 2: What Is Amazon EC2? -->
             <section>
                 <h2>&#128187; What Is Amazon EC2?</h2>
                 <div class="concept-box">
@@ -108,7 +89,7 @@
                 <aside class="notes">EC2 gives you virtual machines with root/admin access, allowing you to install and configure software just as you would on a physical server. The key difference is the speed of provisioning and the elasticity of scaling. You launch instances from Amazon Machine Images (AMIs), which are templates containing the OS and pre-installed software. You can use AWS-provided AMIs, marketplace AMIs, or create your own custom golden images.</aside>
             </section>
 
-            <!-- Slide 5: EC2 Instance Types -->
+            <!-- Slide 3: EC2 Instance Type Families -->
             <section>
                 <h2>&#128736; EC2 Instance Type Families</h2>
                 <div class="two-columns">
@@ -131,7 +112,7 @@
                 <aside class="notes">There are also accelerated computing instances (P, G families) with GPUs for machine learning and graphics. The T family includes burstable instances that are cost-effective for variable workloads. Instance naming convention: family letter, generation number, then size from nano to metal. Start with general purpose (T3 or M5) and right-size based on monitoring data. You don't need to memorize specs — the key is knowing which family fits which workload pattern.</aside>
             </section>
 
-            <!-- Slide 6: EC2 Pricing Overview -->
+            <!-- Slide 4: EC2 Pricing Models -->
             <section>
                 <h2>&#128176; EC2 Pricing Models</h2>
                 <div class="two-columns">
@@ -169,7 +150,7 @@
                 <aside class="notes">On-Demand is the default and most flexible — great for unpredictable workloads and development. Reserved Instances and Savings Plans reward commitment with significant discounts — ideal for steady-state production workloads. Spot Instances offer the deepest discounts but can be reclaimed with 2 minutes notice — perfect for batch processing, CI/CD, and fault-tolerant workloads. Dedicated Hosts are for regulatory or licensing requirements (e.g., per-socket Oracle licenses).</aside>
             </section>
 
-            <!-- Slide 7: EC2 Instance Lifecycle -->
+            <!-- Slide 5: EC2 Instance Lifecycle -->
             <section>
                 <h2>&#128260; EC2 Instance Lifecycle</h2>
                 <div class="concept-box">
@@ -184,14 +165,7 @@
                 <aside class="notes">Understanding the lifecycle is important for cost management. Stopped instances don't incur compute charges but you still pay for attached EBS volumes and Elastic IPs. Termination is permanent — the instance and its root volume are deleted (unless configured to preserve the volume). Hibernate is a special stop state that saves RAM contents to EBS, enabling faster restart. A stopped instance loses its public IP unless you use an Elastic IP.</aside>
             </section>
 
-            <!-- Slide 8: Section Divider — Containers & Serverless -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="section-divider">
-                <h2>&#128230; Containers &amp; Serverless</h2>
-                <h3>Beyond virtual machines</h3>
-                <aside class="notes">Now let's look at lighter-weight compute options. Containers and serverless reduce the operational overhead compared to managing full EC2 instances.</aside>
-            </section>
-
-            <!-- Slide 9: Containers on AWS -->
+            <!-- Slide 6: Containers on AWS -->
             <section>
                 <h2>&#128230; Containers on AWS</h2>
                 <div class="three-columns">
@@ -223,7 +197,7 @@
                 <aside class="notes">Containers package application code with dependencies for consistent deployment. ECS is AWS's own orchestrator — simpler if you're all-in on AWS. EKS runs Kubernetes for teams that want portability or already use K8s. Fargate removes the need to manage the underlying EC2 instances for either ECS or EKS — you just define CPU and memory per container. Use ECS for AWS-native simplicity, EKS for Kubernetes ecosystem, Fargate when you want serverless container hosting.</aside>
             </section>
 
-            <!-- Slide 10: Serverless with Lambda -->
+            <!-- Slide 7: AWS Lambda -->
             <section>
                 <h2>&#9889; AWS Lambda</h2>
                 <div class="concept-box">
@@ -238,7 +212,7 @@
                 <aside class="notes">Lambda is AWS's Function-as-a-Service offering. You upload code, define a trigger, and AWS handles everything else: provisioning, scaling, patching, and high availability. Billing is per invocation (first 1M requests/month free) plus compute time in GB-seconds. Lambda is ideal for event-driven workloads: processing S3 uploads, handling API requests, running scheduled tasks, and responding to database changes. The 15-minute timeout means Lambda isn't suited for long-running batch jobs.</aside>
             </section>
 
-            <!-- Slide 11: Choosing Compute -->
+            <!-- Slide 8: Choosing the Right Compute -->
             <section>
                 <h2>&#127919; Choosing the Right Compute</h2>
                 <div class="two-columns">
@@ -265,22 +239,11 @@
                 <aside class="notes">There's no one-size-fits-all answer. EC2 gives maximum control, Lambda gives minimum management. Containers sit in between. Many production architectures use a mix: EC2 for the main application, Lambda for event processing, containers for microservices. Start with the question: "How much infrastructure do I want to manage?" and work from there. Cost depends heavily on workload patterns — Lambda can be cheaper for sporadic traffic, EC2 for steady high utilization.</aside>
             </section>
 
-            <!-- Slide 12: Module Summary -->
-            <section>
-                <h2>&#128203; Module 2 Summary</h2>
-                <ul>
-                    <li>EC2: full-control virtual machines</li>
-                    <li>Instance families match workload needs</li>
-                    <li>Containers: ECS, EKS, Fargate</li>
-                    <li>Lambda: serverless, event-driven compute</li>
-                </ul>
-                <aside class="notes">Recap: EC2 provides full VM control with multiple pricing options. Instance types are grouped into families optimized for different workloads. Containers offer portability and efficiency for microservices. Lambda removes all server management for event-driven functions. The right choice depends on your control needs, workload patterns, and operational preferences.</aside>
-            </section>
-
-            <!-- Slide 13: Lab Callout -->
+            <!-- Slide 9: Lab Callout -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="lab-callout" style="text-align: center !important;">
                 <h2>&#128736;&#65039; Lab Time</h2>
                 <h3>Launch the Employee Directory App on EC2</h3>
+                <p style="font-size: 1.1em; color: #ffffff;">&#9201; 25 minutes</p>
                 <ul>
                     <li>Launch an EC2 instance with a web application</li>
                     <li>Configure security group for HTTP access</li>
@@ -289,7 +252,7 @@
                 <aside class="notes">In this lab, students launch an EC2 instance using an AMI with the employee directory application pre-installed. They'll configure a security group to allow HTTP traffic and verify the app is accessible. This builds on Module 1's IAM role, which gives the instance permissions to access other AWS services. Circulate and help students troubleshoot connectivity issues — usually related to security group rules.</aside>
             </section>
 
-            <!-- Slide 14: Questions -->
+            <!-- Slide 10: Questions? -->
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Module 2: AWS Compute</p>

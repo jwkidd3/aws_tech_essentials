@@ -41,7 +41,7 @@ Your instructor has assigned you an ID such as `user7`. In every lab, wherever y
 
 ### 📝 Lab Details
 
-- **Duration:** ~15 minutes
+- **Duration:** ~20 minutes
 - **Level:** Introductory
 - **Services:** IAM, S3, EC2
 - **Region:** `us-east-1` (N. Virginia) — stay in it all day

@@ -57,7 +57,7 @@
     <div class="reveal">
         <div class="slides">
 
-            <!-- Slide 1: Title -->
+            <!-- Slide 1: Databases -->
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 60%, #3182ce 100%)" class="title-slide">
                 <h1>&#128450; Databases</h1>
                 <h2>Module 5 &mdash; AWS Technical Essentials</h2>
@@ -73,26 +73,7 @@
                 <aside class="notes">Welcome to Module 5 on Databases. We'll cover the difference between managed and unmanaged databases, Amazon RDS for relational workloads, DynamoDB for NoSQL, and the purpose-built database philosophy.</aside>
             </section>
 
-            <!-- Slide 2: Agenda -->
-            <section>
-                <h2>&#128203; Module 5 Agenda</h2>
-                <ul>
-                    <li>Managed vs unmanaged databases</li>
-                    <li>Amazon RDS and Aurora</li>
-                    <li>Amazon DynamoDB</li>
-                    <li>Lab: Create a DynamoDB table</li>
-                </ul>
-                <aside class="notes">This module covers relational and non-relational database options on AWS. We focus on the managed approach and when to use each type. The lab has students create a DynamoDB table for the employee directory application.</aside>
-            </section>
-
-            <!-- Slide 3: Section Divider — Databases -->
-            <section data-background="linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)" class="section-divider">
-                <h2>&#128218; Databases in AWS</h2>
-                <h3>Managed services for every data need</h3>
-                <aside class="notes">AWS offers managed database services that handle provisioning, patching, backups, and high availability so you can focus on your application and data.</aside>
-            </section>
-
-            <!-- Slide 4: Managed vs Unmanaged -->
+            <!-- Slide 2: Managed vs Unmanaged -->
             <section>
                 <h2>&#128736;&#65039; Managed vs Unmanaged</h2>
                 <div class="two-columns">
@@ -116,7 +97,7 @@
                 <aside class="notes">You can always install a database on EC2 and manage it yourself — this gives full control but means you handle patching, backups, replication, failover, and scaling. Managed services like RDS and DynamoDB offload this operational burden. AWS handles provisioning, patching, automated backups, and high availability. For most workloads, managed is the right choice — use unmanaged only when you need a database engine or configuration that isn't supported by a managed service.</aside>
             </section>
 
-            <!-- Slide 5: What Is Amazon RDS? -->
+            <!-- Slide 3: Amazon RDS -->
             <section>
                 <h2>&#128450; Amazon RDS</h2>
                 <div class="concept-box">
@@ -131,7 +112,7 @@
                 <aside class="notes">RDS supports six popular relational database engines. It handles provisioning, patching, backups, and recovery. Multi-AZ deployments maintain a synchronous standby in another AZ for automatic failover — typically completes in 60-120 seconds. Read replicas create asynchronous copies that can handle read queries, reducing load on the primary. RDS runs inside your VPC on dedicated instances that you size based on workload.</aside>
             </section>
 
-            <!-- Slide 6: RDS Features and Aurora -->
+            <!-- Slide 4: RDS Features & Aurora -->
             <section>
                 <h2>&#9889; RDS Features &amp; Aurora</h2>
                 <ul>
@@ -146,7 +127,7 @@
                 <aside class="notes">Multi-AZ is for high availability — the standby takes over if the primary fails. Read replicas are for performance — offload read traffic from the primary. They can also be promoted to standalone instances for disaster recovery. Aurora is AWS's cloud-native relational database. It's compatible with MySQL and PostgreSQL but redesigned for the cloud with a distributed storage layer that replicates 6 copies across 3 AZs. Aurora Serverless v2 can auto-scale compute capacity based on demand, which is useful for variable workloads.</aside>
             </section>
 
-            <!-- Slide 7: Purpose-Built Databases -->
+            <!-- Slide 5: Purpose-Built Databases -->
             <section>
                 <h2>&#127919; Purpose-Built Databases</h2>
                 <div class="concept-box">
@@ -161,7 +142,7 @@
                 <aside class="notes">AWS offers 15+ purpose-built database services. The idea is that no single database is optimal for every use case. Relational databases are great for structured data with complex queries. DynamoDB excels at key-value lookups at any scale. ElastiCache provides microsecond latency for caching. Neptune handles graph queries for social networks and fraud detection. Redshift is a columnar data warehouse for analytics. DocumentDB is MongoDB-compatible. Timestream is for time-series data. Choose based on data model, access patterns, and scale requirements.</aside>
             </section>
 
-            <!-- Slide 8: What Is DynamoDB? -->
+            <!-- Slide 6: Amazon DynamoDB -->
             <section>
                 <h2>&#9889; Amazon DynamoDB</h2>
                 <div class="concept-box">
@@ -176,7 +157,7 @@
                 <aside class="notes">DynamoDB is AWS's flagship NoSQL database. It's fully serverless — you create a table, define the key schema, and start writing data. No instances to provision, no OS to patch. It automatically replicates across 3 AZs within a Region. DynamoDB handles millions of requests per second with consistent single-digit millisecond latency. Use cases include gaming leaderboards, shopping carts, IoT data, session stores, and any workload that needs fast, scalable key-value access.</aside>
             </section>
 
-            <!-- Slide 9: DynamoDB Key Concepts -->
+            <!-- Slide 7: DynamoDB Key Concepts -->
             <section>
                 <h2>&#128273; DynamoDB Key Concepts</h2>
                 <ul>
@@ -188,7 +169,7 @@
                 <aside class="notes">DynamoDB tables store items, each identified by a primary key. The primary key is either a simple partition key or a composite key (partition + sort). The partition key determines which physical partition stores the item — good key design distributes data evenly. On-demand mode charges per request (great for unpredictable traffic). Provisioned mode lets you set read/write capacity units with auto-scaling. Items can have different attributes — DynamoDB is schema-flexible. Maximum item size is 400 KB.</aside>
             </section>
 
-            <!-- Slide 10: Choosing a Database -->
+            <!-- Slide 8: Choosing a Database -->
             <section>
                 <h2>&#127919; Choosing a Database</h2>
                 <div class="two-columns">
@@ -212,22 +193,11 @@
                 <aside class="notes">The choice between relational and NoSQL depends on your data model and access patterns. If you need joins, transactions across tables, and complex queries — use RDS or Aurora. If you need fast lookups by key, massive scale, and flexible schemas — use DynamoDB. Many architectures use both: RDS for transactional data and DynamoDB for session state or caching. Don't force a relational model onto data that's naturally key-value, and vice versa.</aside>
             </section>
 
-            <!-- Slide 11: Module Summary -->
-            <section>
-                <h2>&#128203; Module 5 Summary</h2>
-                <ul>
-                    <li>Managed databases reduce operational burden</li>
-                    <li>RDS/Aurora for relational SQL workloads</li>
-                    <li>DynamoDB for serverless NoSQL at scale</li>
-                    <li>Purpose-built: right database for each job</li>
-                </ul>
-                <aside class="notes">Recap: Managed databases let you focus on data instead of infrastructure. RDS supports six SQL engines with automated backups, Multi-AZ failover, and read replicas. Aurora is AWS's high-performance cloud-native option. DynamoDB is fully serverless NoSQL with single-digit millisecond latency at any scale. AWS's purpose-built philosophy means choosing the right database for each workload rather than forcing everything into one engine.</aside>
-            </section>
-
-            <!-- Slide 12: Lab Callout -->
+            <!-- Slide 9: Lab Callout -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="lab-callout" style="text-align: center !important;">
                 <h2>&#128736;&#65039; Lab Time</h2>
                 <h3>Create a DynamoDB Table</h3>
+                <p style="font-size: 1.1em; color: #ffffff;">&#9201; 15 minutes</p>
                 <ul>
                     <li>Create a table for employee records</li>
                     <li>Add items and query by partition key</li>
@@ -236,7 +206,7 @@
                 <aside class="notes">In this lab, students create a DynamoDB table to replace the local data store in the employee directory application. They'll define a partition key, add employee records, and update the application to read from DynamoDB. This demonstrates how easy it is to get started with a serverless database — no instances to provision or manage.</aside>
             </section>
 
-            <!-- Slide 13: Questions -->
+            <!-- Slide 10: Questions? -->
             <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Module 5: Databases</p>
