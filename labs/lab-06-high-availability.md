@@ -23,7 +23,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 | Target group | `employee-directory-tg-<ID>` |
 | Launch template | `employee-directory-lt-<ID>` |
 | Auto Scaling group | `employee-directory-asg-<ID>` |
-| *Reused from earlier labs* | `employee-directory-<ID>-vpc`, `employee-directory-app-sg-<ID>`, `employee-dir-key-<ID>` |
+| *Reused from earlier labs* | `employee-directory-<ID>-vpc`, `employee-directory-vpc-sg-<ID>`, `employee-dir-key-<ID>` |
 
 > **⚠️ 32-character limit:** AWS caps load balancer and target group names at 32 characters. Keep your ID to six characters or fewer.
 
@@ -51,7 +51,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 > **Before starting:** Verify these resources from previous labs exist.
 
 - **VPC:** `employee-directory-<ID>-vpc` with 2 public subnets in different AZs
-- **Security Group:** `employee-directory-app-sg-<ID>`
+- **Security Group:** `employee-directory-vpc-sg-<ID>` *(the one in your VPC, created in Lab 3)*
 - **Key Pair:** `employee-dir-key-<ID>`
 
 > **💡 Tip:** Terminate any running EC2 instances from earlier labs to stay within limits.
@@ -122,7 +122,7 @@ Under **Listeners and routing**, click **Create target group**:
 | AMI | **Amazon Linux 2023** |
 | Instance type | **t2.micro** |
 | Key pair | **`employee-dir-key-<ID>`** |
-| Security group | **`employee-directory-app-sg-<ID>`** |
+| Security group | **`employee-directory-vpc-sg-<ID>`** — check the VPC column |
 
 Under **Advanced details**, scroll to **User data** and paste the script on the next slide.
 
@@ -133,25 +133,26 @@ Under **Advanced details**, scroll to **User data** and paste the script on the 
 Paste into the **User data** field:
 
 ```bash
-#!/bin/bash -ex
-yum update -y
-yum install -y httpd
-systemctl start httpd
-systemctl enable httpd
-EC2_INSTANCE_ID=$(ec2-metadata -i | cut -d" " -f2)
-EC2_AZ=$(ec2-metadata -z | cut -d" " -f2)
-echo "<!DOCTYPE html>
+#!/bin/bash
+dnf install -y httpd
+systemctl enable --now httpd
+TOKEN=$(curl -sX PUT http://169.254.169.254/latest/api/token -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+IID=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id)
+AZ=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/availability-zone)
+cat > /var/www/html/index.html <<EOF
+<!DOCTYPE html>
 <html><head><title>Employee Directory</title>
 <style>body{font-family:Arial,sans-serif;max-width:800px;margin:50px auto;padding:20px}
 h1{color:#1a365d}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:12px;text-align:left}
 th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}</style></head>
 <body><h1>Employee Directory</h1>
-<p>Instance: $EC2_INSTANCE_ID | AZ: $EC2_AZ</p>
+<p>Instance: ${IID:-unknown} | AZ: ${AZ:-unknown}</p>
 <table><tr><th>Name</th><th>Department</th><th>Location</th></tr>
 <tr><td>John Smith</td><td>Engineering</td><td>Seattle</td></tr>
 <tr><td>Jane Doe</td><td>Marketing</td><td>New York</td></tr>
 <tr><td>Bob Johnson</td><td>Sales</td><td>Austin</td></tr></table>
-</body></html>" > /var/www/html/index.html
+</body></html>
+EOF
 ```
 
 1. Click **Create launch template**
@@ -177,7 +178,8 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}</style>
 2. Choose **Choose from your load balancer target groups**
 3. Select **`employee-directory-tg-<ID>`**
 4. Health check type: Check **Turn on Elastic Load Balancing health checks**
-5. Click **Next**
+5. Health check grace period: **300** seconds — leave the default, it gives Apache time to install before the first check
+6. Click **Next**
 
 | Setting | Value |
 | --- | --- |
@@ -198,6 +200,19 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}</style>
 5. Refresh the page several times
 
 > **✅ Expected:** The Employee Directory page loads. Refreshing shows different **Instance IDs** and **AZs** — the ALB is distributing traffic.
+
+---
+
+## 🔨 If the Targets Never Go Healthy
+
+Instances launching and terminating on a loop, or the ALB returning **503**, all trace back to the same thing: the target group never sees a **200** on `/`. Work down this list.
+
+| Check | Fix |
+| --- | --- |
+| Target group shows *unhealthy* or *draining* | EC2 → Target Groups → Targets tab reports the reason in plain text — start there |
+| Launch template security group | Must be `employee-directory-vpc-sg-<ID>`, the one in *your VPC*. The Lab 2 group has a similar name but lives in the default VPC, and the launch fails outright |
+| Instances have no public IPv4 | Both public subnets need auto-assign enabled (slide 5). Without it there is no route to the repos, so Apache never installs |
+| Instance is running but serves 403 | `index.html` was never written. Check `/var/log/cloud-init-output.log` |
 
 ---
 
@@ -237,7 +252,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}</style>
 ## 🗑 Clean Up — Step 2
 
 5. **Launch Template:** EC2 → Launch Templates → select → Delete
-6. **Security Groups:** Delete `employee-directory-alb-sg-<ID>` and `employee-directory-app-sg-<ID>`
+6. **Security Groups:** Delete `employee-directory-alb-sg-<ID>` and `employee-directory-vpc-sg-<ID>`
 7. **VPC:** VPC → Your VPCs → select `employee-directory-<ID>-vpc` → Delete (this removes subnets, route tables, and IGW)
 8. **Key Pair:** EC2 → Key Pairs → delete `employee-dir-key-<ID>`
 9. **Any remaining EC2 instances** from earlier labs → Terminate

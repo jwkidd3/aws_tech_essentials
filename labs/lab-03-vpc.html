@@ -77,7 +77,7 @@
                     <tr><th>Resource</th><th>Name</th></tr>
                     <tr><td>VPC wizard &mdash; name tag auto-generation</td><td><code>employee-directory-&lt;ID&gt;</code></td></tr>
                     <tr><td>Resulting VPC</td><td><code>employee-directory-&lt;ID&gt;-vpc</code></td></tr>
-                    <tr><td>Security group</td><td><code>employee-directory-app-sg-&lt;ID&gt;</code></td></tr>
+                    <tr><td>Security group (new, in your VPC)</td><td><code>employee-directory-vpc-sg-&lt;ID&gt;</code></td></tr>
                     <tr><td>EC2 instance (Name tag)</td><td><code>employee-directory-app-vpc-&lt;ID&gt;</code></td></tr>
                 </table>
                 <div class="highlight-box">
@@ -161,7 +161,7 @@
                 <ol>
                     <li>In the VPC console left nav, click <strong>Security groups</strong></li>
                     <li>Click <strong>Create security group</strong></li>
-                    <li>Name: <code>employee-directory-app-sg-&lt;ID&gt;</code></li>
+                    <li>Name: <code>employee-directory-vpc-sg-&lt;ID&gt;</code> &mdash; a <em>new</em> group, not the Lab 2 one</li>
                     <li>Description: <em>Allow HTTP access for Employee Directory</em></li>
                     <li>VPC: Select <strong>employee-directory-&lt;ID&gt;-vpc</strong></li>
                 </ol>
@@ -192,7 +192,7 @@
                             <li>VPC: <strong>employee-directory-&lt;ID&gt;-vpc</strong></li>
                             <li>Subnet: Choose any <strong>public</strong> subnet</li>
                             <li>Auto-assign public IP: <strong>Enable</strong></li>
-                            <li>Select existing security group: <strong>employee-directory-app-sg-&lt;ID&gt;</strong></li>
+                            <li>Select existing security group: <strong>employee-directory-vpc-sg-&lt;ID&gt;</strong></li>
                         </ul>
                     </li>
                 </ol>
@@ -207,11 +207,9 @@
                 <ol>
                     <li>Under <strong>Advanced details</strong>, scroll to <strong>User data</strong> and paste:</li>
                 </ol>
-                <pre><code class="bash">#!/bin/bash -ex
-yum update -y
-yum install -y httpd
-systemctl start httpd
-systemctl enable httpd
+                <pre><code class="bash">#!/bin/bash
+dnf install -y httpd
+systemctl enable --now httpd
 echo '&lt;!DOCTYPE html&gt;
 &lt;html&gt;&lt;head&gt;&lt;title&gt;Employee Directory&lt;/title&gt;
 &lt;style&gt;body{font-family:Arial,sans-serif;max-width:800px;margin:50px auto;padding:20px}
@@ -274,7 +272,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </div>
                 <ul>
                     <li><strong>VPC:</strong> employee-directory-&lt;ID&gt;-vpc (with subnets, IGW, route tables)</li>
-                    <li><strong>Security Group:</strong> employee-directory-app-sg-&lt;ID&gt;</li>
+                    <li><strong>Security Group:</strong> employee-directory-vpc-sg-&lt;ID&gt;</li>
                     <li><strong>Key Pair:</strong> employee-dir-key-&lt;ID&gt;</li>
                 </ul>
                 <p>You may terminate the EC2 instance from this lab — Lab 6 will create new instances via Auto Scaling.</p>

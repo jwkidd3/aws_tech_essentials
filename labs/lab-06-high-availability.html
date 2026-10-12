@@ -82,7 +82,7 @@
                     <tr><td>Target group</td><td><code>employee-directory-tg-&lt;ID&gt;</code></td></tr>
                     <tr><td>Launch template</td><td><code>employee-directory-lt-&lt;ID&gt;</code></td></tr>
                     <tr><td>Auto Scaling group</td><td><code>employee-directory-asg-&lt;ID&gt;</code></td></tr>
-                    <tr><td><em>Reused from earlier labs</em></td><td><code>employee-directory-&lt;ID&gt;-vpc</code>, <code>employee-directory-app-sg-&lt;ID&gt;</code>, <code>employee-dir-key-&lt;ID&gt;</code></td></tr>
+                    <tr><td><em>Reused from earlier labs</em></td><td><code>employee-directory-&lt;ID&gt;-vpc</code>, <code>employee-directory-vpc-sg-&lt;ID&gt;</code>, <code>employee-dir-key-&lt;ID&gt;</code></td></tr>
                 </table>
                 <div class="highlight-box warning">
                     <strong>&#9888;&#65039; 32-character limit:</strong> AWS caps load balancer and target group names at 32 characters. Keep your ID to six characters or fewer.
@@ -127,7 +127,7 @@
                 </div>
                 <ul>
                     <li><strong>VPC:</strong> employee-directory-&lt;ID&gt;-vpc with 2 public subnets in different AZs</li>
-                    <li><strong>Security Group:</strong> employee-directory-app-sg-&lt;ID&gt;</li>
+                    <li><strong>Security Group:</strong> employee-directory-vpc-sg-&lt;ID&gt; <em>(the one in your VPC, created in Lab 3)</em></li>
                     <li><strong>Key Pair:</strong> employee-dir-key-&lt;ID&gt;</li>
                 </ul>
                 <div class="highlight-box">
@@ -219,7 +219,7 @@
                     <tr><td>AMI</td><td><strong>Amazon Linux 2023</strong></td></tr>
                     <tr><td>Instance type</td><td><strong>t2.micro</strong></td></tr>
                     <tr><td>Key pair</td><td><strong>employee-dir-key-&lt;ID&gt;</strong></td></tr>
-                    <tr><td>Security group</td><td><strong>employee-directory-app-sg-&lt;ID&gt;</strong></td></tr>
+                    <tr><td>Security group</td><td><strong>employee-directory-vpc-sg-&lt;ID&gt;</strong> &mdash; check the VPC column</td></tr>
                 </table>
                 <p>Under <strong>Advanced details</strong>, scroll to <strong>User data</strong> and paste the script on the next slide.</p>
                 <aside class="notes">
@@ -231,30 +231,31 @@
             <section>
                 <h2>&#128196; Launch Template — User Data</h2>
                 <p>Paste into the <strong>User data</strong> field:</p>
-                <pre><code class="bash">#!/bin/bash -ex
-yum update -y
-yum install -y httpd
-systemctl start httpd
-systemctl enable httpd
-EC2_INSTANCE_ID=$(ec2-metadata -i | cut -d" " -f2)
-EC2_AZ=$(ec2-metadata -z | cut -d" " -f2)
-echo "&lt;!DOCTYPE html&gt;
+                <pre><code class="bash">#!/bin/bash
+dnf install -y httpd
+systemctl enable --now httpd
+TOKEN=$(curl -sX PUT http://169.254.169.254/latest/api/token -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+IID=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id)
+AZ=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/availability-zone)
+cat &gt; /var/www/html/index.html &lt;&lt;EOF
+&lt;!DOCTYPE html&gt;
 &lt;html&gt;&lt;head&gt;&lt;title&gt;Employee Directory&lt;/title&gt;
 &lt;style&gt;body{font-family:Arial,sans-serif;max-width:800px;margin:50px auto;padding:20px}
 h1{color:#1a365d}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:12px;text-align:left}
 th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/style&gt;&lt;/head&gt;
 &lt;body&gt;&lt;h1&gt;Employee Directory&lt;/h1&gt;
-&lt;p&gt;Instance: $EC2_INSTANCE_ID | AZ: $EC2_AZ&lt;/p&gt;
+&lt;p&gt;Instance: ${IID:-unknown} | AZ: ${AZ:-unknown}&lt;/p&gt;
 &lt;table&gt;&lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Department&lt;/th&gt;&lt;th&gt;Location&lt;/th&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;td&gt;John Smith&lt;/td&gt;&lt;td&gt;Engineering&lt;/td&gt;&lt;td&gt;Seattle&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;td&gt;Jane Doe&lt;/td&gt;&lt;td&gt;Marketing&lt;/td&gt;&lt;td&gt;New York&lt;/td&gt;&lt;/tr&gt;
 &lt;tr&gt;&lt;td&gt;Bob Johnson&lt;/td&gt;&lt;td&gt;Sales&lt;/td&gt;&lt;td&gt;Austin&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/body&gt;&lt;/html&gt;" &gt; /var/www/html/index.html</code></pre>
+&lt;/body&gt;&lt;/html&gt;
+EOF</code></pre>
                 <ol>
                     <li>Click <strong>Create launch template</strong></li>
                 </ol>
                 <aside class="notes">
-                    This script is similar to Lab 2 but embeds the Instance ID and AZ in the page. When students refresh the ALB DNS, they will see different instance IDs, proving load balancing works. No manual edits needed — the script detects instance metadata automatically.
+                    This script embeds the Instance ID and AZ in the page, so refreshing the ALB DNS shows different instance IDs and proves load balancing works. Three things here are deliberate. There is no 'yum update -y': it adds minutes to every boot and one transient repo error would leave the instance with no web server. There is no 'set -e', so a hiccup fetching metadata still leaves a served page instead of an empty docroot. And the metadata calls carry an IMDSv2 token, which Amazon Linux 2023 requires. An instance that boots without index.html returns 403 to the health check and Auto Scaling replaces it in a loop — that loop is the classic failure of this lab.
                 </aside>
             </section>
 
@@ -284,6 +285,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                     <li>Choose <strong>Choose from your load balancer target groups</strong></li>
                     <li>Select <strong>employee-directory-tg-&lt;ID&gt;</strong></li>
                     <li>Health check type: Check <strong>Turn on Elastic Load Balancing health checks</strong></li>
+                    <li>Health check grace period: <strong>300</strong> seconds &mdash; leave the default, it gives Apache time to install before the first check</li>
                     <li>Click <strong>Next</strong></li>
                 </ol>
                 <table>
@@ -318,7 +320,23 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 13: Test Self-Healing -->
+            <!-- Slide 13: If the Targets Never Go Healthy -->
+            <section>
+                <h2>&#128296; If the Targets Never Go Healthy</h2>
+                <p>Instances launching and terminating on a loop, or the ALB returning <strong>503</strong>, all trace back to the same thing: the target group never sees a <strong>200</strong> on <code>/</code>. Work down this list.</p>
+                <table>
+                    <tr><th>Check</th><th>Fix</th></tr>
+                    <tr><td>Target group shows <em>unhealthy</em> or <em>draining</em></td><td>EC2 &rarr; Target Groups &rarr; Targets tab reports the reason in plain text &mdash; start there</td></tr>
+                    <tr><td>Launch template security group</td><td>Must be <code>employee-directory-vpc-sg-&lt;ID&gt;</code>, the one in <em>your VPC</em>. The Lab 2 group has a similar name but lives in the default VPC, and the launch fails outright</td></tr>
+                    <tr><td>Instances have no public IPv4</td><td>Both public subnets need auto-assign enabled (slide 5). Without it there is no route to the repos, so Apache never installs</td></tr>
+                    <tr><td>Instance is running but serves 403</td><td><code>index.html</code> was never written. Check <code>/var/log/cloud-init-output.log</code></td></tr>
+                </table>
+                <aside class="notes">
+                    Walk this list before touching anything else; it covers essentially every failure of this lab. The security group one is the most common and the most confusing, because the name looks right in the dropdown &mdash; have students widen the VPC column and match the VPC ID. The public IP one produces instances that look fine in the console but never serve a page. Remind students that the Targets tab gives a specific reason string rather than just a red dot.
+                </aside>
+            </section>
+
+            <!-- Slide 14: Test Self-Healing -->
             <section>
                 <h2>&#128296; Test Self-Healing</h2>
                 <ol>
@@ -335,7 +353,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 14: View CloudWatch Metrics -->
+            <!-- Slide 15: View CloudWatch Metrics -->
             <section>
                 <h2>&#128202; View CloudWatch Metrics</h2>
                 <ol>
@@ -352,7 +370,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 15: Clean Up — Step 1 -->
+            <!-- Slide 16: Clean Up — Step 1 -->
             <section>
                 <h2>&#128465; Clean Up — Step 1</h2>
                 <div class="highlight-box danger">
@@ -369,12 +387,12 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 16: Clean Up — Step 2 -->
+            <!-- Slide 17: Clean Up — Step 2 -->
             <section>
                 <h2>&#128465; Clean Up — Step 2</h2>
                 <ol start="5">
                     <li><strong>Launch Template:</strong> EC2 &rarr; Launch Templates &rarr; select &rarr; Delete</li>
-                    <li><strong>Security Groups:</strong> Delete <code>employee-directory-alb-sg-&lt;ID&gt;</code> and <code>employee-directory-app-sg-&lt;ID&gt;</code></li>
+                    <li><strong>Security Groups:</strong> Delete <code>employee-directory-alb-sg-&lt;ID&gt;</code> and <code>employee-directory-vpc-sg-&lt;ID&gt;</code></li>
                     <li><strong>VPC:</strong> VPC &rarr; Your VPCs &rarr; select employee-directory-&lt;ID&gt;-vpc &rarr; Delete (this removes subnets, route tables, and IGW)</li>
                     <li><strong>Key Pair:</strong> EC2 &rarr; Key Pairs &rarr; delete <code>employee-dir-key-&lt;ID&gt;</code></li>
                     <li><strong>Any remaining EC2 instances</strong> from earlier labs &rarr; Terminate</li>
@@ -387,7 +405,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 17: Lab 6 Complete! -->
+            <!-- Slide 18: Lab 6 Complete! -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="title-slide">
                 <h1>&#127881; Lab 6 Complete!</h1>
                 <h2>High Availability Architecture Deployed</h2>
@@ -402,7 +420,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 <aside class="notes">Congratulate students on completing the capstone lab and the entire course lab series.</aside>
             </section>
 
-            <!-- Slide 18: Key Takeaways -->
+            <!-- Slide 19: Key Takeaways -->
             <section>
                 <h2>&#127919; Key Takeaways</h2>
                 <div class="two-columns">
@@ -430,7 +448,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 19: All Labs Complete! -->
+            <!-- Slide 20: All Labs Complete! -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="title-slide">
                 <h1>&#127942; All Labs Complete!</h1>
                 <h2>AWS Technical Essentials</h2>
@@ -448,7 +466,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}&lt;/sty
                 </aside>
             </section>
 
-            <!-- Slide 20: Questions? -->
+            <!-- Slide 21: Questions? -->
             <section data-background="linear-gradient(135deg, #2b6cb0 0%, #1a365d 100%)" class="questions-slide" style="text-align: center !important;">
                 <h2>&#10067; Questions?</h2>
                 <p>Final questions before we wrap up the course</p>

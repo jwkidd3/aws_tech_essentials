@@ -156,11 +156,9 @@
             <section>
                 <h2>&#128220; Add User Data Script</h2>
                 <p>In <strong>Advanced details</strong>, scroll to <strong>User data</strong> and paste:</p>
-                <pre><code class="bash">#!/bin/bash -ex
-yum update -y
-yum install -y httpd
-systemctl start httpd
-systemctl enable httpd
+                <pre><code class="bash">#!/bin/bash
+dnf install -y httpd
+systemctl enable --now httpd
 echo '&lt;!DOCTYPE html&gt;
 &lt;html&gt;&lt;head&gt;&lt;title&gt;Employee Directory&lt;/title&gt;
 &lt;style&gt;body{font-family:Arial,sans-serif;max-width:800px;margin:50px auto;padding:20px}

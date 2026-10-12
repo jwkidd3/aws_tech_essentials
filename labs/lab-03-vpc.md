@@ -20,7 +20,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 | --- | --- |
 | VPC wizard — name tag auto-generation | `employee-directory-<ID>` |
 | Resulting VPC | `employee-directory-<ID>-vpc` |
-| Security group | `employee-directory-app-sg-<ID>` |
+| Security group (new, in your VPC) | `employee-directory-vpc-sg-<ID>` |
 | EC2 instance (Name tag) | `employee-directory-app-vpc-<ID>` |
 
 > **💡 Nice side effect:** the wizard applies your name tag to every resource it creates — subnets, route tables and the internet gateway all pick up your ID automatically.
@@ -78,7 +78,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 
 1. In the VPC console left nav, click **Security groups**
 2. Click **Create security group**
-3. Name: `employee-directory-app-sg-<ID>`
+3. Name: `employee-directory-vpc-sg-<ID>` — a *new* group, not the Lab 2 one
 4. Description: *Allow HTTP access for Employee Directory*
 5. VPC: Select **`employee-directory-<ID>-vpc`**
 
@@ -102,7 +102,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
     - VPC: **`employee-directory-<ID>-vpc`**
     - Subnet: Choose any **public** subnet
     - Auto-assign public IP: **Enable**
-    - Select existing security group: **`employee-directory-app-sg-<ID>`**
+    - Select existing security group: **`employee-directory-vpc-sg-<ID>`**
 
 ---
 
@@ -111,11 +111,9 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 1. Under **Advanced details**, scroll to **User data** and paste:
 
 ```bash
-#!/bin/bash -ex
-yum update -y
-yum install -y httpd
-systemctl start httpd
-systemctl enable httpd
+#!/bin/bash
+dnf install -y httpd
+systemctl enable --now httpd
 echo '<!DOCTYPE html>
 <html><head><title>Employee Directory</title>
 <style>body{font-family:Arial,sans-serif;max-width:800px;margin:50px auto;padding:20px}
@@ -160,7 +158,7 @@ th{background:#2b6cb0;color:white}tr:nth-child(even){background:#f7fafc}</style>
 > **Do NOT delete these resources** — they are needed for Lab 6:
 
 - **VPC:** `employee-directory-<ID>-vpc` (with subnets, IGW, route tables)
-- **Security Group:** `employee-directory-app-sg-<ID>`
+- **Security Group:** `employee-directory-vpc-sg-<ID>`
 - **Key Pair:** `employee-dir-key-<ID>`
 
 You may terminate the EC2 instance from this lab — Lab 6 will create new instances via Auto Scaling.

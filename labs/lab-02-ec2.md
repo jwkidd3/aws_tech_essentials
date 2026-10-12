@@ -77,11 +77,9 @@ Under **Network settings**, click **Edit**:
 In **Advanced details**, scroll to **User data** and paste:
 
 ```bash
-#!/bin/bash -ex
-yum update -y
-yum install -y httpd
-systemctl start httpd
-systemctl enable httpd
+#!/bin/bash
+dnf install -y httpd
+systemctl enable --now httpd
 echo '<!DOCTYPE html>
 <html><head><title>Employee Directory</title>
 <style>body{font-family:Arial,sans-serif;max-width:800px;margin:50px auto;padding:20px}

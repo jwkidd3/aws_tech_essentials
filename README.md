@@ -123,8 +123,9 @@ All students in a delivery share one AWS account, so every resource a student cr
 | 1 | IAM policy | `S3ScopedReadPolicy-<ID>` |
 | 2 | EC2 instance | `employee-directory-app-<ID>` |
 | 2 | Key pair | `employee-dir-key-<ID>` |
-| 2 | Security group | `employee-directory-app-sg-<ID>` |
+| 2 | Security group (default VPC) | `employee-directory-app-sg-<ID>` |
 | 3 | VPC wizard name tag | `employee-directory-<ID>` → creates `employee-directory-<ID>-vpc` |
+| 3 | Security group (custom VPC) | `employee-directory-vpc-sg-<ID>` |
 | 3 | EC2 instance | `employee-directory-app-vpc-<ID>` |
 | 4 | S3 bucket | `employee-directory-app-bucket-<ID>-<RANDOM>` |
 | 5 | DynamoDB table | `Employees-<ID>` |
@@ -140,6 +141,7 @@ Notes:
 - **S3 needs two layers.** Bucket names are unique across all of AWS, so Lab 4 keeps a random component on top of the student ID.
 - **Lab 3's VPC wizard does the heavy lifting.** The name-tag auto-generation value propagates to the subnets, route tables, and internet gateway, so one field labels the whole network stack with the student's ID.
 - **Lab 1's custom policy is scoped per student.** The resource ARN embeds `<ID>`, so a student's policy cannot read a classmate's bucket.
+- **The two security groups have deliberately different names.** Lab 2's lives in the default VPC and Lab 3's in the custom VPC. Security group names only have to be unique per VPC, so giving both the same name put two identical entries in Lab 6's launch-template dropdown — and picking the default-VPC one makes every Auto Scaling launch fail with a VPC mismatch.
 
 ### Instructor pre-flight for a shared account
 
