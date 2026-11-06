@@ -97,9 +97,9 @@
                 <aside class="notes">You can always install a database on EC2 and manage it yourself — this gives full control but means you handle patching, backups, replication, failover, and scaling. Managed services like RDS and DynamoDB offload this operational burden. AWS handles provisioning, patching, automated backups, and high availability. For most workloads, managed is the right choice — use unmanaged only when you need a database engine or configuration that isn't supported by a managed service.</aside>
             </section>
 
-            <!-- Slide 3: Amazon RDS -->
+            <!-- Slide 3: Amazon RDS & Aurora -->
             <section>
-                <h2>&#128450; Amazon RDS</h2>
+                <h2>&#128450; Amazon RDS &amp; Aurora</h2>
                 <div class="concept-box">
                     <p><strong>Relational Database Service</strong> &mdash; managed SQL databases in the cloud.</p>
                 </div>
@@ -108,26 +108,16 @@
                     <li>Automated backups (up to 35 days)</li>
                     <li>Push-button Multi-AZ failover</li>
                     <li>Read replicas for scaling reads</li>
-                </ul>
-                <aside class="notes">RDS supports six popular relational database engines. It handles provisioning, patching, backups, and recovery. Multi-AZ deployments maintain a synchronous standby in another AZ for automatic failover — typically completes in 60-120 seconds. Read replicas create asynchronous copies that can handle read queries, reducing load on the primary. RDS runs inside your VPC on dedicated instances that you size based on workload.</aside>
-            </section>
-
-            <!-- Slide 4: RDS Features & Aurora -->
-            <section>
-                <h2>&#9889; RDS Features &amp; Aurora</h2>
-                <ul>
-                    <li><strong>Multi-AZ:</strong> automatic failover to standby</li>
-                    <li><strong>Read Replicas:</strong> scale read-heavy workloads</li>
-                    <li><strong>Encryption:</strong> at rest and in transit</li>
+                    <li>Encryption at rest and in transit</li>
                 </ul>
                 <div class="highlight-box" style="margin-top: 15px;">
                     <h4 style="margin-top: 0;">Amazon Aurora</h4>
                     <p style="margin: 0; font-size: 0.9em;">AWS-built, MySQL/PostgreSQL compatible. 5x MySQL throughput. Storage auto-scales to 128 TB. 6-way replication across 3 AZs.</p>
                 </div>
-                <aside class="notes">Multi-AZ is for high availability — the standby takes over if the primary fails. Read replicas are for performance — offload read traffic from the primary. They can also be promoted to standalone instances for disaster recovery. Aurora is AWS's cloud-native relational database. It's compatible with MySQL and PostgreSQL but redesigned for the cloud with a distributed storage layer that replicates 6 copies across 3 AZs. Aurora Serverless v2 can auto-scale compute capacity based on demand, which is useful for variable workloads.</aside>
+                <aside class="notes">RDS supports six popular relational database engines. It handles provisioning, patching, backups, and recovery. Multi-AZ deployments maintain a synchronous standby in another AZ for automatic failover — typically completes in 60-120 seconds. Read replicas create asynchronous copies that can handle read queries, reducing load on the primary. RDS runs inside your VPC on dedicated instances that you size based on workload. Multi-AZ is for high availability — the standby takes over if the primary fails. Read replicas are for performance — offload read traffic from the primary. They can also be promoted to standalone instances for disaster recovery. Aurora is AWS's cloud-native relational database. It's compatible with MySQL and PostgreSQL but redesigned for the cloud with a distributed storage layer that replicates 6 copies across 3 AZs. Aurora Serverless v2 can auto-scale compute capacity based on demand, which is useful for variable workloads.</aside>
             </section>
 
-            <!-- Slide 5: Purpose-Built Databases -->
+            <!-- Slide 4: Purpose-Built Databases -->
             <section>
                 <h2>&#127919; Purpose-Built Databases</h2>
                 <div class="concept-box">
@@ -142,7 +132,7 @@
                 <aside class="notes">AWS offers 15+ purpose-built database services. The idea is that no single database is optimal for every use case. Relational databases are great for structured data with complex queries. DynamoDB excels at key-value lookups at any scale. ElastiCache provides microsecond latency for caching. Neptune handles graph queries for social networks and fraud detection. Redshift is a columnar data warehouse for analytics. DocumentDB is MongoDB-compatible. Timestream is for time-series data. Choose based on data model, access patterns, and scale requirements.</aside>
             </section>
 
-            <!-- Slide 6: Amazon DynamoDB -->
+            <!-- Slide 5: Amazon DynamoDB -->
             <section>
                 <h2>&#9889; Amazon DynamoDB</h2>
                 <div class="concept-box">
@@ -157,7 +147,7 @@
                 <aside class="notes">DynamoDB is AWS's flagship NoSQL database. It's fully serverless — you create a table, define the key schema, and start writing data. No instances to provision, no OS to patch. It automatically replicates across 3 AZs within a Region. DynamoDB handles millions of requests per second with consistent single-digit millisecond latency. Use cases include gaming leaderboards, shopping carts, IoT data, session stores, and any workload that needs fast, scalable key-value access.</aside>
             </section>
 
-            <!-- Slide 7: DynamoDB Key Concepts -->
+            <!-- Slide 6: DynamoDB Key Concepts -->
             <section>
                 <h2>&#128273; DynamoDB Key Concepts</h2>
                 <ul>
@@ -169,7 +159,7 @@
                 <aside class="notes">DynamoDB tables store items, each identified by a primary key. The primary key is either a simple partition key or a composite key (partition + sort). The partition key determines which physical partition stores the item — good key design distributes data evenly. On-demand mode charges per request (great for unpredictable traffic). Provisioned mode lets you set read/write capacity units with auto-scaling. Items can have different attributes — DynamoDB is schema-flexible. Maximum item size is 400 KB.</aside>
             </section>
 
-            <!-- Slide 8: Choosing a Database -->
+            <!-- Slide 7: Choosing a Database -->
             <section>
                 <h2>&#127919; Choosing a Database</h2>
                 <div class="two-columns">
@@ -193,7 +183,7 @@
                 <aside class="notes">The choice between relational and NoSQL depends on your data model and access patterns. If you need joins, transactions across tables, and complex queries — use RDS or Aurora. If you need fast lookups by key, massive scale, and flexible schemas — use DynamoDB. Many architectures use both: RDS for transactional data and DynamoDB for session state or caching. Don't force a relational model onto data that's naturally key-value, and vice versa.</aside>
             </section>
 
-            <!-- Slide 9: Lab Callout -->
+            <!-- Slide 8: Lab Callout -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="lab-callout" style="text-align: center !important;">
                 <h2>&#128736;&#65039; Lab Time</h2>
                 <h3>Create a DynamoDB Table</h3>
@@ -206,12 +196,6 @@
                 <aside class="notes">In this lab, students create a DynamoDB table to replace the local data store in the employee directory application. They'll define a partition key, add employee records, and update the application to read from DynamoDB. This demonstrates how easy it is to get started with a serverless database — no instances to provision or manage.</aside>
             </section>
 
-            <!-- Slide 10: Questions? -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="questions-slide" style="text-align: center !important;">
-                <h2>&#10067; Questions?</h2>
-                <p>Module 5: Databases</p>
-                <aside class="notes">Open the floor for questions about RDS, Aurora, DynamoDB, or choosing between relational and NoSQL. Common questions: When would you still run a database on EC2? How does DynamoDB pricing compare to RDS? What about migrations from on-premises databases?</aside>
-            </section>
 
         </div>
     </div>

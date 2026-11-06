@@ -178,9 +178,9 @@
                 <aside class="notes">Security groups are the primary firewall in AWS. They're stateful — if you allow inbound HTTP on port 80, the response traffic is automatically allowed out. You can only create allow rules; anything not explicitly allowed is denied by default. A powerful feature is referencing other security groups as sources, e.g., "allow traffic from the web-tier security group" without specifying IPs. Each instance can have up to 5 security groups attached.</aside>
             </section>
 
-            <!-- Slide 8: Network ACLs -->
+            <!-- Slide 8: Network ACLs vs Security Groups -->
             <section>
-                <h2>&#128219; Network ACLs</h2>
+                <h2>&#128219; Network ACLs vs Security Groups</h2>
                 <div class="concept-box">
                     <p>Firewall at the <strong>subnet level</strong>.</p>
                 </div>
@@ -190,12 +190,6 @@
                     <li>Rules evaluated by number (lowest first)</li>
                     <li>Default NACL: allows all traffic</li>
                 </ul>
-                <aside class="notes">NACLs are evaluated before security groups for inbound traffic. They're stateless — you must create rules for both inbound and outbound traffic explicitly. Rules are numbered and evaluated in order — the first matching rule wins. The default NACL allows all traffic; custom NACLs deny all traffic by default. NACLs are useful for blocking specific IP ranges or adding a subnet-level defense layer. Most architectures rely primarily on security groups with NACLs as an additional safeguard.</aside>
-            </section>
-
-            <!-- Slide 9: SGs vs NACLs -->
-            <section>
-                <h2>&#128274; SGs vs NACLs</h2>
                 <div class="two-columns">
                     <div class="card">
                         <h4>Security Groups</h4>
@@ -216,10 +210,10 @@
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">This is one of the most common exam and interview questions. Security groups are your primary defense — stateful, instance-level, allow-only. NACLs are your secondary defense — stateless, subnet-level, support both allow and deny. Think of it as defense in depth: NACLs are the outer wall (subnet boundary), security groups are the inner wall (instance boundary). In practice, most teams configure security groups carefully and leave NACLs at defaults unless they need to explicitly block specific IPs or ranges.</aside>
+                <aside class="notes">NACLs are evaluated before security groups for inbound traffic. They're stateless — you must create rules for both inbound and outbound traffic explicitly. Rules are numbered and evaluated in order — the first matching rule wins. The default NACL allows all traffic; custom NACLs deny all traffic by default. NACLs are useful for blocking specific IP ranges or adding a subnet-level defense layer. Most architectures rely primarily on security groups with NACLs as an additional safeguard. This is one of the most common exam and interview questions. Security groups are your primary defense — stateful, instance-level, allow-only. NACLs are your secondary defense — stateless, subnet-level, support both allow and deny. Think of it as defense in depth: NACLs are the outer wall (subnet boundary), security groups are the inner wall (instance boundary). In practice, most teams configure security groups carefully and leave NACLs at defaults unless they need to explicitly block specific IPs or ranges.</aside>
             </section>
 
-            <!-- Slide 10: Lab Callout -->
+            <!-- Slide 9: Lab Callout -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="lab-callout" style="text-align: center !important;">
                 <h2>&#128736;&#65039; Lab Time</h2>
                 <h3>Create a VPC and Launch the App</h3>
@@ -232,12 +226,6 @@
                 <aside class="notes">In this lab, students create a custom VPC with public and private subnets across two AZs. They'll configure an Internet Gateway, route tables, and security groups, then move the employee directory EC2 instance into this new VPC. Common issues: forgetting to attach the Internet Gateway, missing route table entries, or security group rules not allowing HTTP. Circulate and help troubleshoot.</aside>
             </section>
 
-            <!-- Slide 11: Questions? -->
-            <section data-background="linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%)" class="questions-slide" style="text-align: center !important;">
-                <h2>&#10067; Questions?</h2>
-                <p>Module 3: AWS Networking</p>
-                <aside class="notes">Open the floor for questions about VPCs, subnets, gateways, route tables, security groups, or NACLs. Common confusion points: stateful vs stateless, why NAT Gateway is needed, how route tables determine public vs private subnets.</aside>
-            </section>
 
         </div>
     </div>
