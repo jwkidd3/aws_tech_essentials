@@ -86,13 +86,7 @@
                     <li>Runs inside your VPC</li>
                     <li>Install any software you need</li>
                 </ul>
-                <aside class="notes">EC2 gives you virtual machines with root/admin access, allowing you to install and configure software just as you would on a physical server. The key difference is the speed of provisioning and the elasticity of scaling. You launch instances from Amazon Machine Images (AMIs), which are templates containing the OS and pre-installed software. You can use AWS-provided AMIs, marketplace AMIs, or create your own custom golden images.</aside>
-            </section>
-
-            <!-- Slide 3: EC2 Instance Type Families -->
-            <section>
-                <h2>&#128736; EC2 Instance Type Families</h2>
-                <div class="two-columns">
+                                <div class="two-columns">
                     <div>
                         <ul>
                             <li><strong>General Purpose (M, T)</strong> &mdash; balanced workloads</li>
@@ -109,10 +103,11 @@
                 <div class="key-point" style="margin-top: 15px;">
                     <strong>Naming:</strong> e.g. <code>m5.xlarge</code> = family (m) + generation (5) + size (xlarge)
                 </div>
-                <aside class="notes">There are also accelerated computing instances (P, G families) with GPUs for machine learning and graphics. The T family includes burstable instances that are cost-effective for variable workloads. Instance naming convention: family letter, generation number, then size from nano to metal. Start with general purpose (T3 or M5) and right-size based on monitoring data. You don't need to memorize specs — the key is knowing which family fits which workload pattern.</aside>
+                            
+                <aside class="notes">EC2 gives you virtual machines with root/admin access, allowing you to install and configure software just as you would on a physical server. The key difference is the speed of provisioning and the elasticity of scaling. You launch instances from Amazon Machine Images (AMIs), which are templates containing the OS and pre-installed software. You can use AWS-provided AMIs, marketplace AMIs, or create your own custom golden images. There are also accelerated computing instances (P, G families) with GPUs for machine learning and graphics. The T family includes burstable instances that are cost-effective for variable workloads. Instance naming convention: family letter, generation number, then size from nano to metal. Start with general purpose (T3 or M5) and right-size based on monitoring data. You don't need to memorize specs — the key is knowing which family fits which workload pattern.</aside>
             </section>
 
-            <!-- Slide 4: EC2 Pricing Models -->
+            <!-- Slide 3: EC2 Pricing Models -->
             <section>
                 <h2>&#128176; EC2 Pricing Models</h2>
                 <div class="two-columns">
@@ -150,7 +145,7 @@
                 <aside class="notes">On-Demand is the default and most flexible — great for unpredictable workloads and development. Reserved Instances and Savings Plans reward commitment with significant discounts — ideal for steady-state production workloads. Spot Instances offer the deepest discounts but can be reclaimed with 2 minutes notice — perfect for batch processing, CI/CD, and fault-tolerant workloads. Dedicated Hosts are for regulatory or licensing requirements (e.g., per-socket Oracle licenses).</aside>
             </section>
 
-            <!-- Slide 5: EC2 Instance Lifecycle -->
+            <!-- Slide 4: EC2 Instance Lifecycle -->
             <section>
                 <h2>&#128260; EC2 Instance Lifecycle</h2>
                 <div class="concept-box">
@@ -165,7 +160,7 @@
                 <aside class="notes">Understanding the lifecycle is important for cost management. Stopped instances don't incur compute charges but you still pay for attached EBS volumes and Elastic IPs. Termination is permanent — the instance and its root volume are deleted (unless configured to preserve the volume). Hibernate is a special stop state that saves RAM contents to EBS, enabling faster restart. A stopped instance loses its public IP unless you use an Elastic IP.</aside>
             </section>
 
-            <!-- Slide 6: Containers on AWS -->
+            <!-- Slide 5: Containers on AWS -->
             <section>
                 <h2>&#128230; Containers on AWS</h2>
                 <div class="three-columns">
@@ -197,7 +192,7 @@
                 <aside class="notes">Containers package application code with dependencies for consistent deployment. ECS is AWS's own orchestrator — simpler if you're all-in on AWS. EKS runs Kubernetes for teams that want portability or already use K8s. Fargate removes the need to manage the underlying EC2 instances for either ECS or EKS — you just define CPU and memory per container. Use ECS for AWS-native simplicity, EKS for Kubernetes ecosystem, Fargate when you want serverless container hosting.</aside>
             </section>
 
-            <!-- Slide 7: AWS Lambda -->
+            <!-- Slide 6: AWS Lambda -->
             <section>
                 <h2>&#9889; AWS Lambda</h2>
                 <div class="concept-box">
@@ -209,13 +204,7 @@
                     <li>Supports Python, Node.js, Java, Go, .NET</li>
                     <li>Max 15 minutes per execution</li>
                 </ul>
-                <aside class="notes">Lambda is AWS's Function-as-a-Service offering. You upload code, define a trigger, and AWS handles everything else: provisioning, scaling, patching, and high availability. Billing is per invocation (first 1M requests/month free) plus compute time in GB-seconds. Lambda is ideal for event-driven workloads: processing S3 uploads, handling API requests, running scheduled tasks, and responding to database changes. The 15-minute timeout means Lambda isn't suited for long-running batch jobs.</aside>
-            </section>
-
-            <!-- Slide 8: Choosing the Right Compute -->
-            <section>
-                <h2>&#127919; Choosing the Right Compute</h2>
-                <div class="two-columns">
+                                <div class="two-columns">
                     <div class="card">
                         <h4>&#128187; EC2 When...</h4>
                         <ul>
@@ -236,14 +225,15 @@
                 <div class="key-point" style="margin-top: 15px;">
                     <strong>Containers</strong> (ECS/EKS) fit between: microservices needing portability without full VM overhead.
                 </div>
-                <aside class="notes">There's no one-size-fits-all answer. EC2 gives maximum control, Lambda gives minimum management. Containers sit in between. Many production architectures use a mix: EC2 for the main application, Lambda for event processing, containers for microservices. Start with the question: "How much infrastructure do I want to manage?" and work from there. Cost depends heavily on workload patterns — Lambda can be cheaper for sporadic traffic, EC2 for steady high utilization.</aside>
+                            
+                <aside class="notes">Lambda is AWS's Function-as-a-Service offering. You upload code, define a trigger, and AWS handles everything else: provisioning, scaling, patching, and high availability. Billing is per invocation (first 1M requests/month free) plus compute time in GB-seconds. Lambda is ideal for event-driven workloads: processing S3 uploads, handling API requests, running scheduled tasks, and responding to database changes. The 15-minute timeout means Lambda isn't suited for long-running batch jobs. There's no one-size-fits-all answer. EC2 gives maximum control, Lambda gives minimum management. Containers sit in between. Many production architectures use a mix: EC2 for the main application, Lambda for event processing, containers for microservices. Start with the question: "How much infrastructure do I want to manage?" and work from there. Cost depends heavily on workload patterns — Lambda can be cheaper for sporadic traffic, EC2 for steady high utilization.</aside>
             </section>
 
-            <!-- Slide 9: Lab Callout -->
+            <!-- Slide 7: Lab Callout -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="lab-callout" style="text-align: center !important;">
                 <h2>&#128736;&#65039; Lab Time</h2>
                 <h3>Launch the Employee Directory App on EC2</h3>
-                <p style="font-size: 1.1em; color: #ffffff;">&#9201; 25 minutes</p>
+                <p style="font-size: 1.1em; color: #ffffff;">&#9201; 35 minutes</p>
                 <ul>
                     <li>Launch an EC2 instance with a web application</li>
                     <li>Configure security group for HTTP access</li>

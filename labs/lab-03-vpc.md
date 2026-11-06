@@ -39,7 +39,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 
 ### 📝 Lab Details
 
-- **Duration:** ~25 minutes
+- **Duration:** ~35 minutes
 - **Region:** `us-east-1` (N. Virginia) — same for every lab
 - **Prerequisite:** Lab 2 instance running
 

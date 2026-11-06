@@ -144,25 +144,13 @@
                     <li>Automatic scaling and replication</li>
                     <li>Built-in encryption and backups</li>
                 </ul>
-                <aside class="notes">DynamoDB is AWS's flagship NoSQL database. It's fully serverless — you create a table, define the key schema, and start writing data. No instances to provision, no OS to patch. It automatically replicates across 3 AZs within a Region. DynamoDB handles millions of requests per second with consistent single-digit millisecond latency. Use cases include gaming leaderboards, shopping carts, IoT data, session stores, and any workload that needs fast, scalable key-value access.</aside>
-            </section>
-
-            <!-- Slide 6: DynamoDB Key Concepts -->
-            <section>
-                <h2>&#128273; DynamoDB Key Concepts</h2>
-                <ul>
+                                <ul>
                     <li><strong>Table:</strong> collection of items (like rows)</li>
                     <li><strong>Partition Key:</strong> unique identifier for each item</li>
                     <li><strong>Sort Key:</strong> optional, enables range queries</li>
                     <li><strong>Capacity:</strong> on-demand or provisioned mode</li>
                 </ul>
-                <aside class="notes">DynamoDB tables store items, each identified by a primary key. The primary key is either a simple partition key or a composite key (partition + sort). The partition key determines which physical partition stores the item — good key design distributes data evenly. On-demand mode charges per request (great for unpredictable traffic). Provisioned mode lets you set read/write capacity units with auto-scaling. Items can have different attributes — DynamoDB is schema-flexible. Maximum item size is 400 KB.</aside>
-            </section>
-
-            <!-- Slide 7: Choosing a Database -->
-            <section>
-                <h2>&#127919; Choosing a Database</h2>
-                <div class="two-columns">
+                                <div class="two-columns">
                     <div class="card">
                         <h4>Use RDS/Aurora when...</h4>
                         <ul>
@@ -180,14 +168,16 @@
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">The choice between relational and NoSQL depends on your data model and access patterns. If you need joins, transactions across tables, and complex queries — use RDS or Aurora. If you need fast lookups by key, massive scale, and flexible schemas — use DynamoDB. Many architectures use both: RDS for transactional data and DynamoDB for session state or caching. Don't force a relational model onto data that's naturally key-value, and vice versa.</aside>
+                            
+                            
+                <aside class="notes">DynamoDB is AWS's flagship NoSQL database. It's fully serverless — you create a table, define the key schema, and start writing data. No instances to provision, no OS to patch. It automatically replicates across 3 AZs within a Region. DynamoDB handles millions of requests per second with consistent single-digit millisecond latency. Use cases include gaming leaderboards, shopping carts, IoT data, session stores, and any workload that needs fast, scalable key-value access. DynamoDB tables store items, each identified by a primary key. The primary key is either a simple partition key or a composite key (partition + sort). The partition key determines which physical partition stores the item — good key design distributes data evenly. On-demand mode charges per request (great for unpredictable traffic). Provisioned mode lets you set read/write capacity units with auto-scaling. Items can have different attributes — DynamoDB is schema-flexible. Maximum item size is 400 KB. The choice between relational and NoSQL depends on your data model and access patterns. If you need joins, transactions across tables, and complex queries — use RDS or Aurora. If you need fast lookups by key, massive scale, and flexible schemas — use DynamoDB. Many architectures use both: RDS for transactional data and DynamoDB for session state or caching. Don't force a relational model onto data that's naturally key-value, and vice versa.</aside>
             </section>
 
-            <!-- Slide 8: Lab Callout -->
+            <!-- Slide 6: Lab Callout -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="lab-callout" style="text-align: center !important;">
                 <h2>&#128736;&#65039; Lab Time</h2>
                 <h3>Create a DynamoDB Table</h3>
-                <p style="font-size: 1.1em; color: #ffffff;">&#9201; 15 minutes</p>
+                <p style="font-size: 1.1em; color: #ffffff;">&#9201; 25 minutes</p>
                 <ul>
                     <li>Create a table for employee records</li>
                     <li>Add items and query by partition key</li>

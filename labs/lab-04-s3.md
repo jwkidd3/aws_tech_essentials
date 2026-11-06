@@ -8,7 +8,7 @@
 
 ## 📦 Lab 4: Create an Amazon S3 Bucket
 
-*AWS Technical Essentials — Duration: ~20 minutes*
+*AWS Technical Essentials — Duration: ~30 minutes*
 
 ---
 
@@ -36,7 +36,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 
 ### 📝 Lab Details
 
-- **Duration:** ~20 minutes
+- **Duration:** ~30 minutes
 - **Region:** `us-east-1` (N. Virginia) — same for every lab
 
 > **⚠️** Bucket names must be **globally unique** across all AWS accounts.

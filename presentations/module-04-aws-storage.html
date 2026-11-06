@@ -131,32 +131,7 @@
                 <aside class="notes">Instance store is included with certain EC2 instance types and offers the highest raw performance since it's physically attached. However, data is lost when the instance stops or terminates — never store data you can't afford to lose. EBS is the workhorse for persistent storage: network-attached volumes within a single AZ, replicated for durability, supporting snapshots and encryption. EBS volumes can be resized, re-typed, and moved between instances (within the same AZ).</aside>
             </section>
 
-            <!-- Slide 4: EBS Volume Types -->
-            <section>
-                <h2>&#128190; EBS Volume Types</h2>
-                <div class="two-columns">
-                    <div class="card">
-                        <h4>SSD-Backed</h4>
-                        <ul>
-                            <li><strong>gp3/gp2:</strong> general purpose (boot, apps)</li>
-                            <li><strong>io2/io1:</strong> high-performance databases</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>HDD-Backed</h4>
-                        <ul>
-                            <li><strong>st1:</strong> throughput-optimized (big data)</li>
-                            <li><strong>sc1:</strong> cold storage (infrequent access)</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="key-point" style="margin-top: 15px;">
-                    <strong>Default choice:</strong> gp3 for most workloads (balanced cost and performance).
-                </div>
-                <aside class="notes">gp3 is the latest general purpose SSD — it offers a baseline of 3,000 IOPS and 125 MB/s, and you can independently provision more. gp2 uses a burst credit model. io2 Block Express is for the most demanding databases needing sub-millisecond latency and up to 256,000 IOPS. st1 is for sequential reads (data warehouses, log processing). sc1 is the lowest cost for infrequently accessed data. Most workloads should start with gp3 and upgrade only if monitoring shows they need more.</aside>
-            </section>
-
-            <!-- Slide 5: What Is Amazon S3? -->
+            <!-- Slide 4: What Is Amazon S3? -->
             <section>
                 <h2>&#128230; What Is Amazon S3?</h2>
                 <div class="concept-box">
@@ -171,7 +146,7 @@
                 <aside class="notes">S3 stores objects (files + metadata) in buckets. Bucket names must be globally unique across all AWS accounts. Each object is identified by a key (like a file path). S3 automatically replicates objects across at least 3 AZs within a Region for 11 nines of durability. Access is via HTTPS, AWS SDKs, CLI, or the Console. Common use cases: static website hosting, backup and archive, data lakes, media distribution, and application assets.</aside>
             </section>
 
-            <!-- Slide 6: S3 Storage Classes -->
+            <!-- Slide 5: S3 Storage Classes -->
             <section>
                 <h2>&#128176; S3 Storage Classes</h2>
                 <ul>
@@ -183,25 +158,14 @@
                 <div class="key-point" style="margin-top: 15px;">
                     <strong>Tip:</strong> Use lifecycle policies to automatically transition objects between classes.
                 </div>
-                <aside class="notes">S3 offers multiple storage classes to optimize cost based on access patterns. Standard is the default for frequently accessed data. Intelligent-Tiering automatically moves objects to the most cost-effective tier based on access patterns — great when you don't know the pattern. Standard-IA costs less per GB but charges per retrieval. One Zone-IA stores in a single AZ for even lower cost. Glacier Instant Retrieval, Flexible Retrieval, and Deep Archive offer progressively cheaper storage for archival with varying retrieval times from milliseconds to 12 hours. Lifecycle policies automate transitions.</aside>
-            </section>
-
-            <!-- Slide 7: S3 Features -->
-            <section>
-                <h2>&#128274; S3 Features</h2>
-                <ul>
+                                <ul>
                     <li><strong>Versioning:</strong> keep multiple versions of objects</li>
                     <li><strong>Encryption:</strong> SSE-S3, SSE-KMS, or client-side</li>
                     <li><strong>Access control:</strong> IAM policies, bucket policies, ACLs</li>
                     <li><strong>Block Public Access:</strong> account-level safety net</li>
                 </ul>
-                <aside class="notes">Versioning protects against accidental deletion and overwrites — once enabled, every object change creates a new version. Encryption at rest is available with S3-managed keys (SSE-S3, free), KMS-managed keys (SSE-KMS, for audit trails), or client-side encryption. Access control uses IAM policies (identity-based), bucket policies (resource-based), and Block Public Access settings (account or bucket-level). Best practice: enable versioning, enable default encryption, and turn on Block Public Access unless you explicitly need public objects.</aside>
-            </section>
-
-            <!-- Slide 8: Choosing the Right Storage -->
-            <section>
-                <h2>&#127919; Choosing the Right Storage</h2>
-                <div class="two-columns">
+                            
+                                <div class="two-columns">
                     <div class="card">
                         <h4>Use EBS when...</h4>
                         <ul>
@@ -219,14 +183,15 @@
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">The general rule: EBS for data that needs to be accessed as a mounted drive by a single instance (databases, application files). S3 for data accessed over HTTP by many consumers (images, documents, backups, logs). EFS when you need a shared filesystem across multiple instances. The decision comes down to access pattern, performance needs, and whether the data needs to look like a filesystem or can be accessed as objects via API.</aside>
+                            
+                <aside class="notes">S3 offers multiple storage classes to optimize cost based on access patterns. Standard is the default for frequently accessed data. Intelligent-Tiering automatically moves objects to the most cost-effective tier based on access patterns — great when you don't know the pattern. Standard-IA costs less per GB but charges per retrieval. One Zone-IA stores in a single AZ for even lower cost. Glacier Instant Retrieval, Flexible Retrieval, and Deep Archive offer progressively cheaper storage for archival with varying retrieval times from milliseconds to 12 hours. Lifecycle policies automate transitions. Versioning protects against accidental deletion and overwrites — once enabled, every object change creates a new version. Encryption at rest is available with S3-managed keys (SSE-S3, free), KMS-managed keys (SSE-KMS, for audit trails), or client-side encryption. Access control uses IAM policies (identity-based), bucket policies (resource-based), and Block Public Access settings (account or bucket-level). Best practice: enable versioning, enable default encryption, and turn on Block Public Access unless you explicitly need public objects. The general rule: EBS for data that needs to be accessed as a mounted drive by a single instance (databases, application files). S3 for data accessed over HTTP by many consumers (images, documents, backups, logs). EFS when you need a shared filesystem across multiple instances. The decision comes down to access pattern, performance needs, and whether the data needs to look like a filesystem or can be accessed as objects via API.</aside>
             </section>
 
-            <!-- Slide 9: Lab Callout -->
+            <!-- Slide 6: Lab Callout -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="lab-callout" style="text-align: center !important;">
                 <h2>&#128736;&#65039; Lab Time</h2>
                 <h3>Create an S3 Bucket for the App</h3>
-                <p style="font-size: 1.1em; color: #ffffff;">&#9201; 20 minutes</p>
+                <p style="font-size: 1.1em; color: #ffffff;">&#9201; 30 minutes</p>
                 <ul>
                     <li>Create an S3 bucket for employee photos</li>
                     <li>Configure bucket policy and permissions</li>

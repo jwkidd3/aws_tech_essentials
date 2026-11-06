@@ -86,13 +86,7 @@
                     <li>Scale up or down on demand</li>
                     <li>Pay only for what you consume</li>
                 </ul>
-                <aside class="notes">Stress the shift from CapEx to OpEx. In traditional environments, you had to guess capacity needs 3-6 months in advance. Cloud computing flips this: you provision what you need, when you need it, and pay only for what you consume. This is a fundamental shift in how IT operates. The NIST definition includes five characteristics: on-demand self-service, broad network access, resource pooling, rapid elasticity, and measured service.</aside>
-            </section>
-
-            <!-- Slide 3: Six Advantages of Cloud -->
-            <section>
-                <h2>&#127919; Six Advantages of Cloud</h2>
-                <div class="two-columns">
+                                <div class="two-columns">
                     <div>
                         <ol>
                             <li><strong>Trade CapEx for variable expense</strong></li>
@@ -108,10 +102,11 @@
                         </ol>
                     </div>
                 </div>
-                <aside class="notes">Walk through each advantage. 1) CapEx to OpEx shift is fundamental. 2) AWS has reduced pricing 130+ times since 2006 thanks to aggregated usage. 3) Eliminates procurement lead times and idle hardware. 4) Prototype in an afternoon vs. weeks of hardware setup. 5) AWS handles racking, stacking, power, cooling, physical security. 6) Deploy worldwide for lower latency and better user experience.</aside>
+                            
+                <aside class="notes">Stress the shift from CapEx to OpEx. In traditional environments, you had to guess capacity needs 3-6 months in advance. Cloud computing flips this: you provision what you need, when you need it, and pay only for what you consume. This is a fundamental shift in how IT operates. The NIST definition includes five characteristics: on-demand self-service, broad network access, resource pooling, rapid elasticity, and measured service. Walk through each advantage. 1) CapEx to OpEx shift is fundamental. 2) AWS has reduced pricing 130+ times since 2006 thanks to aggregated usage. 3) Eliminates procurement lead times and idle hardware. 4) Prototype in an afternoon vs. weeks of hardware setup. 5) AWS handles racking, stacking, power, cooling, physical security. 6) Deploy worldwide for lower latency and better user experience.</aside>
             </section>
 
-            <!-- Slide 4: AWS Global Infrastructure -->
+            <!-- Slide 3: AWS Global Infrastructure -->
             <section>
                 <h2>&#127758; AWS Global Infrastructure</h2>
                 <div class="three-columns">
@@ -140,39 +135,11 @@
                         </ul>
                     </div>
                 </div>
-                <aside class="notes">Draw the hierarchy: Region contains multiple AZs, each AZ contains one or more data centers. Regions are completely independent. AZs within a Region are connected by dedicated high-bandwidth, low-latency networking. Edge Locations are separate from Regions and serve cached content to reduce latency for end users. Data sovereignty is Region-level: your data stays in the Region you put it in unless you explicitly replicate it elsewhere. When choosing a Region, consider compliance, latency, service availability, and pricing.</aside>
+                            
+                <aside class="notes">Draw the hierarchy: Region contains multiple AZs, each AZ contains one or more data centers. Regions are completely independent. AZs within a Region are connected by dedicated high-bandwidth, low-latency networking. Edge Locations are separate from Regions and serve cached content to reduce latency for end users. Data sovereignty is Region-level: your data stays in the Region you put it in unless you explicitly replicate it elsewhere. When choosing a Region, consider compliance, latency, service availability, and pricing. Everything in AWS is an API call. The Console is a web interface that makes API calls on your behalf. The CLI lets you script and automate those same calls from the command line. SDKs provide language bindings for Python (boto3), JavaScript, Java, Go, .NET, and more. Infrastructure as Code tools like CloudFormation and Terraform also use these APIs under the hood. All three methods use the same underlying APIs and IAM permissions.</aside>
             </section>
 
-            <!-- Slide 5: Interacting with AWS -->
-            <section>
-                <h2>&#128736;&#65039; Interacting with AWS</h2>
-                <div class="three-columns">
-                    <div class="card">
-                        <h4>&#128187; Console</h4>
-                        <ul>
-                            <li>Web-based GUI</li>
-                            <li>Great for exploration</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#9000;&#65039; CLI</h4>
-                        <ul>
-                            <li>Command-line scripting</li>
-                            <li>Automate tasks</li>
-                        </ul>
-                    </div>
-                    <div class="card">
-                        <h4>&#128268; SDKs</h4>
-                        <ul>
-                            <li>Language-specific APIs</li>
-                            <li>Integrate into apps</li>
-                        </ul>
-                    </div>
-                </div>
-                <aside class="notes">Everything in AWS is an API call. The Console is a web interface that makes API calls on your behalf. The CLI lets you script and automate those same calls from the command line. SDKs provide language bindings for Python (boto3), JavaScript, Java, Go, .NET, and more. Infrastructure as Code tools like CloudFormation and Terraform also use these APIs under the hood. All three methods use the same underlying APIs and IAM permissions.</aside>
-            </section>
-
-            <!-- Slide 6: Shared Responsibility Model -->
+            <!-- Slide 4: Shared Responsibility Model -->
             <section>
                 <h2>&#128274; Shared Responsibility Model</h2>
                 <div class="two-columns">
@@ -198,7 +165,7 @@
                 <aside class="notes">The shared responsibility model is crucial. AWS secures the underlying infrastructure (physical security, hypervisor, global network). Customers are responsible for what they put IN the cloud: data, identity management, application code, OS patching, and firewall rules. The responsibility boundary shifts depending on the service type — with Lambda (serverless), AWS manages more; with EC2, the customer manages more.</aside>
             </section>
 
-            <!-- Slide 7: AWS Identity and Access Management -->
+            <!-- Slide 5: AWS Identity and Access Management -->
             <section>
                 <h2>&#128100; AWS Identity and Access Management</h2>
                 <div class="concept-box">
@@ -213,7 +180,7 @@
                 <aside class="notes">IAM is the first service you should understand deeply. It is global — IAM users, roles, and policies work across all Regions. The principle of least privilege means granting only the permissions needed to perform a task, nothing more. MFA adds a second factor to authentication, strongly recommended for all human users, especially the root account. IAM is free — you're never charged for creating users, roles, or policies.</aside>
             </section>
 
-            <!-- Slide 8: Users, Roles, and Policies -->
+            <!-- Slide 6: Users, Roles, and Policies -->
             <section>
                 <h2>&#128101; Users, Roles, and Policies</h2>
                 <div class="three-columns">
@@ -245,33 +212,17 @@
                 <aside class="notes">Users are for people or applications that need long-term credentials. Roles provide temporary credentials and are preferred — especially for EC2 instances, Lambda functions, and cross-account access. Policies are JSON documents that define permissions (which actions on which resources). Best practice: use groups to assign policies to users, and prefer roles over long-term access keys. An explicit deny in any policy always overrides an allow.</aside>
             </section>
 
-            <!-- Slide 9: Course Application -->
-            <section>
-                <h2>&#128736;&#65039; Course Application</h2>
-                <div class="concept-box">
-                    <h4>Employee Directory Application</h4>
-                    <p>Throughout this course, we build a web app layer by layer using AWS services.</p>
-                </div>
-                <ul>
-                    <li>Module 2: EC2 for compute</li>
-                    <li>Module 3: VPC for networking</li>
-                    <li>Module 4: S3 for photo storage</li>
-                    <li>Module 5: DynamoDB for data</li>
-                </ul>
-                <aside class="notes">The employee directory app is the thread that ties all modules together. Each module adds a new layer to this application. By the end of the day, we'll have a fully architected application with compute, networking, storage, database, monitoring, and high availability. This module sets up IAM, which is the foundation for everything else.</aside>
-            </section>
-
-            <!-- Slide 10: Lab Callout -->
+            <!-- Slide 7: Lab Callout -->
             <section data-background="linear-gradient(135deg, #2f855a 0%, #276749 100%)" class="lab-callout" style="text-align: center !important;">
                 <h2>&#128736;&#65039; Lab Time</h2>
                 <h3>Introduction to AWS IAM</h3>
-                <p style="font-size: 1.1em; color: #ffffff;">&#9201; 20 minutes</p>
+                <p style="font-size: 1.1em; color: #ffffff;">&#9201; 30 minutes</p>
                 <ul>
                     <li>Explore IAM users, groups, and roles</li>
                     <li>Attach policies and test permissions</li>
                     <li>Understand the effect of least privilege</li>
                 </ul>
-                <aside class="notes">This lab introduces IAM through the AWS Console. Students will create users, assign them to groups, attach policies, and verify that permissions work as expected. Emphasize reading policy documents to understand what is being allowed or denied. This is hands-on time — circulate and help as needed.</aside>
+                <aside class="notes">The employee directory app is the thread that ties all modules together. Each module adds a new layer to this application. By the end of the day, we'll have a fully architected application with compute, networking, storage, database, monitoring, and high availability. This module sets up IAM, which is the foundation for everything else. This lab introduces IAM through the AWS Console. Students will create users, assign them to groups, attach policies, and verify that permissions work as expected. Emphasize reading policy documents to understand what is being allowed or denied. This is hands-on time — circulate and help as needed.</aside>
             </section>
 
 

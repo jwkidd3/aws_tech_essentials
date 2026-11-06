@@ -8,7 +8,7 @@
 
 ## 📚 Lab 5
 
-*Implement Amazon DynamoDB — AWS Technical Essentials • ~15 Minutes*
+*Implement Amazon DynamoDB — AWS Technical Essentials • ~25 Minutes*
 
 ---
 
@@ -35,7 +35,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 
 ### 📝 Lab Details
 
-- **Duration:** ~15 minutes
+- **Duration:** ~25 minutes
 - **Capacity mode:** On-demand
 - **Region:** `us-east-1` (N. Virginia) — same for every lab
 
