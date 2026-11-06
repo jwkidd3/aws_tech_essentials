@@ -23,6 +23,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 | Target group | `employee-directory-tg-<ID>` |
 | Launch template | `employee-directory-lt-<ID>` |
 | Auto Scaling group | `employee-directory-asg-<ID>` |
+| Instances it launches (Name tag) | `employee-directory-asg-app-<ID>` |
 | *Reused from earlier labs* | `employee-directory-<ID>-vpc`, `employee-directory-vpc-sg-<ID>`, `employee-dir-key-<ID>` |
 
 > **⚠️ 32-character limit:** AWS caps load balancer and target group names at 32 characters. Keep your ID to six characters or fewer.
@@ -58,17 +59,14 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 
 ---
 
-## 🌐 Enable Public IPs on the Subnets
+## 🌐 Verify Your Subnets
 
-The VPC wizard leaves **auto-assign public IPv4** off. Auto Scaling instances inherit the subnet setting, and without a public IP they cannot reach the internet to install Apache.
+You enabled this in **Lab 3**. Confirm it before building anything — the Auto Scaling group inherits it, and fixing it later means replacing every instance.
 
-1. Navigate to **VPC** → **Subnets**
-2. Filter by your ID and select the first **public** subnet
-3. Click **Actions** → **Edit subnet settings**
-4. Check **Enable auto-assign public IPv4 address**, then **Save**
-5. Repeat for the second public subnet
+1. **VPC** → **Subnets**, filter by `<ID>`
+2. Check the **Auto-assign public IPv4 address** column for both of your public subnets
 
-> **✅ Expected:** Both public subnets show **Auto-assign public IPv4: Yes**.
+> **✅ Expected:** both show **Yes**. If either shows **No**: **Actions** → **Edit subnet settings** → tick the box → **Save**.
 
 ---
 
@@ -123,6 +121,9 @@ Under **Listeners and routing**, click **Create target group**:
 | Instance type | **t2.micro** |
 | Key pair | **`employee-dir-key-<ID>`** |
 | Security group | **`employee-directory-vpc-sg-<ID>`** — check the VPC column |
+| Resource tag (Name) | `employee-directory-asg-app-<ID>` |
+
+> **⚠️ Tag the instances:** in **Resource tags**, add **Key** `Name` / **Value** `employee-directory-asg-app-<ID>` and apply it to **Instances and Volumes**. Without it, every student's Auto Scaling instances appear nameless in a shared account and you cannot tell yours apart.
 
 Under **Advanced details**, scroll to **User data** and paste the script on the next slide.
 
@@ -211,7 +212,7 @@ Instances launching and terminating on a loop, or the ALB returning **503**, all
 | --- | --- |
 | Target group shows *unhealthy* or *draining* | EC2 → Target Groups → Targets tab reports the reason in plain text — start there |
 | Launch template security group | Must be `employee-directory-vpc-sg-<ID>`, the one in *your VPC*. The Lab 2 group has a similar name but lives in the default VPC, and the launch fails outright |
-| Instances have no public IPv4 | Both public subnets need auto-assign enabled (slide 5). Without it there is no route to the repos, so Apache never installs |
+| Instances have no public IPv4 | Both public subnets need auto-assign enabled (Lab 3; re-checked on slide 5). Without it there is no route to the repos, so Apache never installs |
 | Instance is running but serves 403 | `index.html` was never written. Check `/var/log/cloud-init-output.log` |
 
 ---

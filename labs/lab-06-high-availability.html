@@ -82,6 +82,7 @@
                     <tr><td>Target group</td><td><code>employee-directory-tg-&lt;ID&gt;</code></td></tr>
                     <tr><td>Launch template</td><td><code>employee-directory-lt-&lt;ID&gt;</code></td></tr>
                     <tr><td>Auto Scaling group</td><td><code>employee-directory-asg-&lt;ID&gt;</code></td></tr>
+                    <tr><td>Instances it launches (Name tag)</td><td><code>employee-directory-asg-app-&lt;ID&gt;</code></td></tr>
                     <tr><td><em>Reused from earlier labs</em></td><td><code>employee-directory-&lt;ID&gt;-vpc</code>, <code>employee-directory-vpc-sg-&lt;ID&gt;</code>, <code>employee-dir-key-&lt;ID&gt;</code></td></tr>
                 </table>
                 <div class="highlight-box warning">
@@ -138,22 +139,19 @@
                 </aside>
             </section>
 
-            <!-- Slide 5: Enable Public IPs on the Subnets -->
+            <!-- Slide 5: Verify Your Subnets -->
             <section>
-                <h2>&#127760; Enable Public IPs on the Subnets</h2>
-                <p>The VPC wizard leaves <strong>auto-assign public IPv4</strong> off. Auto Scaling instances inherit the subnet setting, and without a public IP they cannot reach the internet to install Apache.</p>
+                <h2>&#127760; Verify Your Subnets</h2>
+                <p>You enabled this in <strong>Lab 3</strong>. Confirm it before building anything &mdash; the Auto Scaling group inherits it, and fixing it later means replacing every instance.</p>
                 <ol>
-                    <li>Navigate to <strong>VPC</strong> &rarr; <strong>Subnets</strong></li>
-                    <li>Filter by your ID and select the first <strong>public</strong> subnet</li>
-                    <li>Click <strong>Actions</strong> &rarr; <strong>Edit subnet settings</strong></li>
-                    <li>Check <strong>Enable auto-assign public IPv4 address</strong>, then <strong>Save</strong></li>
-                    <li>Repeat for the second public subnet</li>
+                    <li><strong>VPC</strong> &rarr; <strong>Subnets</strong>, filter by <code>&lt;ID&gt;</code></li>
+                    <li>Check the <strong>Auto-assign public IPv4 address</strong> column for both of your public subnets</li>
                 </ol>
                 <div class="highlight-box success">
-                    <strong>&#9989; Expected:</strong> Both public subnets show <strong>Auto-assign public IPv4: Yes</strong>.
+                    <strong>&#9989; Expected:</strong> both show <strong>Yes</strong>. If either shows <strong>No</strong>: <strong>Actions</strong> &rarr; <strong>Edit subnet settings</strong> &rarr; tick the box &rarr; <strong>Save</strong>.
                 </div>
                 <aside class="notes">
-                    This is the step students most often miss. In Lab 3 they enabled the public IP per instance in the launch wizard; a launch template does not do that, so the subnet default must be on. Without it the ASG instances never pass the ALB health check and are replaced in a loop.
+                    Thirty seconds here saves a long detour later. Anyone who skipped the step in Lab 3 fixes it now, before the launch template exists.
                 </aside>
             </section>
 
@@ -220,10 +218,14 @@
                     <tr><td>Instance type</td><td><strong>t2.micro</strong></td></tr>
                     <tr><td>Key pair</td><td><strong>employee-dir-key-&lt;ID&gt;</strong></td></tr>
                     <tr><td>Security group</td><td><strong>employee-directory-vpc-sg-&lt;ID&gt;</strong> &mdash; check the VPC column</td></tr>
+                    <tr><td>Resource tag (Name)</td><td><code>employee-directory-asg-app-&lt;ID&gt;</code></td></tr>
                 </table>
+                <div class="highlight-box warning">
+                    <strong>&#9888;&#65039; Tag the instances:</strong> in <strong>Resource tags</strong>, add <strong>Key</strong> <code>Name</code> / <strong>Value</strong> <code>employee-directory-asg-app-&lt;ID&gt;</code> and apply it to <strong>Instances and Volumes</strong>. Without it, every student's Auto Scaling instances appear nameless in a shared account and you cannot tell yours apart.
+                </div>
                 <p>Under <strong>Advanced details</strong>, scroll to <strong>User data</strong> and paste the script on the next slide.</p>
                 <aside class="notes">
-                    The launch template defines the blueprint for all instances created by Auto Scaling. Same security group as before. Auto-assign public IP is left at the subnet default, which is why the previous slide enables it on the subnets.
+                    The launch template defines the blueprint for all instances created by Auto Scaling. Same security group as before. Auto-assign public IP is left at the subnet default, which is what the previous slide verifies. The resource tag matters more than it looks: Auto Scaling instances are not named by default, so in a shared account the console fills with blank-Name instances and nobody can find their own &mdash; neither to terminate one for the self-healing test, nor to sweep at the end.
                 </aside>
             </section>
 
@@ -328,7 +330,7 @@ EOF</code></pre>
                     <tr><th>Check</th><th>Fix</th></tr>
                     <tr><td>Target group shows <em>unhealthy</em> or <em>draining</em></td><td>EC2 &rarr; Target Groups &rarr; Targets tab reports the reason in plain text &mdash; start there</td></tr>
                     <tr><td>Launch template security group</td><td>Must be <code>employee-directory-vpc-sg-&lt;ID&gt;</code>, the one in <em>your VPC</em>. The Lab 2 group has a similar name but lives in the default VPC, and the launch fails outright</td></tr>
-                    <tr><td>Instances have no public IPv4</td><td>Both public subnets need auto-assign enabled (slide 5). Without it there is no route to the repos, so Apache never installs</td></tr>
+                    <tr><td>Instances have no public IPv4</td><td>Both public subnets need auto-assign enabled (Lab 3; re-checked on slide 5). Without it there is no route to the repos, so Apache never installs</td></tr>
                     <tr><td>Instance is running but serves 403</td><td><code>index.html</code> was never written. Check <code>/var/log/cloud-init-output.log</code></td></tr>
                 </table>
                 <aside class="notes">

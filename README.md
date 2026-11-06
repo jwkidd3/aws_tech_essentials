@@ -134,12 +134,14 @@ All students in a delivery share one AWS account, so every resource a student cr
 | 6 | Target group | `employee-directory-tg-<ID>` |
 | 6 | Launch template | `employee-directory-lt-<ID>` |
 | 6 | Auto Scaling group | `employee-directory-asg-<ID>` |
+| 6 | ASG instances (Name tag) | `employee-directory-asg-app-<ID>` |
 
 Notes:
 
 - **Keep IDs to six characters or fewer.** AWS caps load balancer and target group names at 32 characters, and `employee-directory-alb-` already consumes 23.
 - **S3 needs two layers.** Bucket names are unique across all of AWS, so Lab 4 keeps a random component on top of the student ID.
 - **Lab 3's VPC wizard does the heavy lifting.** The name-tag auto-generation value propagates to the subnets, route tables, and internet gateway, so one field labels the whole network stack with the student's ID.
+- **Auto Scaling instances need an explicit tag.** They are the only resource in the course that AWS does not name from something the student typed, so Lab 6's launch template sets a `Name` resource tag. Without it a shared account fills with nameless instances and no student can find their own.
 - **Lab 1's custom policy is scoped per student.** The resource ARN embeds `<ID>`, so a student's policy cannot read a classmate's bucket.
 - **The two security groups have deliberately different names.** Lab 2's lives in the default VPC and Lab 3's in the custom VPC. Security group names only have to be unique per VPC, so giving both the same name put two identical entries in Lab 6's launch-template dropdown — and picking the default-VPC one makes every Auto Scaling launch fail with a VPC mismatch.
 

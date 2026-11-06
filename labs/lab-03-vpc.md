@@ -32,6 +32,7 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 ### 🎯 Objectives
 
 - Create a VPC with public subnets using the wizard
+- Enable auto-assign public IPv4 on both public subnets
 - Create a security group in the new VPC
 - Launch an EC2 instance in the custom VPC
 - Verify the web application works
@@ -71,6 +72,20 @@ Replace `<ID>` with your assigned student ID (for example `user7`).
 4. Click **View VPC**
 
 > **✅ Expected:** VPC created with 2 public subnets, an internet gateway, and route tables — all auto-configured.
+
+---
+
+## 🌐 Enable Auto-Assign Public IPv4
+
+The wizard leaves this **off**. Turn it on now — Lab 6 launches instances from a template that inherits the subnet setting, and without a public IP they cannot reach the package repos.
+
+1. In the VPC console left nav, click **Subnets**
+2. Filter by `<ID>` and select your first public subnet
+3. **Actions** → **Edit subnet settings**
+4. Check **Enable auto-assign public IPv4 address** → **Save**
+5. Repeat for your second public subnet
+
+> **✅ Expected:** both of your public subnets show **Auto-assign public IPv4: Yes**.
 
 ---
 
